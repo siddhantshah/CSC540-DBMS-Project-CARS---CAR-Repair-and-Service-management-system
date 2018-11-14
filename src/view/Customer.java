@@ -14,15 +14,19 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// displayProfilePage();
+			displayProfilePage(sc);
+			break;
 		case 2:
-			// registerCar();
+			registerCar(sc);
+			break;
 		case 3:
-			// service();
+			service(sc);
+			break;
 		case 4:
-			// invoice();
+			invoice(sc);
+			break;
 		case 5:
-			// exit;
+			// logout and return to home page
 		}
 	}
 	
@@ -35,23 +39,26 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// viewProfile();
+			viewProfile(sc);
+			break;
 		case 2:
-			// updateProfile();
+			updateProfile(sc);
+			break;
 		case 3:
-			// exit;
+			// go back to customer landing page
 		}	 
 	 }
 	 
 	 public static void viewProfile(Scanner sc) {
 		System.out.println("======================View Profile======================");
-		// Display profile
+		// Display the following details followed by the menu. A. Customer ID B. Name C. Address D. Email Address E. Phone Number F. List of All Cars (and their details)
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// exit;
+			displayProfilePage(sc);
+			break;
 		}	 	 
 		 
 	 }
@@ -66,18 +73,27 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
+			System.out.println("Please enter your Name.");
+			String name = sc.next();
 			// setName();
 		case 2:
+			System.out.println("Please enter your Address.");
+			String address = sc.next();
 			// setAddress();
 		case 3:
+			System.out.println("Please enter your Phone Number.");
+			int phoneNumber = sc.nextInt();
 			// setPhoneNumber();
 		case 4:
+			System.out.println("Please enter your Password.");
+			String password = sc.next();
 			// setPassword();
 		case 5:
 			// exit;
 		}	 	 
 		 
 	 }
+	 
 	 public static void registerCar(Scanner sc) {
 		System.out.println("======================Register Car======================");
 		// Take input from user, see documentation
