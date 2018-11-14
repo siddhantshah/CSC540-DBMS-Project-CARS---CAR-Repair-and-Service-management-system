@@ -2,7 +2,7 @@ package model;
 
 import java.util.Scanner;
 
-public class Customer {
+public class CustomerModel {
 	private
 		int customerId;
 		String name;

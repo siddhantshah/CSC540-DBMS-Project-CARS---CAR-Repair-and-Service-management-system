@@ -1,8 +1,11 @@
 package view;
-
+import model.CustomerModel;
 import java.util.Scanner;
 
 public class Customer {
+	
+	static CustomerModel customerModelObject = new CustomerModel();
+	
 	public static void displayLandingPage(Scanner sc) {
 		System.out.println("======================Customer Menu======================");
 		System.out.println("1. Profile");
@@ -75,7 +78,7 @@ public class Customer {
 		case 1:
 			System.out.println("Please enter your Name.");
 			String name = sc.next();
-			// setName();
+			//customerModelObject.setName(name);
 		case 2:
 			System.out.println("Please enter your Address.");
 			String address = sc.next();
