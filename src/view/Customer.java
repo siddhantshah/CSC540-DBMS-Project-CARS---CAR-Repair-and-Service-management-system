@@ -1,6 +1,10 @@
 package view;
 import model.CustomerModel;
 import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Customer {
 	
@@ -100,6 +104,31 @@ public class Customer {
 	 public static void registerCar(Scanner sc) {
 		System.out.println("======================Register Car======================");
 		// Take input from user, see documentation
+		System.out.println("Enter the following details:");
+		
+		System.out.println("Enter License Plate:");
+		String licensePlate = sc.next();
+		
+		System.out.println("Enter Purchase Date:");
+		String pDate = sc.next();
+		Date purchaseDate = getDate(pDate);
+		
+		System.out.println("Enter Make:");
+		String make = sc.next();
+		
+		System.out.println("Enter Model:");
+		String model = sc.next();
+		
+		System.out.println("Enter Year:");
+		int year = sc.nextInt();
+		
+		System.out.println("Enter Current Mileage:");
+		int currentMileage = sc.nextInt();
+		
+		System.out.println("Enter Last Service Date:");
+		String lsDate = sc.next();
+		Date lastServiceDate = getDate(lsDate);
+		
 		System.out.println("1. Register");
 		System.out.println("2. Cancel");
 		System.out.println("Please select your choice.");
@@ -108,7 +137,8 @@ public class Customer {
 		case 1:
 			// registerWith Details();
 		case 2:
-			// exit/go back;
+			displayLandingPage(sc);
+			break;
 		}	 	 
 		 
 	 }
@@ -123,13 +153,17 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// viewServiceHistory();
+			viewServiceHistory(sc);
+			break;
 		case 2:
-			// scheduleService();
+			scheduleService(sc);
+			break;
 		case 3:
-			// rescheduleServicePage1();
+			rescheduleServicePage2(sc);
+			break;
 		case 4:
-			// exit/go back to displayLandingPage ;
+			displayLandingPage(sc);
+			break;
 		}
 		 
 	 }
@@ -142,13 +176,26 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// exit;
+			service(sc);
+			break;
 		} 
 	 }
 	 
 	 public static void scheduleService(Scanner sc) {
 		System.out.println("======================Schedule Service======================");
 		// Take input and schedule service 
+		System.out.println("Enter the following details:");
+		
+		System.out.println("Enter License Plate:");
+		String licensePlate = sc.next();
+		
+		System.out.println("Enter Current Mileage:");
+		int currentMileage = sc.nextInt();
+		
+		System.out.println("Enter Mechanic Name: (optional)");
+		String mechanic = sc.next();
+		
+		
 		System.out.println("1. Schedule Maintenance");
 		System.out.println("2. Schedule Repair");
 		System.out.println("3. Go Back");
@@ -156,11 +203,14 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// viewServiceHistory();
+			scheduleMaintenancePage1(sc);
+			break;
 		case 2:
-			// scheduleService();
+			scheduleRepairPage1(sc);
+			break;
 		case 3:
-			// exit/go back to displayLandingPage ;
+			service(sc);
+			break;
 		}	 
 		 
 	 }
@@ -174,11 +224,11 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// see documentation;
+			// HEAVY LOGIC;
 		case 2:
-			// exit/go back to displayLandingPage
+			service(sc);
+			break;		
 		}	 
-		 
 	 }
 	 
 	 public static void scheduleMaintenancePage2(Scanner sc) {
@@ -192,9 +242,12 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// see documentation;
+			// Enter Choice (1-2) If the user chooses 1, ask him to pick one of the two dates shown.
+			// If the user chooses 1, create a new service record for maintenance service on the chosen date,
+			// and go back to Customer: Schedule Service page
 		case 2:
-			// exit/go back to displayLandingPage
+			scheduleMaintenancePage1(sc);
+			break;
 		}	 
 	 }
 	 
@@ -289,9 +342,11 @@ public class Customer {
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// View Invoice Details
+			viewInvoiceDetails(sc);
+			break;
 		case 2:
-			// exit/go back to Customer: Landing page
+			displayLandingPage(sc);
+			break;
 		}	
 	 }
 	 
@@ -299,13 +354,36 @@ public class Customer {
 		 // Ask user to input the following detail in order to show the described output followed by an option to go back as shown under “Menu”. A. Service ID
 		System.out.println("======================View Invoice Details======================");
 		// Take input
+		System.out.println("Enter Service Id;");
+		String serviceId = sc.next();
+		// Show detailed description of a service including following details. A. Service ID B. Service Start Date/Time C. Service End Date/Time D. Licence Plate E. Service Type F. Mechanic Name G. Parts Used in service with cost of each part H. Total labor hours I. Labor wages per hour J. Total Service Cost
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// exit/go back to Customer: Landing page
-		}	
-		 
+			invoice(sc);
+			break;
+		}
 	 }
+	 
+	 
+	 
+	 public static Date getDate(String date) {
+		 	
+		 DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
+		 Date d = new Date();
+		 
+	     try { 
+		     d = df.parse(date);
+	      }
+	     
+	      catch(ParseException e) {
+	         System.out.println("Unable to parse " + date);
+	      }
+	     
+		 return d;
+	 }
+	 
+	 
 }
