@@ -4,16 +4,26 @@ import java.util.Scanner;
 
 public class CustomerModel {
 	private
-		int customerId;
+		String customerId;
 		String name;
 		int phoneNumber;
 		String address;
+		String password;
 		
-		public int getCustomerId() {
+		
+		public CustomerModel(String customerId){
+			
+		}
+		
+		public static void viewProfile() {
+			String query = "SELECT customerId, name, address, email, phoneNmuber, licensePlate FROM Customer c, Owns o WHERE c.customerId="+ + "c.customerId=o.customerId";
+		}
+		
+		public String getCustomerId() {
 			return customerId;
 		}
 		
-		public void setCustomerId(int customerId) {
+		public void setCustomerId(String customerId) {
 			this.customerId = customerId;
 		}
 		

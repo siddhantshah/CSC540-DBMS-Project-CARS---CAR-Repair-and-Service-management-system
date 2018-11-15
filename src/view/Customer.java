@@ -1,5 +1,5 @@
 package view;
-import model.CustomerModel;
+//import model.CustomerModel;
 import java.util.Scanner;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -7,9 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Customer {
-	
-	static CustomerModel customerModelObject = new CustomerModel();
-	
+	private
+		static String customerId;
+		static String name;
+		static int phoneNumber;
+		static String address;
+		static String password;	
+
 	public static void displayLandingPage(Scanner sc) {
 		System.out.println("======================Customer Menu======================");
 		System.out.println("1. Profile");
@@ -52,13 +56,16 @@ public class Customer {
 			updateProfile(sc);
 			break;
 		case 3:
-			// go back to customer landing page
+			displayLandingPage(sc);
+			break;
 		}	 
 	 }
 	 
 	 public static void viewProfile(Scanner sc) {
 		System.out.println("======================View Profile======================");
 		// Display the following details followed by the menu. A. Customer ID B. Name C. Address D. Email Address E. Phone Number F. List of All Cars (and their details)
+		String query = "SELECT customerId, name, address, email, phoneNmuber, licensePlate FROM Customer c, Owns o WHERE c.customerId="+customerId+"AND c.customerId=o.customerId";
+		// Execute query
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
@@ -69,6 +76,7 @@ public class Customer {
 		}	 	 
 		 
 	 }
+	 
 	 public static void updateProfile(Scanner sc) {
 		System.out.println("======================Update Profile======================");
 		System.out.println("1. Update Name");
@@ -76,27 +84,38 @@ public class Customer {
 		System.out.println("3. Update Phone Number");
 		System.out.println("4. Update Password");
 		System.out.println("5. Go Back");
+		String query;
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
 			System.out.println("Please enter your Name.");
 			String name = sc.next();
-			//customerModelObject.setName(name);
+			query = "UPDATE Customer SET name=" + name + " WHERE customerId=" + customerId;
+			updateProfile(sc);
+			// Execute query
+			break;
 		case 2:
 			System.out.println("Please enter your Address.");
 			String address = sc.next();
-			// setAddress();
+			query = "UPDATE Customer SET address=" + address + " WHERE customerId=" + customerId;
+			updateProfile(sc);
+			break;
 		case 3:
 			System.out.println("Please enter your Phone Number.");
 			int phoneNumber = sc.nextInt();
-			// setPhoneNumber();
+			query = "UPDATE Customer SET phoneNumber=" + phoneNumber + " WHERE customerId=" + customerId;
+			updateProfile(sc);
+			break;
 		case 4:
 			System.out.println("Please enter your Password.");
 			String password = sc.next();
-			// setPassword();
+			query = "UPDATE Customer SET password=" + password + " WHERE customerId=" + customerId;
+			updateProfile(sc);
+			break;
 		case 5:
-			// exit;
+			viewProfile(sc);
+			break;
 		}	 	 
 		 
 	 }
@@ -125,17 +144,22 @@ public class Customer {
 		System.out.println("Enter Current Mileage:");
 		int currentMileage = sc.nextInt();
 		
-		System.out.println("Enter Last Service Date:");
+		System.out.println("Enter Last Service Date (Optional):");
 		String lsDate = sc.next();
+		if(lsDate=="") lsDate=null;
 		Date lastServiceDate = getDate(lsDate);
 		
 		System.out.println("1. Register");
 		System.out.println("2. Cancel");
 		System.out.println("Please select your choice.");
+		
+		String query;
+		
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// registerWith Details();
+			query = "INSERT INTO Vehicle VALUES " + licensePlate + "," + purchaseDate + "," + make + "," + model + "," + year + "," + currentMileage + "," + lastServiceDate;
+			// Execute query
 		case 2:
 			displayLandingPage(sc);
 			break;
@@ -171,6 +195,7 @@ public class Customer {
 	 public static void viewServiceHistory(Scanner sc) {
 		System.out.println("======================View Service History======================");
 		// Take input and Display service history
+		// String query = "SELECT * FROM ";
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
@@ -356,6 +381,8 @@ public class Customer {
 		// Take input
 		System.out.println("Enter Service Id;");
 		String serviceId = sc.next();
+		String query = "SELECT serviceId, partId, additionalCharges FROM Service s, Charges c, Invoice i WHERE s.serviceId="+ serviceId + " AND s.serviceId=c.serviceId";
+		// Execute query
 		// Show detailed description of a service including following details. A. Service ID B. Service Start Date/Time C. Service End Date/Time D. Licence Plate E. Service Type F. Mechanic Name G. Parts Used in service with cost of each part H. Total labor hours I. Labor wages per hour J. Total Service Cost
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
