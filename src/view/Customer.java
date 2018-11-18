@@ -1,5 +1,6 @@
 package view;
-//import model.CustomerModel;
+
+import java.sql.*;
 import java.util.Scanner;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -7,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Customer {
+	Statement stmt = null;
+    static ResultSet rs = null;
+	
 	private
 		static String customerId;
 		static String name;
@@ -65,7 +69,22 @@ public class Customer {
 		System.out.println("======================View Profile======================");
 		// Display the following details followed by the menu. A. Customer ID B. Name C. Address D. Email Address E. Phone Number F. List of All Cars (and their details)
 		String query = "SELECT customerId, name, address, email, phoneNmuber, licensePlate FROM Customer c, Owns o WHERE c.customerId="+customerId+"AND c.customerId=o.customerId";
-		// Execute query
+		Object[][] table = new String[1][];
+		table[0] = new String[] { "CustomerId", "Name", "Address", "Email Address" , "Phone Number", "License Plate of Car" };
+		for (Object[] row : table) {
+		    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
+		}
+		try {
+			while(rs.next()) {
+				table[0] = new String[] {rs.getString("customerId"), rs.getString("name"), rs.getString("address"), rs.getString("email"), rs.getString("phoneNumebr"), rs.getString("licensePlate")};
+ 				for (Object[] row : table) {
+					System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
