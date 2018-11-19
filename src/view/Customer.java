@@ -548,8 +548,6 @@ public class Customer {
 		}
 	 }
 	 
-	 
-	 
 	 public static Date getDate(String date) {
 		 	
 		 DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
