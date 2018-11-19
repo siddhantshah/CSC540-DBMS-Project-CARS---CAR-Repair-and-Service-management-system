@@ -1,6 +1,9 @@
 package view;
 //import model.CustomerModel;
 import java.util.Scanner;
+
+import data.DataOps;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -159,7 +162,7 @@ public class Customer {
 		switch(choice) {
 		case 1:
 			query = "INSERT INTO Vehicle VALUES " + licensePlate + "," + purchaseDate + "," + make + "," + model + "," + year + "," + currentMileage + "," + lastServiceDate;
-			// Execute query
+			DataOps.getInstance().insertInto(query);
 		case 2:
 			displayLandingPage(sc);
 			break;
