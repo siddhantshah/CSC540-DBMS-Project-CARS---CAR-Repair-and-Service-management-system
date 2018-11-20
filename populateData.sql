@@ -258,6 +258,22 @@ INSERT INTO Has(serviceCenterId,partId,currentQuantity,minimumQuantityThreshold,
 INSERT INTO Has(serviceCenterId,partId,currentQuantity,minimumQuantityThreshold,minimumOrderThreshold) VALUES(S0002,57,16,13,5);
 
 
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(1,null,'Completed',TIMESTAMP '2018-09-10 10:00:00',557279280,3);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(2,null,'Completed',TIMESTAMP '2018-02-25 09:00:00',557279281,2);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(3,null,'Completed',TIMESTAMP '2017-10-15 08:00:00',183683346,1);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(4,null,'Completed',TIMESTAMP '2018-08-06 08:00:00',557279282,6);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(5,null,'Completed',TIMESTAMP '2018-05-15 10:30:00',557279283,2);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(6,null,'Completed',TIMESTAMP '2018-01-28 12:00:00',557279283,1);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(7,null,'Completed',TIMESTAMP '2018-02-11 08:30:00',557279281,1);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(8,null,'Completed',TIMESTAMP '2017-12-10 09:30:00',557279281,3);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(9,null,'Completed',TIMESTAMP '2017-01-20 10:00:00',557279281,2);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(10,null,'Completed',TIMESTAMP '2018-02-11 08:30:00',187658163,1);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(11,null,'Completed',TIMESTAMP '2016-11-05 09:00:00',401671897,9);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(12,null,'Completed',TIMESTAMP '2017-09-01 09:00:00',590424694,2);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(13,null,'Completed',TIMESTAMP '2014-06-15 08:30:00',310773348,1);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(14,null,'Completed',TIMESTAMP '2016-11-11 08:30:00',310773348,1);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(15,null,'Completed',TIMESTAMP '2016-01-02 14:00:00',401671897,8);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(15,null,'Completed',TIMESTAMP '2015-09-30 11:00:00',401671897,4);
 
 
 
