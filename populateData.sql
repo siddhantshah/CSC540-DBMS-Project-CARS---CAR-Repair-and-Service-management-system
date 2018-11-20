@@ -273,7 +273,25 @@ INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfSe
 INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(13,null,'Completed',TIMESTAMP '2014-06-15 08:30:00',310773348,1);
 INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(14,null,'Completed',TIMESTAMP '2016-11-11 08:30:00',310773348,1);
 INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(15,null,'Completed',TIMESTAMP '2016-01-02 14:00:00',401671897,8);
-INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(15,null,'Completed',TIMESTAMP '2015-09-30 11:00:00',401671897,4);
+INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(16,null,'Completed',TIMESTAMP '2015-09-30 11:00:00',401671897,4);
+
+
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(3,1,'XYZ-5643',1001);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(2,2,'XYZ-5643',1001);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(1,3,'XYZ-5643',1001);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(6,4,'AHS-3132',1001);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(2,5,'AHS-3132',1001);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(1,6,'AHS-3132',1001);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(1,7,'IRM-1212',1002);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(3,8,'IRM-1212',1002);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(2,9,'IRM-1212',1002);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(1,10,'DEL-8888',1003);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(9,11,'DEL-8888',1003);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(2,12,'P11-212A',1004);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(1,13,'P11-212A',1004);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(1,14,'WIM-BLE5',1004);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(8,15,'WIM-BLE5',1004);
+INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(4,16,'WIM-BLE5',1004);
 
 
 
