@@ -2,7 +2,7 @@ package view;
 
 import java.sql.*;
 import java.util.Scanner;
-
+import helper.Helper;
 import data.DataOps;
 
 import java.text.DateFormat;
@@ -432,6 +432,7 @@ public class Customer {
 		switch(choice) {
 		case 1:
 			// Engine knock
+			scheduleRepairHelper(customerId, licensePlate, prefMechId, );
 		case 2:
 			// Car drifts in a particular direction
 		case 3:
