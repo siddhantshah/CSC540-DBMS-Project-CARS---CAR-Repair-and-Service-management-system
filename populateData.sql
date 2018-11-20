@@ -294,9 +294,27 @@ INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(8,15,'
 INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(4,16,'WIM-BLE5',1004);
 
 
-
-
-
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(1,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(2,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(3,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(4,0.5,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(5,1,60,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(6,1,60,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(7,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(8,1,60,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(9,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(10,1,60,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(11,0.5,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(12,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(13,1,60,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(14,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(15,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(16,0.25,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(17,0.5,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(18,0.5,50,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(19,1,60,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(20,1,60,"null");
+INSERT INTO BasicService(basicServiceId,hoursRequired,laborChargeRate,description) VALUES(21,0.25,50,"null");
 
 
 
