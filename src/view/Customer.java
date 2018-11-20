@@ -12,16 +12,16 @@ import java.util.Date;
 
 public class Customer {
 	Statement stmt = null;
-    static ResultSet rs = null;
+    ResultSet rs = null;
 	
 	private
-		static String customerId;
-		static String name;
-		static int phoneNumber;
-		static String address;
-		static String password;	
+		String customerId;
+		String name;
+		int phoneNumber;
+		String address;
+		String password;
 
-	public static void displayLandingPage(Scanner sc) {
+	public void displayLandingPage(Scanner sc) {
 		System.out.println("======================Customer Menu======================");
 		System.out.println("1. Profile");
 		System.out.println("2. Register Car");
@@ -44,11 +44,12 @@ public class Customer {
 			invoice(sc);
 			break;
 		case 5:
+			customerId = null;
 			// logout and return to home page
 		}
 	}
 	
-	 public static void displayProfilePage(Scanner sc) {
+	 public void displayProfilePage(Scanner sc) {
 		System.out.println("======================Profile Menu======================");
 		System.out.println("1. View Profile");
 		System.out.println("2. Update Profile");
@@ -68,7 +69,7 @@ public class Customer {
 		}	 
 	 }
 	 
-	 public static void viewProfile(Scanner sc) {
+	 public void viewProfile(Scanner sc) {
 		System.out.println("======================View Profile======================");
 		// Display the following details followed by the menu. A. Customer ID B. Name C. Address D. Email Address E. Phone Number F. List of All Cars (and their details)
 		String query = "SELECT customerId, name, address, email, phoneNmuber, licensePlate FROM Customer c, Owns o WHERE c.customerId="+customerId+"AND c.customerId=o.customerId";
@@ -99,7 +100,7 @@ public class Customer {
 		 
 	 }
 	 
-	 public static void updateProfile(Scanner sc) {
+	 public void updateProfile(Scanner sc) {
 		System.out.println("======================Update Profile======================");
 		System.out.println("1. Update Name");
 		System.out.println("2. Update Address");
@@ -142,7 +143,7 @@ public class Customer {
 		 
 	 }
 	 
-	 public static void registerCar(Scanner sc) {
+	 public void registerCar(Scanner sc) {
 		System.out.println("======================Register Car======================");
 		// Take input from user, see documentation
 		System.out.println("Enter the following details:");
@@ -208,7 +209,7 @@ public class Customer {
 		 
 	 }
 	 
-	 public static void service(Scanner sc) {
+	 public void service(Scanner sc) {
 		System.out.println("======================Service======================");
 		System.out.println("1. View Service History");
 		System.out.println("2. Schedule Service");
@@ -233,7 +234,7 @@ public class Customer {
 		 
 	 }
 		
-	 public static void viewServiceHistory(Scanner sc) {
+	 public void viewServiceHistory(Scanner sc) {
 		System.out.println("======================View Service History======================");
 		String query = null;
 		String mechname = null;
@@ -284,7 +285,7 @@ public class Customer {
 		} 
 	 }
 	 
-	 public static void scheduleService(Scanner sc) {
+	 public void scheduleService(Scanner sc) {
 		System.out.println("======================Schedule Service======================");
 		// Take input and schedule service 
 		System.out.println("Enter the following details:");
@@ -344,7 +345,7 @@ public class Customer {
 		 
 	 }
 
-	 public static void scheduleMaintenancePage1(Scanner sc, String email , String license, int mileage, int prefMechId) {
+	 public void scheduleMaintenancePage1(Scanner sc, String email , String license, int mileage, int prefMechId) {
 		System.out.println("======================Schedule Maintenance Page 1======================");
 		// Take input and schedule service 
 		String query = "SELECT Count(*) AS valid FROM Vehicle WHERE licensePlate = "+ license;
@@ -387,7 +388,7 @@ public class Customer {
 		}	 
 	 }
 	 
-	 public static void scheduleMaintenancePage2(Scanner sc, String email , String license, int mileage, int prefMechId, int mechId) {
+	 public void scheduleMaintenancePage2(Scanner sc, String email , String license, int mileage, int prefMechId, int mechId) {
 		 // Display the two identified service dates and mechanic name found based on the inputs in the
 		 // previous page to the user, followed by the menu.
 		System.out.println("======================Schedule Maintenance Page 2======================");
@@ -415,7 +416,7 @@ public class Customer {
 		}	 
 	 }
 	 
-	 public static void scheduleRepairPage1(Scanner sc, String email , String license, int mileage, int prefMechId) {
+	 public void scheduleRepairPage1(Scanner sc, String email , String license, int mileage, int prefMechId) {
 		 // Display the menu to allow the user to pick on of the possible problems.
 		System.out.println("======================Schedule Repair Page 1======================");
 		System.out.println("1. Engine knock");
@@ -449,7 +450,7 @@ public class Customer {
 		 
 	 }
 	 
-	 public static void scheduleRepairPage2(Scanner sc) {
+	 public void scheduleRepairPage2(Scanner sc) {
 		// Display the diagnostic report and the two identified service dates and mechanic name found based on the inputs in the previous page to the user, followed by the menu.	 
 		System.out.println("======================Schedule Repair Page 2======================");
 		System.out.println("1. Repair on Date");
@@ -464,7 +465,7 @@ public class Customer {
 		}	 
 	 }
 	 
-	 public static void rescheduleServicePage1(Scanner sc) {
+	 public void rescheduleServicePage1(Scanner sc) {
 		 // Display the following details for all upcoming services for this customer, followed by the menu
 		 // A. License Plate B. Service ID C. Service Date D. Service Type (Maintenance/Re pair) E. Service Details (Service A/B/C or Problem)
 	 	System.out.println("======================Reschedule Service Page 1======================");
@@ -498,7 +499,7 @@ public class Customer {
 		}	
 		 
 	 }
-	 public static void rescheduleServicePage2(Scanner sc) {
+	 public void rescheduleServicePage2(Scanner sc) {
 		 // Display the two identified service dates and mechanic name, followed by the menu.
 		 	System.out.println("======================Reschedule Service Page 2======================");
 			System.out.println("1. Reschedule Date");
@@ -514,7 +515,7 @@ public class Customer {
 		 
 	 }
 	 
-	 public static void invoice(Scanner sc) {
+	 public void invoice(Scanner sc) {
 		 // Display the following details for all the services that are complete followed by the menu. A. Service ID B. Service Start Date/Time
 		 // C. Service End Date/Time D. Licence Plate E. Service Type F. Mechanic Name G. Total
 		System.out.println("======================Invoice======================");
@@ -532,7 +533,7 @@ public class Customer {
 		}	
 	 }
 	 
-	 public static void viewInvoiceDetails(Scanner sc) {
+	 public void viewInvoiceDetails(Scanner sc) {
 		 // Ask user to input the following detail in order to show the described output followed by an option to go back as shown under “Menu”. A. Service ID
 		System.out.println("======================View Invoice Details======================");
 		// Take input
@@ -551,7 +552,7 @@ public class Customer {
 		}
 	 }
 	 
-	 public static Date getDate(String date) {
+	 public Date getDate(String date) {
 		 	
 		 DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
 		 Date d = new Date();
