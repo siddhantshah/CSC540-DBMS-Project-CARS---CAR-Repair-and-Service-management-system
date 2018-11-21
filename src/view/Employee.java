@@ -16,10 +16,14 @@ public class Employee {
     static ResultSet rs = null;
 	
 	private
-		static String employeeId;
+		static int employeeId;
 		static String serviceCenterId;
 		static String name;
 		
+		
+	public Employee(int employeeId) {
+		this.employeeId = employeeId;
+	}	
 	
 	public static void receptionistLandingPage(Scanner sc) {
 		System.out.println("======================Receptionist Menu======================");

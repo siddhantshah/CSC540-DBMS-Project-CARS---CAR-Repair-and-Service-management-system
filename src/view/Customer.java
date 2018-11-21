@@ -15,11 +15,16 @@ public class Customer {
     ResultSet rs = null;
 	
 	private
-		String customerId;
+		int customerId;
 		String name;
 		int phoneNumber;
 		String address;
 		String password;
+		
+		
+	public Customer(int customerId) {
+		this.customerId = customerId;
+	}
 
 	public void displayLandingPage(Scanner sc) {
 		System.out.println("======================Customer Menu======================");
