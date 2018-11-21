@@ -11,15 +11,22 @@ public class MainMenu extends AbstractMenu{
 		System.out.println("1. Login");
 		System.out.println("2. Sign Up");
 		System.out.println("3. Exit");
-		System.out.print("Select 1,2, or 3 and press enter... ");
+		System.out.println("Select 1,2, or 3 and press enter... ");
+		System.out.println();
 		int option = sc.nextInt();
 		switch(option) {
-		case 1:
-			//Login Screen;
-		case 2:
+			case 1:
+				LoginMenu m = new LoginMenu();
+				m.display(sc);
+				break;
+			case 2:
 			// Sign up User;
-		case 3:
-			//Exit
+				break;
+			case 3:
+				break;
+				
+			default:
+				return;
 		}
 		
 	}
