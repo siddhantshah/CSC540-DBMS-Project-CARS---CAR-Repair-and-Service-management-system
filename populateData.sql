@@ -1,8 +1,8 @@
 INSERT INTO ServiceCenter(serviceCenterId,name,address,phoneNumber) VALUES(1,'Downtown Auto Care','437 Fayetteville St., Raleigh, NC 27601','1.800.899.9999');
 INSERT INTO ServiceCenter(serviceCenterId,name,address,phoneNumber) VALUES(2,'Express Auto Shop','201 N Tryon St, Charlotte, NC 28202','1.704.333.1555');
 
-INSERT INTO DISTRIBUTOR(distributorId,name) VALUES(1001,'D1');
-INSERT INTO DISTRIBUTOR(distributorId,name) VALUES(1002,'D2');
+INSERT INTO Distributor(distributorId) VALUES(1001);
+INSERT INTO Distributor(distributorId) VALUES(1002);
 
 INSERT INTO Employee(employeeId,name,phoneNumber,address,email,startDate,loginId) VALUES(950932130,'Larry Cohen','316-978-5494','1979 Henry Street, Raleigh, NC 27606','lacohen@acme.com','2016-08-15','lacohen@acme.com');
 INSERT INTO Employee(employeeId,name,phoneNumber,address,email,startDate,loginId) VALUES(634622236,'Willis Martin','213-988-2011','465 Aviation Way, Raleigh, NC 27601','wimartin@acme.com','2017-12-04','wimartin@acme.com');
@@ -51,20 +51,20 @@ INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(2,310773348);
 INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(2,983204784);
 INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(2,187658163);
 
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('lacohen@acme.com','password','Manager');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('wimartin@acme.com','password','Receptionist');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('jagloss@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('anfreeman@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('erfowler@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('rorichmond@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('pefitzpatrick@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('rophillips@acme.com','password','Manager');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('deholmes@acme.com','password','Receptionist');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('duesparza@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('chpudilo@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('jarivera@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('wimorton@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('rihenderson@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('lacohen@acme.com','password','Manager');
+INSERT INTO Users VALUES('wimartin@acme.com','password','Receptionist');
+INSERT INTO Users VALUES('jagloss@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('anfreeman@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('erfowler@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('rorichmond@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('pefitzpatrick@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('rophillips@acme.com','password','Manager');
+INSERT INTO Users VALUES('deholmes@acme.com','password','Receptionist');
+INSERT INTO Users VALUES('duesparza@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('chpudilo@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('jarivera@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('wimorton@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('rihenderson@acme.com','password','Mechanic');
 
 INSERT INTO Inventory(partId,name,unitprice,warranty,make) VALUES(1,'Air Filter',11,null,'Toyota');
 INSERT INTO Inventory(partId,name,unitprice,warranty,make) VALUES(2,'Air Filter',59,null,'Honda');
@@ -558,10 +558,10 @@ INSERT INTO Uses(basicServiceId,partId,quantity,make,model) VALUES(21,56,1,'Hond
 INSERT INTO Uses(basicServiceId,partId,quantity,make,model) VALUES(21,57,1,'Nissan','Altima');
 INSERT INTO Uses(basicServiceId,partId,quantity,make,model) VALUES(21,57,1,'Nissan','Rogue');
 
-Insert into users values('ethanhunt@gmail.com','password','Customer');
-Insert into users values('jarvis@gmail.com','password','Customer');
-Insert into users values('lovestory@gmail.com','password','Customer');
-Insert into users values('venus@gmail.com','password','Customer');
+Insert into Userss values('ethanhunt@gmail.com','password','Customer');
+Insert into Userss values('jarvis@gmail.com','password','Customer');
+Insert into Userss values('lovestory@gmail.com','password','Customer');
+Insert into Userss values('venus@gmail.com','password','Customer');
 
 Insert into owns values(1001,'XYZ-5643');
 Insert into owns values(1001,'AHS-3132');
