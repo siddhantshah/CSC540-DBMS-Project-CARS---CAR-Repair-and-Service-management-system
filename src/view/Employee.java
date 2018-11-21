@@ -9,23 +9,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
+import data.DataOps;
+import helper.Helper;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Employee {
 	
 	Statement stmt = null;
-    static ResultSet rs = null;
+    ResultSet rs = null;
 	
 	private
-		static int employeeId;
-		static String serviceCenterId;
-		static String name;
+		 int employeeId;
+		 String serviceCenterId;
+		 String name;
 		
 		
 	public Employee(int employeeId) {
 		this.employeeId = employeeId;
 	}	
 	
-	public static void receptionistLandingPage(Scanner sc) {
+	public  void receptionistLandingPage(Scanner sc) {
 		System.out.println("======================Receptionist Menu======================");
 		System.out.println("1. Profile");
 		System.out.println("2. View Customer Profile");
@@ -73,7 +77,7 @@ public class Employee {
 	}
 	
 	
-	public static void managerLandingPage(Scanner sc) {
+	public  void managerLandingPage(Scanner sc) {
 		System.out.println("======================Manager Menu======================");
 		System.out.println("1. Profile");
 		System.out.println("2. View Customer Profile");
@@ -129,7 +133,7 @@ public class Employee {
 		}
 	}
 	
-	public static void receptionistProfile(Scanner sc) {
+	public  void receptionistProfile(Scanner sc) {
 		System.out.println("======================Employee Profile======================");
 		// Display profile
 		System.out.println("1. View Profile");
@@ -151,7 +155,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void managerProfile(Scanner sc) {
+	public  void managerProfile(Scanner sc) {
 		System.out.println("======================Employee Profile======================");
 		// Display profile
 		System.out.println("1. View Profile");
@@ -174,7 +178,7 @@ public class Employee {
 	 }
 	
 	
-	public static void receptionistViewProfile(Scanner sc) {
+	public  void receptionistViewProfile(Scanner sc) {
 		System.out.println("======================View Employee Profile======================");
 		// Display profile
 		String query = "SELECT E.employeeId, E.name, E.address, E.email, E.phoneNumebr, W.serviceCenterId"
@@ -211,7 +215,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void managerViewProfile(Scanner sc) {
+	public  void managerViewProfile(Scanner sc) {
 		System.out.println("======================View Employee Profile======================");
 		// Display profile
 		String query = "SELECT E.employeeId, E.name, E.address, E.email, E.phoneNumebr, W.serviceCenterId"
@@ -249,7 +253,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistUpdateProfile(Scanner sc) {
+	public  void receptionistUpdateProfile(Scanner sc) {
 		System.out.println("======================Update Profile======================");
 		System.out.println("1. Update Name");
 		System.out.println("2. Update Address");
@@ -298,7 +302,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void managerUpdateProfile(Scanner sc) {
+	public  void managerUpdateProfile(Scanner sc) {
 		System.out.println("======================Update Profile======================");
 		System.out.println("1. Update Name");
 		System.out.println("2. Update Address");
@@ -347,7 +351,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistViewCustomerProfile(Scanner sc) {
+	public  void receptionistViewCustomerProfile(Scanner sc) {
 		System.out.println("======================View Customer Profile======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
@@ -408,7 +412,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void managerViewCustomerProfile(Scanner sc) {
+	public  void managerViewCustomerProfile(Scanner sc) {
 		System.out.println("======================View Customer Profile======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
@@ -469,7 +473,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistRegisterCar(Scanner sc) {
+	public  void receptionistRegisterCar(Scanner sc) {
 		System.out.println("======================Register Car======================");
 		
 		System.out.println("A. Customer Email Address");
@@ -523,7 +527,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistServiceHistory(Scanner sc) {
+	public  void receptionistServiceHistory(Scanner sc) {
 		System.out.println("======================Service History======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
@@ -590,7 +594,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistScheduleService(Scanner sc) {
+	public  void receptionistScheduleService(Scanner sc) {
 		System.out.println("======================Schedule Service======================");
 		
 		System.out.println("A. Customer Email Address");
@@ -643,7 +647,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistScheduleMaintainencePage1(Scanner sc, String email , String license, int mileage, int prefMechId) {
+	public  void receptionistScheduleMaintainencePage1(Scanner sc, String email , String license, int mileage, int prefMechId) {
 		System.out.println("======================Schedule Maintainence Page 1======================");
 		String query = "SELECT Count(*) AS valid FROM Vehicle WHERE licensePlate = "+ license;
 		try {
@@ -686,7 +690,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistScheduleMaintainencePage2(Scanner sc, String email , String license, int mileage, int prefMechId, int mechId) {
+	public  void receptionistScheduleMaintainencePage2(Scanner sc, String email , String license, int mileage, int prefMechId, int mechId) {
 		System.out.println("======================Schedule Maintainence Page 2======================");
 		Date appointmentDate;
 		System.out.println("Select Date Of Appointment");
@@ -708,7 +712,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistScheduleRepairPage1(Scanner sc,  String email , String license, int mileage, int PrefMechId) {
+	public  void receptionistScheduleRepairPage1(Scanner sc,  String email , String license, int mileage, int PrefMechId) {
 		System.out.println("======================Schedule Repair Page 1======================");
 		System.out.println("1. Engine Knock");
 		System.out.println("2. Car Drifts in a Particular Direction");
@@ -748,7 +752,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistScheduleRepairPage2(Scanner sc) {
+	public  void receptionistScheduleRepairPage2(Scanner sc) {
 		System.out.println("======================Schedule Repair Page 2======================");
 		//display
 		System.out.println("1. Repair On Date");
@@ -766,7 +770,7 @@ public class Employee {
 	 }
 	
 	
-	public static void receptionistReScheduleServicePage1(Scanner sc) {
+	public  void receptionistReScheduleServicePage1(Scanner sc) {
 		System.out.println("======================Reschedule Service Page 1======================");
 		System.out.println("Customer Email Address");
 		String email = sc.nextLine();
@@ -799,7 +803,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistReScheduleServicePage2(Scanner sc) {
+	public  void receptionistReScheduleServicePage2(Scanner sc) {
 		System.out.println("======================Reschedule Service Page 2======================");
 		//display
 		System.out.println("1. Reschdule Date");
@@ -816,7 +820,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistInvoices(Scanner sc) {
+	public  void receptionistInvoices(Scanner sc) {
 		System.out.println("======================invoices======================");
 		System.out.println("Customer Email Address");
 		String email = sc.nextLine();
@@ -830,7 +834,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistDailyTaskUpdateInventory(Scanner sc) {
+	public  void receptionistDailyTaskUpdateInventory(Scanner sc) {
 		System.out.println("======================Daily Task Uodate Inventory======================");
 		//display
 		System.out.println("1. Go Back");
@@ -844,7 +848,7 @@ public class Employee {
 		 
 	 }
 	
-	public static void receptionistDailyTaskRecordDeliveries(Scanner sc) {
+	public  void receptionistDailyTaskRecordDeliveries(Scanner sc) {
 		System.out.println("======================Daily Task Record Deliveries======================");
 		System.out.println("1. Enter Order ID (CSV)");
 		System.out.println("2. Go Back");
@@ -860,7 +864,7 @@ public class Employee {
 		 
 	 }
 	
-	 public static void managerAddNewEmployees(Scanner sc) {
+	 public  void managerAddNewEmployees(Scanner sc) {
 		System.out.println("======================Add Employess Menu======================");
 		System.out.println("A. Name");
 		String name = sc.nextLine();
@@ -898,7 +902,7 @@ public class Employee {
 		}	 
 	 }
 	 
-	 public static void managerPayroll(Scanner sc) {
+	 public  void managerPayroll(Scanner sc) {
 			System.out.println("======================Payroll======================");
 			System.out.println("Employee ID");
 			String employeeid = sc.nextLine();
@@ -910,7 +914,7 @@ public class Employee {
 			}	 
 		 }
 	 
-	 public static void managerInventory(Scanner sc) {
+	 public  void managerInventory(Scanner sc) {
 			System.out.println("======================Inventory======================");
 			//display
 			System.out.println("1. Go Back");
@@ -921,7 +925,7 @@ public class Employee {
 			}	 
 		 }
 	 
-	 public static void managerOrders(Scanner sc) {
+	 public  void managerOrders(Scanner sc) {
 			System.out.println("======================Orders======================");
 			System.out.println("1. Order History");
 			System.out.println("2. New Order");
@@ -939,7 +943,7 @@ public class Employee {
 			}	 
 		 }
 	 
-	 public static void managerOrderHistory(Scanner sc) {
+	 public  void managerOrderHistory(Scanner sc) {
 			System.out.println("======================Order History======================");
 			//display
 			System.out.println("1. Go Back");
@@ -950,7 +954,7 @@ public class Employee {
 			}	 
 		 }
 	 
-	 public static void managerNewOrder(Scanner sc) {
+	 public  void managerNewOrder(Scanner sc) {
 			System.out.println("======================New Order======================");
 			System.out.println("A. Part ID");
 			String partid = sc.nextLine();
@@ -967,7 +971,7 @@ public class Employee {
 			}	 
 		 }
 	 
-	 public static void managerNotifications(Scanner sc) {
+	 public  void managerNotifications(Scanner sc) {
 			System.out.println("======================Notifications======================");
 			//display
 			System.out.println("1. Order ID");
@@ -981,7 +985,7 @@ public class Employee {
 			}
 		 }
 	 
-	 public static void managerNotificationsDetail(Scanner sc) {
+	 public  void managerNotificationsDetail(Scanner sc) {
 			System.out.println("======================Notifications Detail======================");
 			//display
 			System.out.println("1. Go Back");
@@ -992,7 +996,7 @@ public class Employee {
 			}
 		 }
 	 
-	 public static void managerNewCarModel(Scanner sc) {
+	 public  void managerNewCarModel(Scanner sc) {
 			System.out.println("======================New Car Model======================");
 			System.out.println("A. Make");
 			String make = sc.nextLine();
@@ -1061,7 +1065,7 @@ public class Employee {
 			}
 		 }
 	 
-	 public static void managerCarServiceDetails(Scanner sc) {
+	 public  void managerCarServiceDetails(Scanner sc) {
 			System.out.println("======================Manager Car Service Details======================");
 			System.out.println("A. Make");
 			String make = sc.nextLine();
@@ -1118,9 +1122,47 @@ public class Employee {
 			}
 		 }
 	 
-	 public static void managerServiceHistory(Scanner sc) {
+	 public  void managerServiceHistory(Scanner sc) {
 			System.out.println("======================Manager Service History======================");
-			String query = "SELECT B.appointmentId, FROM Books B, Appointment A WHERE";
+			String query = null;
+			String mechname=null;
+			
+			query = "SELECT B.appointmentId, C.name, B.licensePlate, A.typeOfService, A.mechId, A.timeIn, A.timeOut, A.Status FROM Books B, Appointment A, Customer C"
+					+ " WHERE A.appointmentId = B.appointmentId, A.customerId = C.customerId";
+			
+			Object[][] table = new String[1][];
+			table[0] = new String[] { "Appointment Id", "Customer Name", "License Plate", "Service Type", "Mechanic Name" , "Service Start Date", "Service End Date", "Service Status"};
+
+			for (Object[] row : table) {
+			    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
+			}
+			
+			try {
+				while(rs.next()) {
+					String serviceType = null;
+					query = "SELECT name FROM Employee WHERE employeeId = " + rs.getInt("mechId");
+					ResultSet rs1 = null;
+					while(rs1.next()) {
+						mechname = rs1.getString("name");
+					}
+					
+					if(rs.getString("typeOfService") == "Maintenance") {
+						query = "SELECT serviceType FROM Maintenance WHERE serviceId = " + rs.getInt("serviceId");
+						while(rs1.next()) {
+							serviceType = rs1.getString("serviceType");
+						}
+					}
+					
+					table[0] = new String[] { rs.getString("appointmentId"), rs.getString("licensePlate"), rs.getString("typeOfService"), serviceType, mechname,  rs.getString("timeIn"), rs.getString("timeOut"), rs.getString("Status")};
+		
+					for (Object[] row : table) {
+					    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("1. Go Back");
 			System.out.println("Please select your choice.");
 			int choice = sc.nextInt();
@@ -1130,106 +1172,35 @@ public class Employee {
 			}
 		 }
 	 
-	 public static void managerInvoices(Scanner sc) {
+	 public  void managerInvoices(Scanner sc) {
 			System.out.println("======================Manager Invoices======================");
 			try {
-				int count = 0;
-				
-				
-				String query = "SELECT Count(*) AS totalCount FROM Inventory";
-				
-				while(rs.next()) {
-					count = rs.getInt("totalCount");
+				String query = null;
+			    query = "SELECT appointmentId from Appointment";
+			    rs = DataOps.getInstance().retrieve(query);
+			    Object[][] table = new String[1][];
+				table[0] = new String[] { "AppointmentId", "Customer Name", "Start Date" , "License Plate", "Service Type", "Mechanic Name", "Parts Used", "Total cost for parts", "Total Labour Hours", "Total Labour Wages", "Total Service Cost" };
+
+				for (Object[] row : table) {
+				    System.out.format("%35s%35s%35s%35s%35s%35s%35s%50s%35s%35s%35s%35s\n", row);
 				}
-				
-				int[] partsArray = new int[count];
-				int[] partsCostArray = new int[count];
-				
-			    query = "SELECT B.appointmentId, C.name, A.timeIn, A.timeOut, A.typeOfService, B.licensePlate, V.make, V.model, M.serviceTime, E.name"
-						+ "FROM BOOKS B, CUSTOMER C , Maintenance M, Employee E, Appointment A , Vehicle V"
-						+ "WHERE A.mechId = E.employeeId AND B.appointmentId = A.apointmentId AND B.customerId = C.customerId AND"
-						+ "B.serviceId = M.serviceId AND V.licensePlate = B.licensePlate";
-				
 				while(rs.next()) {
-					float totalcost = 0;
-					String sids = null;
-					String make = null;
-					String model = null;
-					String typeOfService = null;
-					int totalDiagnosticFee = 0;
-					float totalHours = 0;
-					float totalLabourCharge = 0;
-					float totalPartsCost = 0;
-					sids = rs.getString("appointmentId");
-					make = rs.getString("make");
-					model = rs.getString("model");
-					typeOfService = rs.getString("typeOfService");
-					ResultSet rs1 = null;
-					if(typeOfService == "Repair") {
-						List<String> sidlist = getList(sids);
-						for(String current:sidlist){
-							  int sid = Integer.parseInt(current);
-							  query = "SELECT diagnosticFee FROM Repair WHERE serviceId = " + sid;
-							  // execute query
-							  while(rs1.next()) {
-								 totalDiagnosticFee = totalDiagnosticFee + rs1.getInt("diagnosticFee");
-							  }
+					int appointmentId = rs.getInt("appointmentId");
+					Map<String, Object> result = new HashMap<String, Object>();
+					Helper helper = new Helper();
+					result = helper.invoiceGenerator(appointmentId);
+					String parts=null;
+					String costs=null;
+					for (Map.Entry<String, Object> entry : result.entrySet()) {
+					    parts = parts + ", "+entry.getKey();
+					    costs = costs + ", "+entry.getValue();
+					}
+					table = new String[1][];
+					table[0] = new String[] { (String)result.get("appointmentId"), (String)result.get("customerName"),(String)result.get("startDate"),(String)result.get("licensePlate"),(String)result.get("serviceType"),(String)result.get("Mechanic Name"),parts,costs,(String)result.get("Total Labour Hours"),(String)result.get("Total Labour Wages"),(String)result.get("Total Service Cost")};
 
-							  query = "SELECT Sum(B.hoursRequired) AS totalHours , Sum(B.laborChargeRate) AS totalLabourCharge FROM Basicservice B, Contains C "
-							  		+ "WHERE C.basicServiceId = B.basicServiceId AND C.serviceID = " + sid + " AND C.make = " + make + " C.model = " + model;
-							  //ResultSet rs1 = null;
-							  while(rs1.next()) {
-								  totalHours = totalHours + rs1.getFloat("totalHours");
-								  totalLabourCharge = totalLabourCharge + (rs1.getInt("totalLabourCharge") *  rs1.getFloat("totalHours"));
-							  }
-							  
-							  query = "SELECT B.basicServiceId FROM Basicservice B, Contains C "
-								  		+ "WHERE C.basicServiceId = B.basicServiceId AND C.serviceID = " + sid + " AND C.make "
-								  				+ "= " + make + " C.model = " + model;
-								  //ResultSet rs1 = null;
-							  while(rs1.next()) {
-								  int basicServiceId = rs1.getInt("basicServiceId");
-								  ResultSet rs2 = null;
-								  query = "SELECT U.partId, U.number FROM Uses U WHERE U.basicServiceId = " + basicServiceId + " AND U.make = " + make + " AND U.model = " + model;
-								  while(rs2.next()) {
-									  partsArray[rs2.getInt("partId")-1] = partsArray[rs2.getInt("partId")-1] + rs2.getInt("number");
-									  ResultSet rs3 = null;
-									  query = "SELECT W.cost FROM Warranty W WHERE W.partId = " + rs2.getInt("partId") + "AND W.make = " + make;
-									  while(rs3.next()) {
-										  partsCostArray[rs2.getInt("partId")-1] = partsCostArray[rs2.getInt("partId")-1] + (rs3.getInt("cost")*rs2.getInt("number"));
-									  }
-								  }
-							  }
-							  
-						}
-						
-						for(int i = 0 ; i < count ; i++) {
-							totalPartsCost = totalPartsCost + partsCostArray[i];
-						}
-						
-						totalcost = totalLabourCharge + totalDiagnosticFee + totalPartsCost;
-						
-					} /*else {
-						// maintenance 
-						  query = "SELECT Sum(B.hoursRequired) AS totalHours , Sum(B.laborChargeRate) AS totalLabourCharge FROM Basicservice B, Contains C "
-						  		+ "WHERE C.basicServiceId = B.basicServiceId AND C.make = " + make + " C.model = " + model;
-						 // ResultSet rs1 = null;
-						  while(rs1.next()) {
-							  totalHours = rs1.getFloat("totalHours");
-							  totalLabourCharge = rs1.getInt("totalLabourCharge");
-						  }
-					}*/
-					
-					/*final Object[][] table = new String[4][];
-					table[0] = new String[] { "foo", "bar", "baz" };
-					table[1] = new String[] { "bar2", "foo2", "baz2" };
-					table[2] = new String[] { "baz3", "bar3", "foo3" };
-					table[3] = new String[] { "foo4", "bar4", "baz4" };
-
-					for (final Object[] row : table) {
-					    System.out.format("%15s%15s%15s\n", row);
-					}*/
-					
+					for (Object[] row : table) {
+					    System.out.format("%15s%15s\n", row);
+					}
 				} 
 				
 				// print here
@@ -1238,8 +1209,6 @@ public class Employee {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			String query2 = "SELECT FROM PARTS P, ";	// complete after repair thing has been thought of
 			
 			System.out.println("1. Go Back");
 			System.out.println("Please select your choice.");
@@ -1250,7 +1219,7 @@ public class Employee {
 			}
 		 }
 	 
-	 public static Date getDate(String date) {
+	 public  Date getDate(String date) {
 		 	
 		 DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
 		 Date d = new Date();
@@ -1266,12 +1235,12 @@ public class Employee {
 		 return d;
 	 }
 	 
-	 public static List getList(String s) {
+	 public  List getList(String s) {
 		 List<String> list = new ArrayList<String>(Arrays.asList(s.split(" , ")));
 		 return list;
 	 }
 	 
-	 public static Date getDateTime(String s) {
+	 public  Date getDateTime(String s) {
 		 DateFormat df = new SimpleDateFormat("dd/mm/yyyy HH:mm");
 		 Date d = new Date();
 		 

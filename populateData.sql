@@ -1,8 +1,8 @@
 INSERT INTO ServiceCenter(serviceCenterId,name,address,phoneNumber) VALUES(1,'Downtown Auto Care','437 Fayetteville St., Raleigh, NC 27601','1.800.899.9999');
 INSERT INTO ServiceCenter(serviceCenterId,name,address,phoneNumber) VALUES(2,'Express Auto Shop','201 N Tryon St, Charlotte, NC 28202','1.704.333.1555');
 
-INSERT INTO DISTRIBUTOR(distributorId,name) VALUES(1001,'D1');
-INSERT INTO DISTRIBUTOR(distributorId,name) VALUES(1002,'D2');
+INSERT INTO Distributor(distributorId) VALUES(1001);
+INSERT INTO Distributor(distributorId) VALUES(1002);
 
 INSERT INTO Employee(employeeId,name,phoneNumber,address,email,startDate,loginId) VALUES(950932130,'Larry Cohen','316-978-5494','1979 Henry Street, Raleigh, NC 27606','lacohen@acme.com','2016-08-15','lacohen@acme.com');
 INSERT INTO Employee(employeeId,name,phoneNumber,address,email,startDate,loginId) VALUES(634622236,'Willis Martin','213-988-2011','465 Aviation Way, Raleigh, NC 27601','wimartin@acme.com','2017-12-04','wimartin@acme.com');
@@ -51,20 +51,20 @@ INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(2,310773348);
 INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(2,983204784);
 INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(2,187658163);
 
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('lacohen@acme.com','password','Manager');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('wimartin@acme.com','password','Receptionist');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('jagloss@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('anfreeman@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('erfowler@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('rorichmond@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('pefitzpatrick@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('rophillips@acme.com','password','Manager');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('deholmes@acme.com','password','Receptionist');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('duesparza@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('chpudilo@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('jarivera@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('wimorton@acme.com','password','Mechanic');
-INSERT INTO User(loginId,password,employeeOrManagerOrReceptionist) VALUES('rihenderson@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('lacohen@acme.com','password','Manager');
+INSERT INTO Users VALUES('wimartin@acme.com','password','Receptionist');
+INSERT INTO Users VALUES('jagloss@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('anfreeman@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('erfowler@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('rorichmond@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('pefitzpatrick@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('rophillips@acme.com','password','Manager');
+INSERT INTO Users VALUES('deholmes@acme.com','password','Receptionist');
+INSERT INTO Users VALUES('duesparza@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('chpudilo@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('jarivera@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('wimorton@acme.com','password','Mechanic');
+INSERT INTO Users VALUES('rihenderson@acme.com','password','Mechanic');
 
 INSERT INTO Inventory(partId,name,unitprice,warranty,make) VALUES(1,'Air Filter',11,null,'Toyota');
 INSERT INTO Inventory(partId,name,unitprice,warranty,make) VALUES(2,'Air Filter',59,null,'Honda');
@@ -558,7 +558,362 @@ INSERT INTO Uses(basicServiceId,partId,quantity,make,model) VALUES(21,56,1,'Hond
 INSERT INTO Uses(basicServiceId,partId,quantity,make,model) VALUES(21,57,1,'Nissan','Altima');
 INSERT INTO Uses(basicServiceId,partId,quantity,make,model) VALUES(21,57,1,'Nissan','Rogue');
 
+Insert into Userss values('ethanhunt@gmail.com','password','Customer');
+Insert into Userss values('jarvis@gmail.com','password','Customer');
+Insert into Userss values('lovestory@gmail.com','password','Customer');
+Insert into Userss values('venus@gmail.com','password','Customer');
+
+Insert into owns values(1001,'XYZ-5643');
+Insert into owns values(1001,'AHS-3132');
+Insert into owns values(1002,'IRM-1212');
+Insert into owns values(1003,'TSW-3462');
+Insert into owns values(1003,'DEL-8888');
+Insert into owns values(1004,'P11-212A');
+Insert into owns values(1004,'WIM-BLE5');
+
+Insert into service values(1);
+Insert into service values(2);
+Insert into service values(3);
+Insert into service values(4);
+Insert into service values(5);
+Insert into service values(6);
+Insert into service values(7);
+Insert into service values(8);
+Insert into service values(9);
+Insert into service values(10);
+
+Insert into repair values(4,'Engine knock',75,'Timing issue');
+Insert into repair values(5,'Car drifts in a particular direction',50,'Wheel alignment issue');
+Insert into repair values(6,'Battery does not hold charge',25,'Battery needs replacement');
+Insert into repair values(7,'Black/unclean exhaust',75,'Bad catalytic convertor and filters');
+Insert into repair values(8,'A/C-Heater not working',50,'Drive belt damaged, coolant not enough, weak battery');
+Insert into repair values(9,'Headlamps/Tail lamps not working',30,'Light assembly damaged');
+Insert into repair values(10,'Check engine light',100,'Gearbox and Torque convertor issue');
+
+Insert into maintenance values(1,'A');
+Insert into maintenance values(2,'B');
+Insert into maintenance values(3,'C');
+
+Insert into contains values(8,4,'Toyota','Corrola');
+Insert into contains values(15,4,'Toyota','Corrola');    
+Insert into contains values(5,4,'Toyota','Corrola');
+Insert into contains values(19,4,'Toyota','Corrola');
+
+Insert into contains values(8,4,'Toyota','Prius');
+Insert into contains values(15,4,'Toyota','Prius');    
+Insert into contains values(5,4,'Toyota','Prius');
+Insert into contains values(19,4,'Toyota','Prius');
+
+Insert into contains values(8,4,'Honda','Civic');
+Insert into contains values(15,4,'Honda','Civic');    
+Insert into contains values(5,4,'Honda','Civic');
+Insert into contains values(19,4,'Honda','Civic');
+
+Insert into contains values(8,4,'Honda','Accord');
+Insert into contains values(15,4,'Honda','Accord');    
+Insert into contains values(5,4,'Honda','Accord');
+Insert into contains values(19,4,'Honda','Accord');
+
+Insert into contains values(8,4,'Nissan','Altima');
+Insert into contains values(15,4,'Nissan','Altima');    
+Insert into contains values(5,4,'Nissan','Altima');
+Insert into contains values(19,4,'Nissan','Altima');
+
+Insert into contains values(8,4,'Nissan','Rogue');
+Insert into contains values(15,4,'Nissan','Rogue');    
+Insert into contains values(5,4,'Nissan','Rogue');
+Insert into contains values(19,4,'Nissan','Rogue');
+
+
+Insert into contains values(20,5,'Toyota','Corrola');
+
+Insert into contains values(20,5,'Toyota','Prius');
+
+Insert into contains values(20,5,'Honda','Civic');
+
+Insert into contains values(20,5,'Honda','Accord');
+
+Insert into contains values(20,5,'Nissan','Altima');
+
+Insert into contains values(20,5,'Nissan','Rogue');
+
+
+Insert into contains values(2,6,'Toyota','Corrola');
+
+Insert into contains values(2,6,'Toyota','Prius');
+
+Insert into contains values(2,6,'Honda','Civic');
+
+Insert into contains values(2,6,'Honda','Accord');
+
+Insert into contains values(2,6,'Nissan','Altima');
+
+Insert into contains values(2,6,'Nissan','Rogue');
+
+Insert into contains values(1,7,'Toyota','Corrola');
+Insert into contains values(12,7,'Toyota','Corrola');    
+Insert into contains values(6,7,'Toyota','Corrola');
+
+Insert into contains values(1,7,'Toyota','Prius');
+Insert into contains values(12,7,'Toyota','Prius');    
+Insert into contains values(6,7,'Toyota','Prius');
+
+Insert into contains values(1,7,'Honda','Civic');
+Insert into contains values(12,7,'Honda','Civic');    
+Insert into contains values(6,7,'Honda','Civic');
+
+Insert into contains values(1,7,'Honda','Accord');
+Insert into contains values(12,7,'Honda','Accord');    
+Insert into contains values(6,7,'Honda','Accord');
+
+Insert into contains values(1,7,'Nissan','Altima');
+Insert into contains values(12,7,'Nissan','Altima');    
+Insert into contains values(6,7,'Nissan','Altima');
+
+Insert into contains values(1,7,'Nissan','Rogue');
+Insert into contains values(12,7,'Nissan','Rogue');    
+Insert into contains values(6,7,'Nissan','Rogue');
+
+
+Insert into contains values(8,8,'Toyota','Corrola');
+Insert into contains values(7,8,'Toyota','Corrola');   
+Insert into contains values(2,8,'Toyota','Corrola');
+
+Insert into contains values(8,8,'Toyota','Prius');
+Insert into contains values(7,8,'Toyota','Prius');   
+Insert into contains values(2,8,'Toyota','Prius');
+
+Insert into contains values(8,8,'Honda','Civic');
+Insert into contains values(7,8,'Honda','Civic');   
+Insert into contains values(2,8,'Honda','Civic');
+
+Insert into contains values(8,8,'Honda','Accord');
+Insert into contains values(7,8,'Honda','Accord');   
+Insert into contains values(2,8,'Honda','Accord');
+
+Insert into contains values(8,8,'Nissan','Altima');
+Insert into contains values(7,8,'Nissan','Altima');   
+Insert into contains values(2,8,'Nissan','Altima');
+
+Insert into contains values(8,8,'Nissan','Rogue');
+Insert into contains values(7,8,'Nissan','Rogue');   
+Insert into contains values(2,8,'Nissan','Rogue');
+
+Insert into contains values(11,9,'Toyota','Corrola');
+Insert into contains values(17,9,'Toyota','Corrola');   
+Insert into contains values(18,9,'Toyota','Corrola');
+
+Insert into contains values(11,9,'Toyota','Prius');
+Insert into contains values(17,9,'Toyota','Prius');   
+Insert into contains values(18,9,'Toyota','Prius');
+
+Insert into contains values(11,9,'Honda','Civic');
+Insert into contains values(17,9,'Honda','Civic');   
+Insert into contains values(18,9,'Honda','Civic');
+
+Insert into contains values(11,9,'Honda','Accord');
+Insert into contains values(17,9,'Honda','Accord');   
+Insert into contains values(18,9,'Honda','Accord');
+
+Insert into contains values(11,9,'Nissan','Altima');
+Insert into contains values(17,9,'Nissan','Altima');   
+Insert into contains values(18,9,'Nissan','Altima');
+
+Insert into contains values(11,9,'Nissan','Rogue');
+Insert into contains values(17,9,'Nissan','Rogue');   
+Insert into contains values(18,9,'Nissan','Rogue');
 
 
 
+Insert into contains values(13,10,'Toyota','Corrola');
+Insert into contains values(10,10,'Toyota','Corrola');    
+Insert into contains values(5,10,'Toyota','Corrola');
+Insert into contains values(19,10,'Toyota','Corrola');
 
+Insert into contains values(13,10,'Toyota','Prius');
+Insert into contains values(10,10,'Toyota','Prius');    
+Insert into contains values(5,10,'Toyota','Prius');
+Insert into contains values(19,10,'Toyota','Prius');
+
+Insert into contains values(13,10,'Honda','Civic');
+Insert into contains values(10,10,'Honda','Civic');   
+Insert into contains values(5,10,'Honda','Civic');
+Insert into contains values(19,10,'Honda','Civic');
+
+Insert into contains values(13,10,'Honda','Accord');
+Insert into contains values(10,10,'Honda','Accord');    
+Insert into contains values(5,10,'Honda','Accord');
+Insert into contains values(19,10,'Honda','Accord');
+
+Insert into contains values(13,10,'Nissan','Altima');
+Insert into contains values(10,10,'Nissan','Altima');   
+Insert into contains values(5,10,'Nissan','Altima');
+Insert into contains values(19,10,'Nissan','Altima');
+
+Insert into contains values(13,10,'Nissan','Rogue');
+Insert into contains values(10,10,'Nissan','Rogue');   
+Insert into contains values(5,10,'Nissan','Rogue');
+Insert into contains values(19,10,'Nissan','Rogue');
+
+Insert into contains values(9,1,'Toyota','Corrola');
+Insert into contains values(7,1,'Toyota','Corrola');
+
+Insert into contains values(9,2,'Toyota','Corrola');
+Insert into contains values(7,2,'Toyota','Corrola');
+Insert into contains values(1,2,'Toyota','Corrola');
+Insert into contains values(12,2,'Toyota','Corrola');
+Insert into contains values(3,2,'Toyota','Corrola');
+Insert into contains values(21,2,'Toyota','Corrola');
+Insert into contains values(15,2,'Toyota','Corrola');
+
+Insert into contains values(9,3,'Toyota','Corrola');
+Insert into contains values(7,3,'Toyota','Corrola');
+Insert into contains values(1,3,'Toyota','Corrola');
+Insert into contains values(12,3,'Toyota','Corrola');
+Insert into contains values(3,3,'Toyota','Corrola');
+Insert into contains values(21,3,'Toyota','Corrola');
+Insert into contains values(15,3,'Toyota','Corrola');
+Insert into contains values(16,3,'Toyota','Corrola');
+Insert into contains values(4,3,'Toyota','Corrola');
+Insert into contains values(14,3,'Toyota','Corrola');
+
+Insert into contains values(9,1,'Toyota','Prius');
+Insert into contains values(7,1,'Toyota','Prius');
+Insert into contains values(12,1,'Toyota','Prius');
+
+Insert into contains values(9,2,'Toyota','Prius');
+Insert into contains values(7,2,'Toyota','Prius');
+Insert into contains values(12,2,'Toyota','Prius');
+Insert into contains values(1,2,'Toyota','Prius');
+Insert into contains values(2,2,'Toyota','Prius');
+Insert into contains values(3,2,'Toyota','Prius');
+Insert into contains values(21,2,'Toyota','Prius');
+Insert into contains values(15,2,'Toyota','Prius');
+
+Insert into contains values(9,3,'Toyota','Prius');
+Insert into contains values(7,3,'Toyota','Prius');
+Insert into contains values(12,3,'Toyota','Prius');
+Insert into contains values(1,3,'Toyota','Prius');
+Insert into contains values(2,3,'Toyota','Prius');
+Insert into contains values(3,3,'Toyota','Prius');
+Insert into contains values(21,3,'Toyota','Prius');
+Insert into contains values(15,3,'Toyota','Prius');
+Insert into contains values(16,3,'Toyota','Prius');
+Insert into contains values(4,3,'Toyota','Prius');
+Insert into contains values(14,3,'Toyota','Prius');
+
+
+Insert into contains values(9,1,'Nissan','Altima');
+Insert into contains values(1,1,'Nissan','Altima');
+Insert into contains values(7,1,'Nissan','Altima');
+Insert into contains values(12,1,'Nissan','Altima');
+
+Insert into contains values(9,2,'Nissan','Altima');
+Insert into contains values(1,2,'Nissan','Altima');
+Insert into contains values(7,2,'Nissan','Altima');
+Insert into contains values(12,2,'Nissan','Altima');
+Insert into contains values(21,2,'Nissan','Altima');
+Insert into contains values(3,2,'Nissan','Altima');
+
+
+Insert into contains values(9,3,'Nissan','Altima');
+Insert into contains values(1,3,'Nissan','Altima');
+Insert into contains values(7,3,'Nissan','Altima');
+Insert into contains values(12,3,'Nissan','Altima');
+Insert into contains values(21,3,'Nissan','Altima');
+Insert into contains values(3,3,'Nissan','Altima');
+Insert into contains values(16,3,'Nissan','Altima');
+Insert into contains values(4,3,'Nissan','Altima');
+Insert into contains values(14,3,'Nissan','Altima');
+Insert into contains values(15,3,'Nissan','Altima');
+
+
+Insert into contains values(9,1,'Nissan','Rogue');
+Insert into contains values(1,1,'Nissan','Rogue');
+Insert into contains values(7,1,'Nissan','Rogue');
+Insert into contains values(12,1,'Nissan','Rogue');
+Insert into contains values(14,1,'Nissan','Rogue');
+Insert into contains values(3,1,'Nissan','Rogue');
+
+Insert into contains values(9,2,'Nissan','Rogue');
+Insert into contains values(1,2,'Nissan','Rogue');
+Insert into contains values(7,2,'Nissan','Rogue');
+Insert into contains values(12,2,'Nissan','Rogue');
+Insert into contains values(14,2,'Nissan','Rogue');
+Insert into contains values(3,2,'Nissan','Rogue');
+Insert into contains values(16,2,'Nissan','Rogue');
+Insert into contains values(21,2,'Nissan','Rogue');
+Insert into contains values(15,2,'Nissan','Rogue');
+
+Insert into contains values(9,3,'Nissan','Rogue');
+Insert into contains values(1,3,'Nissan','Rogue');
+Insert into contains values(7,3,'Nissan','Rogue');
+Insert into contains values(12,3,'Nissan','Rogue');
+Insert into contains values(14,3,'Nissan','Rogue');
+Insert into contains values(3,3,'Nissan','Rogue');
+Insert into contains values(16,3,'Nissan','Rogue');
+Insert into contains values(21,3,'Nissan','Rogue');
+Insert into contains values(15,3,'Nissan','Rogue');
+Insert into contains values(4,3,'Nissan','Rogue');
+Insert into contains values(2,3,'Nissan','Rogue');
+
+Insert into contains values(9,1,'Honda','Accord');
+Insert into contains values(1,1,'Honda','Accord');
+Insert into contains values(7,1,'Honda','Accord');
+Insert into contains values(12,1,'Honda','Accord');
+
+Insert into contains values(9,2,'Honda','Accord');
+Insert into contains values(1,2,'Honda','Accord');
+Insert into contains values(7,2,'Honda','Accord');
+Insert into contains values(12,2,'Honda','Accord');
+Insert into contains values(3,2,'Honda','Accord');
+Insert into contains values(21,2,'Honda','Accord');
+Insert into contains values(15,2,'Honda','Accord');
+
+Insert into contains values(9,3,'Honda','Accord');
+Insert into contains values(1,3,'Honda','Accord');
+Insert into contains values(7,3,'Honda','Accord');
+Insert into contains values(12,3,'Honda','Accord');
+Insert into contains values(3,3,'Honda','Accord');
+Insert into contains values(21,3,'Honda','Accord');
+Insert into contains values(15,3,'Honda','Accord');
+Insert into contains values(16,3,'Honda','Accord');
+Insert into contains values(4,3,'Honda','Accord');
+Insert into contains values(14,3,'Honda','Accord');
+
+Insert into contains values(9,1,'Honda','Civic');
+Insert into contains values(3,1,'Honda','Civic');
+Insert into contains values(7,1,'Honda','Civic');
+
+Insert into contains values(9,2,'Honda','Civic');
+Insert into contains values(3,2,'Honda','Civic');
+Insert into contains values(7,2,'Honda','Civic');
+Insert into contains values(1,2,'Honda','Civic');
+Insert into contains values(12,2,'Honda','Civic');
+Insert into contains values(4,2,'Honda','Civic');
+Insert into contains values(21,2,'Honda','Civic');
+Insert into contains values(15,2,'Honda','Civic');
+
+Insert into contains values(9,3,'Honda','Civic');
+Insert into contains values(3,3,'Honda','Civic');
+Insert into contains values(7,3,'Honda','Civic');
+Insert into contains values(1,3,'Honda','Civic');
+Insert into contains values(12,3,'Honda','Civic');
+Insert into contains values(4,3,'Honda','Civic');
+Insert into contains values(21,3,'Honda','Civic');
+Insert into contains values(15,3,'Honda','Civic');
+Insert into contains values(16,3,'Honda','Civic');
+Insert into contains values(14,3,'Honda','Civic');
+
+Insert into customer(cutomerId,name, phoneNumber, address, email, loginId) values(1001, 'Tom Cruise', 1234567890,'203, Park St, Raleigh, NC - 27603', 'ethanhunt@gmail.com','ethanhunt@gmail.com');
+Insert into customer(customerId,name, phoneNumber, address, email, loginId) values(1002, 'Robert Downey Jr.', '9989877791','12-A, High St, Raleigh, NC - 27605', 'jarvis@gmail.com','jarvis@gmail.com');
+Insert into customer(cutomerId,name, phoneNumber, address, email, loginId) values(1003, 'Taylor Swift', '8179827199','2A, 3rd Ave, Charlotte, NC - 28134', 'lovestory@gmail.com','lovestory@gmail.com');
+Insert into customer(customerId,name, phoneNumber, address, email, loginId) values(1004, 'Serena Williams', '8714791879','90, Gorman St, Charlotte, NC - 28201', 'venus@gmail.com','venus@gmail.com');
+
+Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('XYZ-5643', 'Civic', '2009-12-24',90452,'Honda',3,'2018-09-10',2009,1);
+Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('AHS-3132', 'Prius', '2011-01-02',65452,'Toyota',6,'2018-08-06',2007,1);
+Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('IRM-1212', 'Altima', '2002-09-07',210452,'Nissan','1','2018-02-11',2001,1);
+Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('TSW-3462', 'Accord', '2015-12-9',null,'Honda',null,null,2015,1);
+Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('DEL-8888', 'Rogue', '2016-05-11',31209,'Nissan','1','2018-02-11',2014,1);
+Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('P11-212A', 'Accord', '2010-04-14',60452,'Honda','2','2017-09-01',2009,2);
+Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('WIM-BLE5', 'Prius', '2014-03-01',19876,'Toyota','1','2016-11-11',2013,2);
