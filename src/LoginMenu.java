@@ -14,11 +14,11 @@ public class LoginMenu extends AbstractMenu {
 		String userId = sc.next();
 		System.out.print("Enter Password:");
 		String password = sc.next();
-		if(password!="password") {
+		if(!password.equals("password")) {
 			System.out.println("Incorrect password.");
 			System.exit(1);
 		}
-		String query = "SELECT * FROM User WHERE loginId=" + userId;
+		String query = "SELECT * FROM Users WHERE loginId=" + userId;
 		ResultSet rs = DataOps.getInstance().retrieve(query);
 		try {
 			while(rs.next()) {
