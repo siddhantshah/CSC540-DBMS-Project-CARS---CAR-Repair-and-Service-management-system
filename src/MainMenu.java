@@ -20,8 +20,12 @@ public class MainMenu extends AbstractMenu{
 			break;
 		case 2:
 			// Sign up User;
-		case 3:
-			//Exit
+				break;
+			case 3:
+				break;
+				
+			default:
+				return;
 		}
 		
 	}
