@@ -49,7 +49,7 @@ public class Customer {
 			invoice(sc);
 			break;
 		case 5:
-			customerId = null;
+			//customerId = null;
 			// logout and return to home page
 		}
 	}
@@ -437,7 +437,7 @@ public class Customer {
 		switch(choice) {
 		case 1:
 			// Engine knock
-			scheduleRepairHelper(customerId, licensePlate, prefMechId, );
+			//scheduleRepairHelper(customerId, licensePlate, prefMechId, );
 		case 2:
 			// Car drifts in a particular direction
 		case 3:

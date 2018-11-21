@@ -2,6 +2,8 @@
 
 import java.util.Scanner;
 
+import data.DataOps;
+
 
 public class CarsExec {
 
@@ -10,6 +12,7 @@ public class CarsExec {
 		Scanner sc = new Scanner(System.in);
 		m.display(sc);
 		sc.close();
+		DataOps.destroyInstance();
 	}
 
 }
