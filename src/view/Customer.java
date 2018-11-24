@@ -16,6 +16,7 @@ public class Customer {
 	
 	private
 		int customerId;
+		String loginId;
 		String name;
 		int phoneNumber;
 		String address;
@@ -24,6 +25,17 @@ public class Customer {
 		
 	public Customer(int customerId) {
 		this.customerId = customerId;
+		String custQuery = "SELECT email FROM Customer WHERE customerId=" + customerId;
+		ResultSet custrs = DataOps.getInstance().retrieve(custQuery);
+		try {
+			custrs.next();
+			loginId = custrs.getString("email");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
+			e.printStackTrace();
+		}
+
 	}
 
 	public void displayLandingPage(Scanner sc) {
@@ -139,7 +151,7 @@ public class Customer {
 		case 4:
 			System.out.println("Please enter your Password.");
 			String password = sc.next();
-			query = "UPDATE Users SET password='" + password + "' WHERE customerId=" + customerId;
+			query = "UPDATE Users SET password='" + password + "' WHERE loginId='" + loginId + "'";
 			DataOps.getInstance().insertInto(query);
 			updateProfile(sc);
 			break;
