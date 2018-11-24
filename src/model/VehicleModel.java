@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import data.DataOps;
+
 public class VehicleModel {
 	int year;
 	String model;
@@ -24,6 +26,7 @@ public class VehicleModel {
 	      }
 	     
 	      catch(ParseException e) {
+	    	  	DataOps.destroyInstance();
 	         System.out.println("Unable to parse " + date);
 	      }
 	     

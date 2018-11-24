@@ -42,6 +42,7 @@ public class DataOps {
 			DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
 			conn = DriverManager.getConnection(jdbcURL, user, passwd);
 		} catch (Exception e) {
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		} 
 	}
@@ -53,6 +54,7 @@ public class DataOps {
 
 
 		} catch (SQLException e) {
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		} finally {
 			close(rs);
@@ -68,26 +70,24 @@ public class DataOps {
 
 
 		} catch (SQLException e) {
+			DataOps.destroyInstance();
 			e.printStackTrace();
-		} finally {
-			close(rs);
-			close(stmt);
-		}
+		} 
 		return rs;
 	 
 	}
-	private static void close(Connection conn) {
+	public static void close(Connection conn) {
 		if(conn != null) {
 			try { conn.close(); } catch(Throwable whatever) {}
 		}
 	}
 
-	private static void close(Statement st) {
+	public static void close(Statement st) {
 		if(st != null) {
 			try { st.close(); } catch(Throwable whatever) {}
 		}
 	}
-	private static void close(ResultSet rs) {
+	public static void close(ResultSet rs) {
 		if(rs != null) {
 			try { rs.close(); } catch(Throwable whatever) {}
 		}

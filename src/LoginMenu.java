@@ -18,25 +18,26 @@ public class LoginMenu extends AbstractMenu {
 			System.out.println("Incorrect password.");
 			System.exit(1);
 		}
-		String query = "SELECT * FROM Users WHERE loginId=" + userId;
+		String query = "SELECT * FROM Users WHERE loginId='" + userId+"'";
 		ResultSet rs = DataOps.getInstance().retrieve(query);
 		try {
 			while(rs.next()) {
-				String role = rs.getString("employeeOrCustomer");
-				if(role=="Customer") {
-					String custQuery = "SELECT * FROM Customer WHERE emailAddress=" + userId;
+				String role = rs.getString("role");
+				if(role.equals("Customer")) {
+					String custQuery = "SELECT * FROM Customer WHERE email='" + userId+"'";
 					ResultSet custrs = DataOps.getInstance().retrieve(custQuery);
+					custrs.next();
 					int customerId = custrs.getInt("customerId");
 					Customer newCustomer = new Customer(customerId);				
 					newCustomer.displayLandingPage(sc);
-				} else if(role=="Receptionist") {
-					String empQuery = "SELECT * FROM Employee WHERE emailAddress=" + userId;
+				} else if(role.equals("Receptionist")) {
+					String empQuery = "SELECT * FROM Employee WHERE email='" + userId+"'";
 					ResultSet emprs = DataOps.getInstance().retrieve(empQuery);
 					int employeeId = emprs.getInt("employeeId");
 					Employee newEmployee = new Employee(employeeId);				
 					newEmployee.receptionistLandingPage(sc);
-				} else if(role=="Manager") {
-					String empQuery = "SELECT * FROM Employee WHERE emailAddress=" + userId;
+				} else if(role.equals("Manager")) {
+					String empQuery = "SELECT * FROM Employee WHERE email='" + userId+"'";
 					ResultSet emprs = DataOps.getInstance().retrieve(empQuery);
 					int employeeId = emprs.getInt("employeeId");
 					Employee newEmployee = new Employee(employeeId);				
@@ -44,6 +45,7 @@ public class LoginMenu extends AbstractMenu {
 				}
 			}
 		} catch(Exception e) {
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 	}

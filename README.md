@@ -11,9 +11,16 @@ Swastik Mittal (smittal6)
 
 Siddhant Shah (sshah14)
 
+The submission contains the following files:
+1. Executable jar named cars_zephyr.jar
+2. DDL SQL file named ddl.sql
+3. Data import file called data.sql
+4. Final submission report
+
 ### Steps to Run -
 
-Just execute the jar file.
+Execute the jar file using 
 
-Mock data to be populated is in the populateData.sql file.
+"java -jar cars_zephyr.jar"
+
 

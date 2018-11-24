@@ -203,6 +203,7 @@ public class Employee {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		System.out.println("1. Go Back");
@@ -240,6 +241,7 @@ public class Employee {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		System.out.println("1. Go Back");
@@ -398,6 +400,7 @@ public class Employee {
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		
@@ -459,6 +462,7 @@ public class Employee {
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		
@@ -515,6 +519,7 @@ public class Employee {
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
 				e.printStackTrace();
 			}	
 			String query4 = "INSERT INTO OWNS VALUES(" + license + "," + retrievedId + ")";
@@ -542,6 +547,7 @@ public class Employee {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		
@@ -579,6 +585,7 @@ public class Employee {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 
@@ -624,6 +631,7 @@ public class Employee {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 
@@ -661,6 +669,7 @@ public class Employee {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		
@@ -1161,6 +1170,7 @@ public class Employee {
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
 				e.printStackTrace();
 			}
 			System.out.println("1. Go Back");
@@ -1207,6 +1217,7 @@ public class Employee {
 				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
 				e.printStackTrace();
 			}
 			
@@ -1229,6 +1240,7 @@ public class Employee {
 	      }
 	     
 	      catch(ParseException e) {
+	    	  DataOps.destroyInstance();
 	         System.out.println("Unable to parse " + date);
 	      }
 	     
@@ -1249,6 +1261,7 @@ public class Employee {
 	      }
 	     
 	      catch(ParseException e) {
+	    	  DataOps.destroyInstance();
 	         System.out.println("Unable to parse " + s);
 	      }
 	     

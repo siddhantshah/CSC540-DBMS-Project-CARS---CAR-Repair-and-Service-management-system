@@ -77,21 +77,20 @@ public class Customer {
 	 public void viewProfile(Scanner sc) {
 		System.out.println("======================View Profile======================");
 		// Display the following details followed by the menu. A. Customer ID B. Name C. Address D. Email Address E. Phone Number F. List of All Cars (and their details)
-		String query = "SELECT customerId, name, address, email, phoneNmuber, licensePlate FROM Customer c, Owns o WHERE c.customerId="+customerId+"AND c.customerId=o.customerId";
-		Object[][] table = new String[1][];
-		table[0] = new String[] { "CustomerId", "Name", "Address", "Email Address" , "Phone Number", "License Plate of Car" };
-		for (Object[] row : table) {
-		    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-		}
+		String query = "SELECT c.customerId, name, address, email, phoneNumber, licensePlate FROM Customer c, Owns o WHERE c.customerId="+customerId+" AND c.customerId=o.customerId";
+		rs = DataOps.getInstance().retrieve(query);
 		try {
 			while(rs.next()) {
-				table[0] = new String[] {rs.getString("customerId"), rs.getString("name"), rs.getString("address"), rs.getString("email"), rs.getString("phoneNumebr"), rs.getString("licensePlate")};
- 				for (Object[] row : table) {
-					System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-				}
+ 				System.out.println("CustomerId: "+rs.getString("customerId"));
+ 				System.out.println("Name: "+rs.getString("name"));
+ 				System.out.println("Address: "+rs.getString("address"));
+ 				System.out.println("Email Address: "+rs.getString("email"));
+ 				System.out.println("Phone Number: "+rs.getString("phoneNumber"));
+ 				System.out.println("License Plate of Car: "+rs.getString("licensePlate"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		System.out.println("1. Go Back");
@@ -203,6 +202,7 @@ public class Customer {
 					retrievedId = rs.getInt("customerId");
 				}
 			} catch (SQLException e) {
+				DataOps.destroyInstance();
 				e.printStackTrace();
 			}	
 			String query4 = "INSERT INTO OWNS VALUES(" + licensePlate + "," + retrievedId + ")";
@@ -277,6 +277,7 @@ public class Customer {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		
@@ -328,6 +329,7 @@ public class Customer {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		int prefMechId = Integer.parseInt(sc.nextLine());		
@@ -365,6 +367,7 @@ public class Customer {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		
@@ -489,6 +492,7 @@ public class Customer {
 					
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 	 	
@@ -568,6 +572,7 @@ public class Customer {
 	      }
 	     
 	      catch(ParseException e) {
+	    	  	DataOps.destroyInstance();
 	         System.out.println("Unable to parse " + date);
 	      }
 	     
