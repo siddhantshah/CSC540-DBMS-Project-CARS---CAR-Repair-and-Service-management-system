@@ -185,7 +185,7 @@ public class Employee {
 				+ " E.startDate, R.salary FROM Employee E, Works_In W, Receptionist R"
 				+ "WHERE E.employeeId = W.employeeId AND R.employeeId = E.employeeId AND E.employeeId = " + employeeId;
 		
-		rs = DataOps.getInstance.retrieve(query);
+		rs = DataOps.getInstance().retrieve(query);
 
 		Object[][] table = new String[1][];
 		table[0] = new String[] { "EmployeeId", "Name", "Address", "Email Address" , "Phone Number", "Service Center", "Role", "Start Date", "Compensation($)", "Compensation(freq)" };
@@ -226,7 +226,7 @@ public class Employee {
 				+ "WHERE E.employeeId = W.employeeId AND M.employeeId = E.employeeId AND E.employeeId = " + employeeId;
 		
 
-		rs = DataOps.getInstance.retrieve(query);		
+		rs = DataOps.getInstance().retrieve(query);		
 
 		Object[][] table = new String[1][];
 		table[0] = new String[] { "EmployeeId", "Name", "Address", "Email Address" , "Phone Number", "Service Center", "Role", "Start Date", "Compensation($)", "Compensation(freq)" };
@@ -276,28 +276,28 @@ public class Employee {
 			System.out.println("Please Enter Your Name");
 			input = sc.nextLine();
 			query = "UPDATE Employee SET name =" + input + "Where employeeId =" + employeeId;
-			DataOps.getInstance.insertInto(query);
+			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 2:
 			System.out.println("Please Enter Your Address");
 			input = sc.nextLine();
 			query = "UPDATE Employee SET address =" + input + "Where employeeId =" + employeeId;
-			DataOps.getInstance.insertInto(query);
+			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 3:
 			System.out.println("Please Enter Your Email Address");
 			input = sc.nextLine();
 			query = "UPDATE Employee SET email =" + input + "Where employeeId =" + employeeId;
-			DataOps.getInstance.insertInto(query);
+			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 4:
 			System.out.println("Please Enter Your Phone Number");
 			input = sc.nextLine();
 			query = "UPDATE Employee SET phoneNumber =" + input + "Where employeeId =" + employeeId;
-			DataOps.getInstance.insertInto(query);
+			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 5:
