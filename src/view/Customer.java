@@ -118,26 +118,29 @@ public class Customer {
 		case 1:
 			System.out.println("Please enter your Name.");
 			String name = sc.next();
-			query = "UPDATE Customer SET name=" + name + " WHERE customerId=" + customerId;
+			query = "UPDATE Customer SET name='" + name + "' WHERE customerId=" + customerId;
+			DataOps.getInstance().insertInto(query);
 			updateProfile(sc);
-			// Execute query
 			break;
 		case 2:
 			System.out.println("Please enter your Address.");
 			String address = sc.next();
-			query = "UPDATE Customer SET address=" + address + " WHERE customerId=" + customerId;
+			query = "UPDATE Customer SET address='" + address + "' WHERE customerId=" + customerId;
+			DataOps.getInstance().insertInto(query);
 			updateProfile(sc);
 			break;
 		case 3:
 			System.out.println("Please enter your Phone Number.");
 			int phoneNumber = sc.nextInt();
-			query = "UPDATE Customer SET phoneNumber=" + phoneNumber + " WHERE customerId=" + customerId;
+			query = "UPDATE Customer SET phoneNumber='" + phoneNumber + "' WHERE customerId=" + customerId;
+			DataOps.getInstance().insertInto(query);
 			updateProfile(sc);
 			break;
 		case 4:
 			System.out.println("Please enter your Password.");
 			String password = sc.next();
-			query = "UPDATE Customer SET password=" + password + " WHERE customerId=" + customerId;
+			query = "UPDATE Users SET password='" + password + "' WHERE customerId=" + customerId;
+			DataOps.getInstance().insertInto(query);
 			updateProfile(sc);
 			break;
 		case 5:
