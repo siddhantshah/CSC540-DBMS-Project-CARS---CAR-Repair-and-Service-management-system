@@ -2,16 +2,21 @@ package helper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.GregorianCalendar;
 
 
 import data.DataOps;
+import view.Appointment;
 
 public class Helper {
 	
@@ -20,7 +25,8 @@ public class Helper {
 	static ResultSet rs2 = null;
 	static ResultSet rs3 = null;
 	
-	public void scheduleMaintenanceHelper(int customerId, String licensePlate, String mechanic, int currentMileage) throws SQLException, ParseException{
+	public Appointment scheduleMaintenanceHelper(int customerId, String licensePlate, String mechanic, int currentMileage) throws SQLException, ParseException{
+		Appointment ap = new Appointment();
 		String mileageQuery="select LASTRECORDEDMILEAGE,make,model,servicecenterid from vehicle where licenseplate='"+licensePlate+"'";
 		ResultSet mileageRS = DataOps.getInstance().retrieve(mileageQuery); 
 		int lastRecordedMileage = mileageRS.getInt("LASTRECORDEDMILEAGE");
@@ -39,6 +45,9 @@ public class Helper {
 		else {
 			maintenanceType=3;
 		}
+		ap.customerId=customerId;
+		ap.licensePlate = licensePlate;
+		ap.serviceId=maintenanceType;
 		//Get basic services for this repair
 		String deficitQuery = "select j2.partid, j2.currentquantity,j2.requiredquantity,j3.schduledquantity from \n" + 
 				"(select h.partid, h.currentquantity, j1.requiredquantity from has h join \n" + 
@@ -76,35 +85,159 @@ public class Helper {
 					}
 					shortage=true;
 				}
+				else {
+					ap.partsRequired.put(partId, requiredquantity);
+				}
 			}
 			if(!shortage) {
-				if(mechanic.equals("")) {
+				
+				String hoursReqdQuery = "select sum(hoursrequired) as totalhoursrequired from (select basicserviceid from contains where serviceid="+maintenanceType+" and (make,model) in (select make,model from vehicle where licenseplate='"+licensePlate+"')) j1 join basicservice b on j1.basicserviceid=b.basicserviceid";
+				ResultSet hoursReqdRS = DataOps.getInstance().retrieve(hoursReqdQuery);
+				hoursReqdRS.next();
+				ap.hoursReqd = hoursReqdRS.getInt("totalhoursrequired");
+				
+				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+				Date today = new Date();
+				String date = sdfDate.format(today);
+				
+				
+				String mechQuery;
+				if(mechanic== null || mechanic.length()==0) {
+					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 8-r.hours >="+ap.hoursReqd+" order by r.day"  ;
+					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
+					mechRS.next();
+					String availableSlots = mechRS.getString("availableslots");
+					String[] availableSlotsList = availableSlots.split(",");
+					while (availableSlotsList.length < ap.hoursReqd) {
+						if (!mechRS.next()) {
+							ap.canSchedule = false;
+							ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
+							return ap;
+						}
+					}
+					availableSlots = mechRS.getString("availableslots");
+					availableSlotsList = availableSlots.split(",");
+					ap.assignedMechanic = mechRS.getString("name");
+					ap.assignedMechanicId = mechRS.getInt("employeeid");
+					String dayString = mechRS.getString("day");
+					SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					Date startOfDay = hourFormat.parse(dayString + " 08:00");
+					ap.proposedDates[0] = hourFormat.format(new Date(
+							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+					StringBuffer slotBuffer = new StringBuffer();
+					double hoursReqd = ap.hoursReqd;
+					for (int j = 0; j < hoursReqd; j++) {
+						slotBuffer.append(availableSlotsList[j] + ",");
 
+					}
+					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+					ap.proposedSlots[0] = slotBuffer.toString();
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' order by r.day" ;
+					mechRS = DataOps.getInstance().retrieve(mechQuery);
+				
+					
+						mechRS.next();
+						availableSlots = mechRS.getString("availableslots");
+						availableSlotsList = availableSlots.split(",");
+						while (availableSlotsList.length < ap.hoursReqd) {
+							if (!mechRS.next()) {
+								ap.canSchedule = false;
+								ap.errorReport = "Cannot schedule appointment. Please try later";
+								return ap;
+							}
+						}
+						availableSlots = mechRS.getString("availableslots");
+						availableSlotsList = availableSlots.split(",");
+						dayString = mechRS.getString("day");
+						hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						startOfDay = hourFormat.parse(dayString + " 08:00");
+						ap.proposedDates[1] = hourFormat.format(new Date(
+								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+						slotBuffer = new StringBuffer();
+						hoursReqd = ap.hoursReqd;
+						for (int j = 0; j < hoursReqd; j++) {
+							slotBuffer.append(availableSlotsList[j] + ",");
+
+						}
+						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+						ap.proposedSlots[1] = slotBuffer.toString();
+				
+				
 				}
+				
+				else {
+	
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+mechanic+"' and r.day > '"+date+"' order by r.day" ;
+					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
+				
+					for (int i = 0; i < 2; i++) {
+						mechRS.next();
+						String availableSlots = mechRS.getString("availableslots");
+						String[] availableSlotsList = availableSlots.split(",");
+						while (availableSlotsList.length < ap.hoursReqd) {
+							if (!mechRS.next()) {
+								ap.canSchedule = false;
+								ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
+								return ap;
+							}
+						}
+						availableSlots = mechRS.getString("availableslots");
+						availableSlotsList = availableSlots.split(",");
+						ap.assignedMechanic = mechanic;
+						ap.assignedMechanicId = mechRS.getInt("employeeid");
+						String dayString = mechRS.getString("day");
+						SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						Date startOfDay = hourFormat.parse(dayString + " 08:00");
+						ap.proposedDates[i] = hourFormat.format(new Date(
+								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+						StringBuffer slotBuffer = new StringBuffer();
+						double hoursReqd = ap.hoursReqd;
+						for (int j = 0; j < hoursReqd; j++) {
+							slotBuffer.append(availableSlotsList[j] + ",");
+
+						}
+						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+						ap.proposedSlots[i] = slotBuffer.toString();
+					}
+					
+					
+					
+				}
+				ap.canSchedule=true;
+				return ap;
+			}
+			else {
+				ap.canSchedule=false;
+				ap.errorReport="Cannot schedule due to inventory shortage. Please schedule appointment after: "+maxDate;
+				return ap;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-
+		return null;
 		//Print diagnostic report and basic services for this repair
 
 		//For each basic service check if parts are available, order if they are not, and print next available dates.
 	}
 	
-	public void scheduleRepairHelper(int customerId, String licensePlate, String mechanic, int currentMileage, int problem) throws ParseException, SQLException{
+	public Appointment scheduleRepairHelper(int customerId, String licensePlate, String mechanic, int currentMileage, int problem) throws ParseException, SQLException{
+		Appointment ap = new Appointment();
+		ap.customerId=customerId;
+		ap.licensePlate = licensePlate;
+		ap.serviceId=3+problem;
 		String mileageQuery="select servicecenterid from vehicle where licenseplate='"+licensePlate+"'";
 		ResultSet mileageRS = DataOps.getInstance().retrieve(mileageQuery); 
-		
+		mileageRS.next();
 		int servicecenterid = mileageRS.getInt("servicecenterid");
 		String updateMileageQuery="update Vehicle set lastrecordedmileage="+currentMileage+" where licenseplate='"+licensePlate+"'";
 		DataOps.getInstance().insertInto(updateMileageQuery);
 		//Get basic services for this repair
-		String deficitQuery = "select j2.partid, j2.currentquantity,j2.requiredquantity,j3.schduledquantity from \n" + 
+		String deficitQuery = "select j2.partid, j2.currentquantity,j2.requiredquantity,NVL(j3.schduledquantity,0) as schduledquantity from \n" + 
 				"(select h.partid, h.currentquantity, j1.requiredquantity from has h join \n" + 
 				"(select U.partid, U.quantity as requiredquantity from Uses U where basicserviceid in (select C.basicserviceid from Repair R join Contains C on r.serviceid = c.serviceid where c.serviceid="+(3+problem)+") \n" + 
-				"and (U.make, U.model) in (select V.make, v.model from vehicle V where v.licenseplate='"+licensePlate+"')) J1 on h.partid = j1.partid where h.servicecenterid ='"+servicecenterid+"') J2 join (select partid, sum(quantity) as schduledquantity from outgoingparts where servicecenterid ="+servicecenterid+" group by partid)j3\n" + 
+				"and (U.make, U.model) in (select V.make, v.model from vehicle V where v.licenseplate='"+licensePlate+"')) J1 on h.partid = j1.partid where h.servicecenterid ='"+servicecenterid+"') J2 left join (select partid, sum(quantity) as schduledquantity from outgoingparts where servicecenterid ="+servicecenterid+" group by partid)j3\n" + 
 				"on j2.partid = j3.partid";
 		ResultSet rs = DataOps.getInstance().retrieve(deficitQuery);
 		int partId, currentquantity,requiredquantity, schduledquantity,deficit;
@@ -137,22 +270,143 @@ public class Helper {
 					}
 					shortage=true;
 				}
-			}
-			if(!shortage) {
-				if(mechanic.equals("")) {
-					
+				else {
+					ap.partsRequired.put(partId, requiredquantity);
 				}
 			}
+			if(!shortage) {
+				String diagQuery = "select diagnosticfee, diagnosticDescription from Repair where serviceid="+(3+problem);
+				ResultSet diagRS = DataOps.getInstance().retrieve(diagQuery);
+				diagRS.next();
+				ap.diagnosticReport=diagRS.getString("diagnosticDescription");
+				ap.diagnosticFee=diagRS.getInt("diagnosticFee");
+				
+				String hoursReqdQuery = "select sum(hoursrequired) as totalhoursrequired from (select basicserviceid from contains where serviceid="+(3+problem)+" and (make,model) in (select make,model from vehicle where licenseplate='"+licensePlate+"')) j1 join basicservice b on j1.basicserviceid=b.basicserviceid";
+				ResultSet hoursReqdRS = DataOps.getInstance().retrieve(hoursReqdQuery);
+				hoursReqdRS.next();
+				ap.hoursReqd = hoursReqdRS.getInt("totalhoursrequired");
+				
+				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+				Date today = new Date();
+				String date = sdfDate.format(today);
+				
+				
+				String mechQuery;
+				if(mechanic== null || mechanic.length()==0) {
+					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 8-r.hours >="+ap.hoursReqd+" order by r.day"  ;
+					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
+					mechRS.next();
+					String availableSlots = mechRS.getString("availableslots");
+					String[] availableSlotsList = availableSlots.split(",");
+					while (availableSlotsList.length < ap.hoursReqd) {
+						if (!mechRS.next()) {
+							ap.canSchedule = false;
+							ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
+							return ap;
+						}
+					}
+					availableSlots = mechRS.getString("availableslots");
+					availableSlotsList = availableSlots.split(",");
+					ap.assignedMechanic = mechRS.getString("name");
+					ap.assignedMechanicId = mechRS.getInt("employeeid");
+					String dayString = mechRS.getString("day");
+					SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					Date startOfDay = hourFormat.parse(dayString + " 08:00");
+					ap.proposedDates[0] = hourFormat.format(new Date(
+							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+					StringBuffer slotBuffer = new StringBuffer();
+					double hoursReqd = ap.hoursReqd;
+					for (int j = 0; j < hoursReqd; j++) {
+						slotBuffer.append(availableSlotsList[j] + ",");
+
+					}
+					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+					ap.proposedSlots[0] = slotBuffer.toString();
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' order by r.day" ;
+					mechRS = DataOps.getInstance().retrieve(mechQuery);
+				
+					
+						mechRS.next();
+						availableSlots = mechRS.getString("availableslots");
+						availableSlotsList = availableSlots.split(",");
+						while (availableSlotsList.length < ap.hoursReqd) {
+							if (!mechRS.next()) {
+								ap.canSchedule = false;
+								ap.errorReport = "Cannot schedule appointment. Please try later";
+								return ap;
+							}
+						}
+						availableSlots = mechRS.getString("availableslots");
+						availableSlotsList = availableSlots.split(",");
+						dayString = mechRS.getString("day");
+						hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						startOfDay = hourFormat.parse(dayString + " 08:00");
+						ap.proposedDates[1] = hourFormat.format(new Date(
+								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+						slotBuffer = new StringBuffer();
+						hoursReqd = ap.hoursReqd;
+						for (int j = 0; j < hoursReqd; j++) {
+							slotBuffer.append(availableSlotsList[j] + ",");
+
+						}
+						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+						ap.proposedSlots[1] = slotBuffer.toString();
+				
+				
+				}
+				
+				else {
+	
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+mechanic+"' and r.day > '"+date+"' order by r.day" ;
+					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
+				
+					for (int i = 0; i < 2; i++) {
+						mechRS.next();
+						String availableSlots = mechRS.getString("availableslots");
+						String[] availableSlotsList = availableSlots.split(",");
+						while (availableSlotsList.length < ap.hoursReqd) {
+							if (!mechRS.next()) {
+								ap.canSchedule = false;
+								ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
+								return ap;
+							}
+						}
+						availableSlots = mechRS.getString("availableslots");
+						availableSlotsList = availableSlots.split(",");
+						ap.assignedMechanic = mechanic;
+						ap.assignedMechanicId = mechRS.getInt("employeeid");
+						String dayString = mechRS.getString("day");
+						SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						Date startOfDay = hourFormat.parse(dayString + " 08:00");
+						ap.proposedDates[i] = hourFormat.format(new Date(
+								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+						StringBuffer slotBuffer = new StringBuffer();
+						double hoursReqd = ap.hoursReqd;
+						for (int j = 0; j < hoursReqd; j++) {
+							slotBuffer.append(availableSlotsList[j] + ",");
+
+						}
+						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+						ap.proposedSlots[i] = slotBuffer.toString();
+					}
+					
+					
+					
+				}
+				ap.canSchedule=true;
+				return ap;
+			}
+			else {
+				ap.canSchedule=false;
+				ap.errorReport="Cannot schedule due to inventory shortage. Please schedule appointment after: "+maxDate;
+				return ap;
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-		
-		//Print diagnostic report and basic services for this repair
-		
-		//For each basic service check if parts are available, order if they are not, and print next available dates.
-		
+		return null;
+				
 	}
 	
 	public Map<String, Object> invoiceGenerator(int appointmentId) {
@@ -341,7 +595,7 @@ public class Helper {
 		String checkOtherCenterQuery = "select servicecenterid, currentquantity, MIMINUMORDERTHRESHOLD from Has where servicecenterid != "+servicecenterid+" order by currentquantity desc";
 		ResultSet checkOtherCenterRS = DataOps.getInstance().retrieve(checkOtherCenterQuery);
 		while(checkOtherCenterRS.next()) {
-			int serv = checkOtherCenterRS.getInt("servicecenterid");	
+			int serv = checkOtherCenterRS.getInt("servicecbenterid");	
 			int currentQ = checkOtherCenterRS.getInt("currentquantity");
 			int minimumQ = checkOtherCenterRS.getInt("MIMINUMORDERTHRESHOLD");
 			SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
