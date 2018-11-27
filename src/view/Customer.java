@@ -5,6 +5,7 @@ import java.util.Scanner;
 import helper.Helper;
 import data.DataOps;
 
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,7 +62,8 @@ public class Customer {
 			invoice(sc);
 			break;
 		case 5:
-			//customerId = null;
+			customerId = (Integer) null;
+			System.exit(1);
 			// logout and return to home page
 		}
 	}
