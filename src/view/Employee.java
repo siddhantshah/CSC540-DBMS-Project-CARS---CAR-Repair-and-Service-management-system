@@ -23,10 +23,33 @@ public class Employee {
 		 int employeeId;
 		 String serviceCenterId;
 		 String name;
+		 String email;
 		
 		
 	public Employee(int employeeId) {
 		this.employeeId = employeeId;
+		try {
+			String custQuery = "SELECT name FROM Employee WHERE employeeId=" + employeeId;
+			ResultSet custrs = DataOps.getInstance().retrieve(custQuery);
+			custrs.next();
+			this.name = custrs.getString("name");
+			
+		    custQuery = "SELECT serviceCenterId FROM works_in WHERE employeeId=" + employeeId;
+			custrs = DataOps.getInstance().retrieve(custQuery);
+			custrs.next();
+			this.serviceCenterId = custrs.getString("serviceCenterId");
+			
+			custQuery = "SELECT email FROM Employee WHERE employeeId=" + employeeId;
+			custrs = DataOps.getInstance().retrieve(custQuery);
+			custrs.next();
+			this.email = custrs.getString("email");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
+			e.printStackTrace();
+		}
+
 	}	
 	
 	public  void receptionistLandingPage(Scanner sc) {
@@ -73,6 +96,10 @@ public class Employee {
 			break;
 		case 10:
 			// login
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistLandingPage(sc);
 		}
 	}
 	
@@ -130,12 +157,15 @@ public class Employee {
 		case 12:
 			//login
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			managerLandingPage(sc);
 		}
 	}
 	
 	public  void receptionistProfile(Scanner sc) {
-		System.out.println("======================Employee Profile======================");
-		// Display profile
+		System.out.println("======================Receptionist Profile======================");
 		System.out.println("1. View Profile");
 		System.out.println("2. Update Profile");
 		System.out.println("3. Go Back");
@@ -151,13 +181,16 @@ public class Employee {
 		case 3:
 			receptionistLandingPage(sc);
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistProfile(sc);
 		}	 	 
 		 
 	 }
 	
 	public  void managerProfile(Scanner sc) {
-		System.out.println("======================Employee Profile======================");
-		// Display profile
+		System.out.println("======================Manager Profile======================");
 		System.out.println("1. View Profile");
 		System.out.println("2. Update Profile");
 		System.out.println("3. Go Back");
@@ -173,35 +206,35 @@ public class Employee {
 		case 3:
 			managerLandingPage(sc);
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			managerProfile(sc);
 		}	 	 
 		 
 	 }
 	
 	
 	public  void receptionistViewProfile(Scanner sc) {
-		System.out.println("======================View Employee Profile======================");
-		// Display profile
-		String query = "SELECT E.employeeId, E.name, E.address, E.email, E.phoneNumebr, W.serviceCenterId"
-				+ " E.startDate, R.salary FROM Employee E, Works_In W, Receptionist R"
+		System.out.println("======================View Receptionist Profile======================");
+		String query = "SELECT E.employeeId, E.name, E.address, E.email, E.phoneNumber, W.serviceCenterId,"
+				+ " E.startDate, R.salary FROM Employee E, Works_In W, Receptionist R "
 				+ "WHERE E.employeeId = W.employeeId AND R.employeeId = E.employeeId AND E.employeeId = " + employeeId;
 		
 		rs = DataOps.getInstance().retrieve(query);
-
-		Object[][] table = new String[1][];
-		table[0] = new String[] { "EmployeeId", "Name", "Address", "Email Address" , "Phone Number", "Service Center", "Role", "Start Date", "Compensation($)", "Compensation(freq)" };
-
-		for (Object[] row : table) {
-		    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-		}
-		
 		try {
 			while(rs.next()) {
-				
-				table[0] = new String[] {rs.getString("employeeId"), rs.getString("name"), rs.getString("address"), rs.getString("email"), rs.getString("phoneNumebr"), rs.getString("serviceCenterId"), "Receptionist", rs.getString("startDate"), rs.getString("salary"), "Monthly"};
-
-				for (Object[] row : table) {
-					System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-				}
+				System.out.println("EmployeeId: "+rs.getString("employeeId"));
+				System.out.println("Name: "+rs.getString("name"));
+				System.out.println("Address: "+rs.getString("address"));
+				System.out.println("Email Address: "+rs.getString("email"));
+				System.out.println("Phone Number: "+rs.getString("phoneNumber"));
+				System.out.println("Service Center: "+rs.getString("serviceCenterId"));
+				System.out.println("Role: "+"Receptionist");
+				System.out.println("Start Date: "+rs.getString("startDate"));
+				System.out.println("Compensation($): "+rs.getString("salary"));
+				System.out.println("Compensation(freq): "+"Monthly");
+				System.out.println();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -214,35 +247,37 @@ public class Employee {
 		switch(choice) {
 		case 1:
 			receptionistProfile(sc);
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistViewProfile(sc);
 		}
 		 
 	 }
 	
 	public  void managerViewProfile(Scanner sc) {
-		System.out.println("======================View Employee Profile======================");
-		// Display profile
-		String query = "SELECT E.employeeId, E.name, E.address, E.email, E.phoneNumebr, W.serviceCenterId"
-				+ " E.startDate, M.salary FROM Employee E, Works_In W, Manager M"
+		System.out.println("======================View Manager Profile======================");
+		String query = "SELECT E.employeeId, E.name, E.address, E.email, E.phoneNumber, W.serviceCenterId,"
+				+ " E.startDate, M.salary FROM Employee E, Works_In W, Manager M "
 				+ "WHERE E.employeeId = W.employeeId AND M.employeeId = E.employeeId AND E.employeeId = " + employeeId;
 		
 
 		rs = DataOps.getInstance().retrieve(query);		
-
-		Object[][] table = new String[1][];
-		table[0] = new String[] { "EmployeeId", "Name", "Address", "Email Address" , "Phone Number", "Service Center", "Role", "Start Date", "Compensation($)", "Compensation(freq)" };
-
-		for (Object[] row : table) {
-		    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-		}
 		
 		try {
 			while(rs.next()) {
-				
-				table[0] = new String[] {rs.getString("employeeId"), rs.getString("name"), rs.getString("address"), rs.getString("email"), rs.getString("phoneNumebr"), rs.getString("serviceCenterId"), "Manager", rs.getString("startDate"), rs.getString("salary"), "Monthly"};
-
-				for (Object[] row : table) {
-					System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-				}
+				System.out.println("EmployeeId: "+rs.getString("employeeId"));
+				System.out.println("Name: "+rs.getString("name"));
+				System.out.println("Address: "+rs.getString("address"));
+				System.out.println("Email Address: "+rs.getString("email"));
+				System.out.println("Phone Number: "+rs.getString("phoneNumber"));
+				System.out.println("Service Center: "+rs.getString("serviceCenterId"));
+				System.out.println("Role: "+"Manager");
+				System.out.println("Start Date: "+rs.getString("startDate"));
+				System.out.println("Compensation($): "+rs.getString("salary"));
+				System.out.println("Compensation(freq): "+"Monthly");
+				System.out.println();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -255,13 +290,17 @@ public class Employee {
 		switch(choice) {
 		case 1:
 			managerProfile(sc);
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			managerViewProfile(sc);
 		}
 		 
 		 
 	 }
 	
 	public  void receptionistUpdateProfile(Scanner sc) {
-		System.out.println("======================Update Profile======================");
+		System.out.println("======================Update Receptionist Profile======================");
 		System.out.println("1. Update Name");
 		System.out.println("2. Update Address");
 		System.out.println("3. Update Email Address");
@@ -274,47 +313,68 @@ public class Employee {
 		switch(choice) {
 		case 1:
 			System.out.println("Please Enter Your Name");
+			System.out.println();
 			input = sc.nextLine();
-			query = "UPDATE Employee SET name =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET name ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 2:
 			System.out.println("Please Enter Your Address");
 			input = sc.nextLine();
-			query = "UPDATE Employee SET address =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET address ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 3:
 			System.out.println("Please Enter Your Email Address");
 			input = sc.nextLine();
-			query = "UPDATE Employee SET email =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET email ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 4:
 			System.out.println("Please Enter Your Phone Number");
 			input = sc.nextLine();
-			query = "UPDATE Employee SET phoneNumber =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET phoneNumber ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 5:
 			System.out.println("Please Enter Your password");
 			input = sc.nextLine();
-			query = "UPDATE Users SET password =" + input + "Where loginId =" + employeeId;
+			input = sc.nextLine();
+			query = "SELECT loginId FROM employee WHERE employeeId=" + employeeId;
+			rs = DataOps.getInstance().retrieve(query);
+			String loginId =null;
+			try {
+				rs.next();
+			    loginId = rs.getString("loginId");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			query = "UPDATE Users SET password ='" + input + "' Where loginId ='" + loginId+"'";
+			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 6:
 			receptionistProfile(sc);
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistUpdateProfile(sc);
 		}	 	 
 		 
 	 }
 	
 	public  void managerUpdateProfile(Scanner sc) {
-		System.out.println("======================Update Profile======================");
+		System.out.println("======================Update Manager Profile======================");
 		System.out.println("1. Update Name");
 		System.out.println("2. Update Address");
 		System.out.println("3. Update Email Address");
@@ -327,92 +387,106 @@ public class Employee {
 		switch(choice) {
 		case 1:
 			System.out.println("Please Enter Your Name");
+			System.out.println();
 			input = sc.nextLine();
-			query = "UPDATE Employee SET name =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET name ='" + input + "' Where employeeId =" + employeeId;
+			DataOps.getInstance().insertInto(query);
 			managerUpdateProfile(sc);
 			break;
 		case 2:
 			System.out.println("Please Enter Your Address");
 			input = sc.nextLine();
-			query = "UPDATE Employee SET address =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET address ='" + input + "' Where employeeId =" + employeeId;
+			DataOps.getInstance().insertInto(query);
 			managerUpdateProfile(sc);
 			break;
 		case 3:
 			System.out.println("Please Enter Your Email Address");
 			input = sc.nextLine();
-			query = "UPDATE Employee SET email =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET email ='" + input + "' Where employeeId =" + employeeId;
+			DataOps.getInstance().insertInto(query);
 			managerUpdateProfile(sc);
 			break;
 		case 4:
 			System.out.println("Please Enter Your Phone Number");
 			input = sc.nextLine();
-			query = "UPDATE Employee SET phoneNumber =" + input + "Where employeeId =" + employeeId;
+			input = sc.nextLine();
+			query = "UPDATE Employee SET phoneNumber ='" + input + "' Where employeeId =" + employeeId;
+			DataOps.getInstance().insertInto(query);
 			managerUpdateProfile(sc);
 			break;
 		case 5:
 			System.out.println("Please Enter Your password");
 			input = sc.nextLine();
-			query = "UPDATE Users SET password =" + input + "Where loginId =" + employeeId;
+			input = sc.nextLine();
+			query = "SELECT loginId FROM employee WHERE employeeId=" + employeeId;
+			rs = DataOps.getInstance().retrieve(query);
+			String loginId =null;
+			try {
+				rs.next();
+			    loginId = rs.getString("loginId");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			query = "UPDATE Users SET password ='" + input + "' Where loginId ='" + loginId+"'";
+			DataOps.getInstance().insertInto(query);
 			managerUpdateProfile(sc);
 			break;
 		case 6:
 			managerProfile(sc);
 			break;
-		}	 	 
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			managerUpdateProfile(sc);
+		}	
 		 
 	 }
 	
 	public  void receptionistViewCustomerProfile(Scanner sc) {
-		System.out.println("======================View Customer Profile======================");
+		System.out.println("======================Receptionist View Customer Profile======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
-		String query1 = "SELECT C.customerId, C.name, C.address, C.email, C.phoneNumber FROM  Customer C "
-				+ " WHERE C.email = " + email;
-		
+		email = sc.nextLine();
 		int retrievedId = 0;
 		
-		Object[][] table = new String[1][];
-		table[0] = new String[] { "CustomerId", "Name", "Address", "Email Address" , "Phone Number"};
-
-		for (Object[] row : table) {
-		    System.out.format("%35s%35s%35s%35s%35s\n", row);
-		}
-		
 		try {
+			String query = "SELECT C.customerId, C.name, C.address, C.email, C.phoneNumber FROM  Customer C "
+					+ " WHERE C.email = '" + email+"'";
+			rs = DataOps.getInstance().retrieve(query);
 			while(rs.next()) {
+				System.out.println("CustomerId: "+rs.getString("customerId"));
+				System.out.println("Name: "+rs.getString("name"));
+				System.out.println("Address: "+rs.getString("address"));
+				System.out.println("Email Address: "+rs.getString("email"));
+				System.out.println("Phone Number: "+rs.getString("phoneNumber"));
 				retrievedId = rs.getInt("customerId");
-				table[0] = new String[] { rs.getString("employeeId"), rs.getString("name"), rs.getString("address"), rs.getString("email"), rs.getString("phoneNumebr")};
-
-				for (Object[] row : table) {
-				    System.out.format("%35s%35s%35s%35s%35s\n", row);
-				}
+				System.out.println();
 			}
-			
-			String query2 = "SELECT V.licencsePlate, V.model, V.dateOfPurchase, V.lastRecordedMileage, V.make, V.typeOfLastService "
-					+ ", V.dateOfLastService, V.yearManufactured FROM Vehicle V, Owns O"
-					+ "WHERE O.customerId = "+ retrievedId;
-			
-			table[0] = new String[] { "License Plate", "Make", "Model", "Date Of Purchase" , "Last Recorded Mileage", "Types Of Last Service", "Date Of Last Service", "Manufactured Year"};
-			
-			for (Object[] row : table) {
-				System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-			}
-			
+			query = "SELECT V.licensePlate, V.model, V.dateOfPurchase, V.lastRecordedMileage, V.make, V.typeOfLastService,"
+					+ "V.dateOfLastService, V.yearManufactured FROM Vehicle V, Owns O"
+					+ " WHERE O.licensePlate = V.licensePlate AND O.customerId = "+ retrievedId;
+			rs = DataOps.getInstance().retrieve(query);
 			while(rs.next()) {
-					
-				table[0] = new String[] {rs.getString("licensePlate"), rs.getString("make"), rs.getString("model"), rs.getString("dateOfPurchase"), rs.getString("lastRecordedMileage"), rs.getString("typeOfLastService"), rs.getString("dateOfLastService"), rs.getString("yearManufactured")};
-
-				for (Object[] row : table) {
-					System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-				}
+				System.out.println("License Plate: "+rs.getString("licensePlate"));
+				System.out.println("Make: "+rs.getString("make"));
+				System.out.println("Model: "+rs.getString("model"));
+				System.out.println("Date Of Purchase: "+rs.getString("dateOfPurchase"));
+				System.out.println("Last Recorded Mileage: "+rs.getInt("lastRecordedMileage"));
+				System.out.println("Types Of Last Service: "+rs.getInt("typeOfLastService"));
+				System.out.println("Date Of Last Service: "+rs.getString("dateOfLastService"));
+				System.out.println("Manufactured Year: "+rs.getInt("yearManufactured"));
+				System.out.println();
 			}
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-		
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
@@ -420,82 +494,78 @@ public class Employee {
 		case 1:
 			receptionistLandingPage(sc);
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistViewCustomerProfile(sc);
 		}
 		 
 	 }
 	
 	public  void managerViewCustomerProfile(Scanner sc) {
-		System.out.println("======================View Customer Profile======================");
+		System.out.println("======================Manager View Customer Profile======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
-		String query1 = "SELECT C.customerId, C.name, C.address, C.email, C.phoneNumber FROM  Customer C "
-				+ " WHERE C.email = " + email;
-		
+		email = sc.nextLine();
 		int retrievedId = 0;
 		
-		Object[][] table = new String[1][];
-		table[0] = new String[] { "CustomerId", "Name", "Address", "Email Address" , "Phone Number"};
-
-		for (Object[] row : table) {
-		    System.out.format("%35s%35s%35s%35s%35s\n", row);
-		}
-		
 		try {
+			String query = "SELECT C.customerId, C.name, C.address, C.email, C.phoneNumber FROM  Customer C "
+					+ " WHERE C.email = '" + email+"'";
+			rs = DataOps.getInstance().retrieve(query);
 			while(rs.next()) {
+				System.out.println("CustomerId: "+rs.getString("customerId"));
+				System.out.println("Name: "+rs.getString("name"));
+				System.out.println("Address: "+rs.getString("address"));
+				System.out.println("Email Address: "+rs.getString("email"));
+				System.out.println("Phone Number: "+rs.getString("phoneNumber"));
 				retrievedId = rs.getInt("customerId");
-				table[0] = new String[] { rs.getString("employeeId"), rs.getString("name"), rs.getString("address"), rs.getString("email"), rs.getString("phoneNumebr")};
-
-				for (Object[] row : table) {
-				    System.out.format("%35s%35s%35s%35s%35s\n", row);
-				}
+				System.out.println();
 			}
-			
-			String query2 = "SELECT V.licencsePlate, V.model, V.dateOfPurchase, V.lastRecordedMileage, V.make, V.typeOfLastService "
-					+ ", V.dateOfLastService, V.yearManufactured FROM Vehicle V, Owns O"
-					+ "WHERE O.customerId = "+ retrievedId;
-			
-			table[0] = new String[] { "License Plate", "Make", "Model", "Date Of Purchase" , "Last Recorded Mileage", "Types Of Last Service", "Date Of Last Service", "Manufactured Year"};
-			
-			for (Object[] row : table) {
-				System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-			}
-			
+			query = "SELECT V.licensePlate, V.model, V.dateOfPurchase, V.lastRecordedMileage, V.make, V.typeOfLastService,"
+					+ "V.dateOfLastService, V.yearManufactured FROM Vehicle V, Owns O"
+					+ " WHERE O.licensePlate = V.licensePlate AND O.customerId = "+ retrievedId;
+			rs = DataOps.getInstance().retrieve(query);
 			while(rs.next()) {
-					
-				table[0] = new String[] {rs.getString("licensePlate"), rs.getString("make"), rs.getString("model"), rs.getString("dateOfPurchase"), rs.getString("lastRecordedMileage"), rs.getString("typeOfLastService"), rs.getString("dateOfLastService"), rs.getString("yearManufactured")};
-
-				for (Object[] row : table) {
-					System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-				}
+				System.out.println("License Plate: "+rs.getString("licensePlate"));
+				System.out.println("Make: "+rs.getString("make"));
+				System.out.println("Model: "+rs.getString("model"));
+				System.out.println("Date Of Purchase: "+rs.getString("dateOfPurchase"));
+				System.out.println("Last Recorded Mileage: "+rs.getInt("lastRecordedMileage"));
+				System.out.println("Types Of Last Service: "+rs.getInt("typeOfLastService"));
+				System.out.println("Date Of Last Service: "+rs.getString("dateOfLastService"));
+				System.out.println("Manufactured Year: "+rs.getInt("yearManufactured"));
+				System.out.println();
 			}
-			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-		
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			managerLandingPage(sc);
+			managerLandingPage(sc); 
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			managerViewCustomerProfile(sc);
 		}
 		 
 	 }
 	
 	public  void receptionistRegisterCar(Scanner sc) {
-		System.out.println("======================Register Car======================");
-		
+		System.out.println("======================Receptionist Register Car======================");
 		System.out.println("A. Customer Email Address");
 		String email = sc.nextLine();
+		email = sc.nextLine();
 		System.out.println("B. License Plate");
 		String license = sc.nextLine();
 		System.out.println("C. Purchase Date");
-		String purdate = sc.nextLine();
-		Date purchasedate = getDate(purdate);
+		String purchasedate = sc.nextLine();
 		System.out.println("D. Make");
 		String make = sc.nextLine();
 		System.out.println("E. Model");
@@ -510,95 +580,77 @@ public class Employee {
 		System.out.println("2. Cancel");
 		System.out.println("Please select your choice.");
 		int retrievedId = 0;
+		String query = null;
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			String query1 = "INSERT INTO Vehicle(licensePlate, model, dateOfPurchase, lastRecordedMileage, make, yearManufactured) "
-					+ "VALUES(" + license + "," + model + "," + purchasedate + "," + mileage + "," + make + "," + year + ")";
-			if(serdate != "") {
-				Date servicedate = getDate(serdate);
-				String query2 = "UPDATE Vehicle SET dateOfLastService = " + servicedate + "WHERE licensePlate = " + license; 
+			query = "INSERT INTO Vehicle(licensePlate, model, dateOfPurchase, lastRecordedMileage, make, yearManufactured, serviceCenterId) "
+					+ "VALUES('" + license + "','" + model + "','" + purchasedate + "'," + mileage + ",'" + make + "'," + year + "," + serviceCenterId +")";
+			DataOps.getInstance().insertInto(query);
+			if(!serdate.equals("")) {
+				query = "UPDATE Vehicle SET dateOfLastService = '" + serdate + "' WHERE licensePlate = '" + license +"'";
+				DataOps.getInstance().insertInto(query);
 			}
-			
-			String query3 = "SELECT customerId FROM Customer WHERE email = " + email;
-			
+			query = "SELECT customerId FROM Customer WHERE email = '" + email +"'";
+			rs = DataOps.getInstance().retrieve(query);
 			try {
-				while(rs.next()) {
-					retrievedId = rs.getInt("customerId");
-				}
-			} catch (SQLException e) {
+				rs.next();
+				retrievedId = rs.getInt("customerId");
+			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
-				DataOps.destroyInstance();
-				e.printStackTrace();
-			}	
-			String query4 = "INSERT INTO OWNS VALUES(" + license + "," + retrievedId + ")";
+				e1.printStackTrace();
+			}
+			query = "INSERT INTO OWNS VALUES('" + license + "'," + retrievedId + ")";
+			DataOps.getInstance().insertInto(query);
 			receptionistLandingPage(sc);
 			break;
 		case 2:
 			receptionistLandingPage(sc);
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistLandingPage(sc);
 		}
 		 
 	 }
 	
 	public  void receptionistServiceHistory(Scanner sc) {
-		System.out.println("======================Service History======================");
+		System.out.println("======================Receptionist Service History======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
+		email = sc.nextLine();
 		int retrievedId = 0;
 		String mechname = null;
 		String query = null;
-		//String query1 = "SELECT FROM Record WHERE " + email; 
 		try {
-			query = "SELECT C.customerId FROM CUSTOMER C WHERE C.email = " + email;
-			while(rs.next()) {
-				retrievedId = rs.getInt("customerId");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			DataOps.destroyInstance();
-			e.printStackTrace();
-		}
-		
-		query = "SELECT B.appointmentId, B.serviceId, B.licensePlate, A.typeOfService, A.mechId, A.timeIn, A.timeOut, A.Status FROM Books B, Appointment A"
-				+ " WHERE A.appointmentId = B.appointmentId AND B.cutomerId = " + retrievedId;
-		
-		Object[][] table = new String[1][];
-		table[0] = new String[] { "Appointment Id", "License Plate", "Type Of Service", "Service Type", "Mechanic Name" , "Service Start Date", "Service End Date", "Service Status"};
-
-		for (Object[] row : table) {
-		    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-		}
-		
-		try {
+			query = "SELECT customerId FROM Customer WHERE email = '" + email +"'";
+			rs = DataOps.getInstance().retrieve(query);
+			rs.next();
+			retrievedId = rs.getInt("customerId");
+			query = "SELECT B.appointmentId, B.serviceId, B.licensePlate, A.typeOfService, A.mechId, A.timeIn, A.Status FROM Books B, Appointment A"
+					+ " WHERE A.appointmentId = B.appointmentId AND B.customerId = " + retrievedId;
+			rs = DataOps.getInstance().retrieve(query);
 			while(rs.next()) {
 				String serviceType = null;
 				query = "SELECT name FROM Employee WHERE employeeId = " + rs.getInt("mechId");
 				ResultSet rs1 = null;
-				while(rs1.next()) {
-					mechname = rs1.getString("name");
-				}
-				
-				if(rs.getString("typeOfService") == "Maintenance") {
-					query = "SELECT serviceType FROM Maintenance WHERE serviceId = " + rs.getInt("serviceId");
-					while(rs1.next()) {
-						serviceType = rs1.getString("serviceType");
-					}
-				}
-				
-				table[0] = new String[] { rs.getString("appointmentId"), rs.getString("licensePlate"), rs.getString("typeOfService"), serviceType, mechname,  rs.getString("timeIn"), rs.getString("timeOut"), rs.getString("Status")};
-	
-				for (Object[] row : table) {
-				    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-				}
+				rs1 = DataOps.getInstance().retrieve(query);
+				rs1.next();
+				mechname = rs1.getString("name");
+				System.out.println("Appointment Id: "+rs.getString("appointmentId"));
+				System.out.println("License Plate: "+rs.getString("licensePlate"));
+				System.out.println("Service Type: "+rs.getString("typeOfService"));
+				System.out.println("Mechanic Name: "+mechname);
+				System.out.println("Service Start Date: "+rs.getString("timeIn"));
+				System.out.println("Service Status: "+rs.getString("Status"));
+				System.out.println();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-
-		
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
@@ -606,6 +658,10 @@ public class Employee {
 		case 1:
 			receptionistLandingPage(sc);
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistLandingPage(sc);
 		}
 		 
 	 }
@@ -1142,40 +1198,27 @@ public class Employee {
 	 
 	 public  void managerServiceHistory(Scanner sc) {
 			System.out.println("======================Manager Service History======================");
+			String mechname = null;
 			String query = null;
-			String mechname=null;
-			
-			query = "SELECT B.appointmentId, C.name, B.licensePlate, A.typeOfService, A.mechId, A.timeIn, A.timeOut, A.Status FROM Books B, Appointment A, Customer C"
-					+ " WHERE A.appointmentId = B.appointmentId, A.customerId = C.customerId";
-			
-			Object[][] table = new String[1][];
-			table[0] = new String[] { "Appointment Id", "Customer Name", "License Plate", "Service Type", "Mechanic Name" , "Service Start Date", "Service End Date", "Service Status"};
-
-			for (Object[] row : table) {
-			    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-			}
-			
 			try {
+				query = "SELECT B.appointmentId, C.name, B.licensePlate, A.typeOfService, A.mechId, A.timeIn, A.Status FROM Books B, Appointment A, Customer C"
+						+ " WHERE A.appointmentId = B.appointmentId AND B.customerId = C.customerId";
+				rs = DataOps.getInstance().retrieve(query);
 				while(rs.next()) {
 					String serviceType = null;
 					query = "SELECT name FROM Employee WHERE employeeId = " + rs.getInt("mechId");
 					ResultSet rs1 = null;
-					while(rs1.next()) {
-						mechname = rs1.getString("name");
-					}
-					
-					if(rs.getString("typeOfService") == "Maintenance") {
-						query = "SELECT serviceType FROM Maintenance WHERE serviceId = " + rs.getInt("serviceId");
-						while(rs1.next()) {
-							serviceType = rs1.getString("serviceType");
-						}
-					}
-					
-					table[0] = new String[] { rs.getString("appointmentId"), rs.getString("licensePlate"), rs.getString("typeOfService"), serviceType, mechname,  rs.getString("timeIn"), rs.getString("timeOut"), rs.getString("Status")};
-		
-					for (Object[] row : table) {
-					    System.out.format("%35s%35s%35s%35s%35s%35s%35s%35s\n", row);
-					}
+					rs1 = DataOps.getInstance().retrieve(query);
+					rs1.next();
+					mechname = rs1.getString("name");
+					System.out.println("Appointment Id: "+rs.getString("appointmentId"));
+					System.out.println("Customer Name: "+rs.getString("name"));
+					System.out.println("License Plate: "+rs.getString("licensePlate"));
+					System.out.println("Service Type: "+rs.getString("typeOfService"));
+					System.out.println("Mechanic Name: "+mechname);
+					System.out.println("Service Start Date: "+rs.getString("timeIn"));
+					System.out.println("Service Status: "+rs.getString("Status"));
+					System.out.println();
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -1187,7 +1230,12 @@ public class Employee {
 			int choice = sc.nextInt();
 			switch(choice) {
 			case 1:
-				//go back
+				receptionistLandingPage(sc);
+				break;
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				managerLandingPage(sc);
 			}
 		 }
 	 
