@@ -48,6 +48,7 @@ public class Customer {
 		System.out.println("5. Logout");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			displayProfilePage(sc);
@@ -75,6 +76,7 @@ public class Customer {
 		System.out.println("3. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			viewProfile(sc);
@@ -128,6 +130,7 @@ public class Customer {
 		String query;
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			System.out.println("Please enter your Name.");
@@ -204,6 +207,7 @@ public class Customer {
 		String query;
 		
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			// query = "INSERT INTO Vehicle VALUES(" + licensePlate + "," + purchaseDate + "," + make + "," + model + "," + year + "," + currentMileage + "," + lastServiceDate;
@@ -239,6 +243,7 @@ public class Customer {
 		System.out.println("4. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			viewServiceHistory(sc);
@@ -317,13 +322,15 @@ public class Customer {
 		String email = sc.nextLine();
 		
 		System.out.println("Enter License Plate:");
-		String licensePlate = sc.next();
+		String licensePlate = sc.nextLine();
 		
 		System.out.println("Enter Current Mileage:");
 		int currentMileage = sc.nextInt();
+		sc.nextLine();
 		
 		System.out.println("Enter Service Centre Id:");
 		int serviceCenterId = sc.nextInt();
+		sc.nextLine();
 		
 		System.out.println("Enter Mechanic Name: (optional)");
 		String query = "SELECT name, employeeId FROM Employee WHERE serviceCenterId = " + serviceCenterId;
@@ -355,6 +362,7 @@ public class Customer {
 		System.out.println("3. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			scheduleMaintenancePage1(sc, email, licensePlate, currentMileage, prefMechId);
@@ -392,6 +400,7 @@ public class Customer {
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			// call back end function to register
@@ -426,6 +435,7 @@ public class Customer {
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		int random = 0; // has to be changed at back end to genrate autonatic id
 		switch(choice) {
 		case 1:
@@ -454,6 +464,7 @@ public class Customer {
 		System.out.println("8. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			// Engine knock
@@ -483,6 +494,7 @@ public class Customer {
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			// Repair on Date
@@ -533,6 +545,7 @@ public class Customer {
 			System.out.println("2. Go Back");
 			System.out.println("Please select your choice.");
 			int choice = sc.nextInt();
+			sc.nextLine();
 			switch(choice) {
 			case 1:
 				// Reschedule Date
@@ -550,6 +563,7 @@ public class Customer {
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			viewInvoiceDetails(sc);
@@ -572,6 +586,7 @@ public class Customer {
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		sc.nextLine();
 		switch(choice) {
 		case 1:
 			invoice(sc);
