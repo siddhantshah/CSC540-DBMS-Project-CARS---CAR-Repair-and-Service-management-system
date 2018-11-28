@@ -57,7 +57,7 @@ public class DataOps {
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		} finally {
-			close(rs);
+			//close(rs);
 			close(stmt);
 		}
 		return true;
