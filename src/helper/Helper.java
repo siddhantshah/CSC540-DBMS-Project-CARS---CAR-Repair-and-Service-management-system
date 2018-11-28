@@ -96,7 +96,7 @@ public class Helper {
 				String hoursReqdQuery = "select sum(hoursrequired) as totalhoursrequired from (select basicserviceid from contains where serviceid="+maintenanceType+" and (make,model) in (select make,model from vehicle where licenseplate='"+licensePlate+"')) j1 join basicservice b on j1.basicserviceid=b.basicserviceid";
 				ResultSet hoursReqdRS = DataOps.getInstance().retrieve(hoursReqdQuery);
 				hoursReqdRS.next();
-				ap.hoursReqd = hoursReqdRS.getInt("totalhoursrequired");
+				ap.hoursReqd = hoursReqdRS.getFloat("totalhoursrequired");
 				
 				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 				Date today = new Date();
@@ -287,7 +287,7 @@ public class Helper {
 				String hoursReqdQuery = "select sum(hoursrequired) as totalhoursrequired from (select basicserviceid from contains where serviceid="+(3+problem)+" and (make,model) in (select make,model from vehicle where licenseplate='"+licensePlate+"')) j1 join basicservice b on j1.basicserviceid=b.basicserviceid";
 				ResultSet hoursReqdRS = DataOps.getInstance().retrieve(hoursReqdQuery);
 				hoursReqdRS.next();
-				ap.hoursReqd = hoursReqdRS.getInt("totalhoursrequired");
+				ap.hoursReqd = hoursReqdRS.getFloat("totalhoursrequired");
 				
 				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 				Date today = new Date();

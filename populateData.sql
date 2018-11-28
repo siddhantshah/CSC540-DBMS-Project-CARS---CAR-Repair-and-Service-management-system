@@ -275,6 +275,20 @@ INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfSe
 INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(15,null,'Completed',TIMESTAMP '2016-01-02 14:00:00',401671897,8);
 INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(16,null,'Completed',TIMESTAMP '2015-09-30 11:00:00',401671897,4);
 
+update appointment set typeofservice = 1 where appointmentid =3;
+update appointment set typeofservice = 2 where appointmentid =4;
+update appointment set typeofservice = 1 where appointmentid =5;
+update appointment set typeofservice = 1 where appointmentid =6;
+update appointment set typeofservice = 1 where appointmentid =7;
+update appointment set typeofservice = 1 where appointmentid =8;
+update appointment set typeofservice = 1 where appointmentid =9;
+update appointment set typeofservice = 1 where appointmentid =10;
+update appointment set typeofservice = 2 where appointmentid =11;
+update appointment set typeofservice = 1 where appointmentid =12;
+update appointment set typeofservice = 1 where appointmentid =13;
+update appointment set typeofservice = 1 where appointmentid =14;
+update appointment set typeofservice = 2 where appointmentid =15;
+update appointment set typeofservice = 2 where appointmentid =16;
 
 INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(3,1,'XYZ-5643',1001);
 INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(2,2,'XYZ-5643',1001);
@@ -917,3 +931,25 @@ Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,t
 Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('DEL-8888', 'Rogue', '2016-05-11',31209,'Nissan','1','2018-02-11',2014,1);
 Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('P11-212A', 'Accord', '2010-04-14',60452,'Honda','2','2017-09-01',2009,2);
 Insert into vehicle(licenseplate,model,dateofpurchase,lastrecordedmileage,make,typeoflastservice,dateOfLastService,yearManufactured,serviceCenterId) values('WIM-BLE5', 'Prius', '2014-03-01',19876,'Toyota','1','2016-11-11',2013,2);
+
+update basicservice set hoursrequired = 0.25, description = 'Air Filter Change' where basicserviceid = 1;
+update basicservice set hoursrequired = 0.25, description = 'Battery Replacement' where basicserviceid = 2;
+update basicservice set hoursrequired = 0.25, description = 'Brake Check' where basicserviceid = 3;
+update basicservice set hoursrequired = 0.5, description = 'Brake Repair'where basicserviceid = 4;
+update basicservice set hoursrequired = 1, description = 'Camshaft Replacement' where basicserviceid = 5;
+update basicservice set hoursrequired = 1, description = 'Catalytic Covertor Replacement' where basicserviceid = 6;
+update basicservice set hoursrequired = 0.25, description = 'Coolant Recycle' where basicserviceid = 7;
+update basicservice set hoursrequired = 1, description = 'Drive Belt Replacement' where basicserviceid = 8;
+update basicservice set hoursrequired = 0.25, description = 'Engine Oil Change' where basicserviceid = 9;
+update basicservice set hoursrequired = 1, description = 'Gear Box Repair' where basicserviceid = 10;
+update basicservice set hoursrequired = 0.5, description = 'Headlights Replacement' where basicserviceid = 11;
+update basicservice set hoursrequired = 0.25, description = 'Oil Filter Change' where basicserviceid = 12;
+update basicservice set hoursrequired = 1, description = 'Piston Replacement' where basicserviceid = 13;
+update basicservice set hoursrequired = 0.25, description = 'Power Steering Check' where basicserviceid = 14;
+update basicservice set hoursrequired = 0.25, description = 'Spark Plugs Replacement' where basicserviceid = 15;
+update basicservice set hoursrequired = 0.25, description = 'Suspension Check' where basicserviceid = 16;
+update basicservice set hoursrequired = 0.5, description = 'Tail Lights Replacement' where basicserviceid = 17;
+update basicservice set hoursrequired = 0.5, description = 'Turn Lights Replacement' where basicserviceid = 18;
+update basicservice set hoursrequired = 1, description = 'Valve Replacement' where basicserviceid = 19;
+update basicservice set hoursrequired = 1, description = 'Wheel Alignment' where basicserviceid = 20;
+update basicservice set hoursrequired = 0.25, description = 'Wiper Check' where basicserviceid = 21;
