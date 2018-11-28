@@ -593,6 +593,7 @@ public class Helper {
 	public Date orderParts(int servicecenterid, int partId, int quantity) throws SQLException {
 		String minThresQuery="select MINIMUMORDERTHRESHOLD from Has where servicecenterid="+servicecenterid+" partid="+partId;
 		ResultSet minThreshRS = DataOps.getInstance().retrieve(minThresQuery);
+		minThreshRS.next();
 		int minThresh = minThreshRS.getInt("MINIMUMORDERTHRESHOLD");
 		int orderQuant = (quantity < minThresh) ? minThresh : quantity;
 		String checkOtherCenterQuery = "select servicecenterid, currentquantity, MINIMUMQUANTITYTHRESHOLD from Has where servicecenterid != "+servicecenterid+" order by currentquantity desc";
@@ -610,13 +611,16 @@ public class Helper {
 			c.add(Calendar.DATE, 1);
 			Date tomorrow = c.getTime();
 		    String strDate = sdfDate.format(tomorrow);
-			String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+serv+", "+servicecenterid+", "+strDate+")";
+			String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+serv+", "+servicecenterid+", "+strDate+")";
 			DataOps.getInstance().insertInto(order);
+			String decrease="update Has set currentquantity="+(currentQ-orderQuant)+" where servicecenterid="+serv+" and partid= "+partId;
+			DataOps.getInstance().insertInto(decrease);
 			return tomorrow;
 			
 		}
 		String checkDistQuery = "select DISTRIBUTORID, deliveryWindow from Supplies where partId = "+partId+" order by deliverWindow asc";
 		ResultSet checkDistRS = DataOps.getInstance().retrieve(checkDistQuery);
+		checkDistRS.next();
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		Date today = new Date();
 		Calendar c = Calendar.getInstance(); 
@@ -645,6 +649,35 @@ public class Helper {
 				 outgoingPartQuery="insert into OutgoingParts (AppointmentId, partId, Quantity, scheduledDate, serviceCenterId) VALUES ( "+(lastappointmentid+1)+" ,"+partId+" ,"+ap.partsRequired.get(partId)+"' , "+ap.assignedDate+", "+ap.serviceCenterId+")";
 				 DataOps.getInstance().insertInto(outgoingPartQuery);
 			}
+			String day = ap.assignedDate.substring(0, 10);
+			String mecrecQuery = "select availableslots, hours from mecrec where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
+			ResultSet mecrecRS = DataOps.getInstance().retrieve(mecrecQuery);
+			mecrecRS.next();
+			String[] slots = mecrecRS.getString("availableslots").split(",");
+			int hours = mecrecRS.getInt("hours");
+			int updatedHours=0;
+			ArrayList<String> slotList = new ArrayList<String>();
+			for(String slot: slots) {
+				slotList.add(slot);
+			}
+			if(ap.proposedDates[0].equals(ap.assignedDate)) {
+				String[] proposedSlots = ap.proposedSlots[0].split(",");
+				for(String proposedSlot : proposedSlots) {
+					slotList.remove(proposedSlot);
+				}
+				updatedHours=hours-proposedSlots.length;
+			}
+			else {
+				String[] proposedSlots = ap.proposedSlots[1].split(",");
+				for(String proposedSlot : proposedSlots) {
+					slotList.remove(proposedSlot);
+				}
+				updatedHours=hours-proposedSlots.length;
+			}
+			String newSlots = slotList.toString().substring(1);
+			newSlots=newSlots.substring(0, newSlots.length()-1);
+			String updateMecrecQuery ="update MecRec set availableslots='"+newSlots+"' and hours="+updatedHours+" where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
+			DataOps.getInstance().insertInto(updateMecrecQuery);
 			
 		}
 		catch(Exception e) {
