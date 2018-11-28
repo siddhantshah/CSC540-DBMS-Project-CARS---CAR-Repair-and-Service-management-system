@@ -749,7 +749,7 @@ public class Helper {
 			while (mechHours.next()) {
 				int eid = mechHours.getInt("EMPLOYEEID");
 				String[] slots = mechHours.getString("AVAILABLESLOTS").split(",");
-				double hours_worked = slots.length * 0.5;
+				double hours_worked = (18 - slots.length) * 0.5;
 				
 				String employeeSalaryQuery = "select HOURLYWAGES from MECHANIC where EMPLOYEEID = '"+eid+"'";
 				ResultSet salary_rs = DataOps.getInstance().retrieve(employeeSalaryQuery);
@@ -799,5 +799,4 @@ public class Helper {
 			}
 		} catch (Exception e) {}
 	}
-	
 }
