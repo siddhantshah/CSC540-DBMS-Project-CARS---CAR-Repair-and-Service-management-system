@@ -29,6 +29,7 @@ public class Helper {
 		Appointment ap = new Appointment();
 		String mileageQuery="select LASTRECORDEDMILEAGE,make,model,servicecenterid from vehicle where licenseplate='"+licensePlate+"'";
 		ResultSet mileageRS = DataOps.getInstance().retrieve(mileageQuery); 
+		mileageRS.next();
 		int lastRecordedMileage = mileageRS.getInt("LASTRECORDEDMILEAGE");
 		String make = mileageRS.getString("make");
 		String model = mileageRS.getString("model");
@@ -48,6 +49,7 @@ public class Helper {
 		ap.customerId=customerId;
 		ap.licensePlate = licensePlate;
 		ap.serviceId=maintenanceType;
+		ap.serviceCenterId = servicecenterid;
 		//Get basic services for this repair
 		String deficitQuery = "select j2.partid, j2.currentquantity,j2.requiredquantity,j3.schduledquantity from \n" + 
 				"(select h.partid, h.currentquantity, j1.requiredquantity from has h join \n" + 
@@ -231,6 +233,7 @@ public class Helper {
 		ResultSet mileageRS = DataOps.getInstance().retrieve(mileageQuery); 
 		mileageRS.next();
 		int servicecenterid = mileageRS.getInt("servicecenterid");
+		ap.serviceCenterId = servicecenterid;
 		String updateMileageQuery="update Vehicle set lastrecordedmileage="+currentMileage+" where licenseplate='"+licensePlate+"'";
 		DataOps.getInstance().insertInto(updateMileageQuery);
 		//Get basic services for this repair
@@ -588,16 +591,18 @@ public class Helper {
 	
 	
 	public Date orderParts(int servicecenterid, int partId, int quantity) throws SQLException {
-		String minThresQuery="select MIMINUMORDERTHRESHOLD from Has where servicecenterid="+servicecenterid+" partid="+partId;
+		String minThresQuery="select MINIMUMORDERTHRESHOLD from Has where servicecenterid="+servicecenterid+" partid="+partId;
 		ResultSet minThreshRS = DataOps.getInstance().retrieve(minThresQuery);
-		int minThresh = minThreshRS.getInt("MIMINUMORDERTHRESHOLD");
+		int minThresh = minThreshRS.getInt("MINIMUMORDERTHRESHOLD");
 		int orderQuant = (quantity < minThresh) ? minThresh : quantity;
-		String checkOtherCenterQuery = "select servicecenterid, currentquantity, MIMINUMORDERTHRESHOLD from Has where servicecenterid != "+servicecenterid+" order by currentquantity desc";
+		String checkOtherCenterQuery = "select servicecenterid, currentquantity, MINIMUMQUANTITYTHRESHOLD from Has where servicecenterid != "+servicecenterid+" order by currentquantity desc";
 		ResultSet checkOtherCenterRS = DataOps.getInstance().retrieve(checkOtherCenterQuery);
 		while(checkOtherCenterRS.next()) {
-			int serv = checkOtherCenterRS.getInt("servicecbenterid");	
+			int serv = checkOtherCenterRS.getInt("servicecenterid");	
 			int currentQ = checkOtherCenterRS.getInt("currentquantity");
-			int minimumQ = checkOtherCenterRS.getInt("MIMINUMORDERTHRESHOLD");
+			int minimumQ = checkOtherCenterRS.getInt("MINIMUMQUANTITYTHRESHOLD");
+			if(currentQ-orderQuant < minimumQ)
+				continue;
 			SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 			Date today = new Date();
 			Calendar c = Calendar.getInstance(); 
@@ -605,11 +610,10 @@ public class Helper {
 			c.add(Calendar.DATE, 1);
 			Date tomorrow = c.getTime();
 		    String strDate = sdfDate.format(tomorrow);
-			if(currentQ-orderQuant >minimumQ) {
-				String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+serv+", "+servicecenterid+", "+strDate+")";
-				DataOps.getInstance().insertInto(order);
-				return tomorrow;
-			}
+			String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+serv+", "+servicecenterid+", "+strDate+")";
+			DataOps.getInstance().insertInto(order);
+			return tomorrow;
+			
 		}
 		String checkDistQuery = "select DISTRIBUTORID, deliveryWindow from Supplies where partId = "+partId+" order by deliverWindow asc";
 		ResultSet checkDistRS = DataOps.getInstance().retrieve(checkDistQuery);
@@ -625,6 +629,85 @@ public class Helper {
 		return delDate;
 	}
 	
+	
+	public boolean scheduleAppointment(Appointment ap) {
+		try {
+			String lastApptQuery = "select max(appointmentid) as lastappointmentid from appointment";
+			ResultSet lastApptRS = DataOps.getInstance().retrieve(lastApptQuery);
+			lastApptRS.next();
+			int lastappointmentid = lastApptRS.getInt("lastappointmentid");
+			String apptQuery="insert into Appointment (AppointmentId, status, TimeIn, mechId, TypeOfService) VALUES ( "+(lastappointmentid+1)+","+" 'Pending', '"+ap.assignedDate+"' , "+ap.assignedMechanicId+", "+ap.serviceId+")";
+			String booksQuery="insert into Books (ServiceId, AppointmentId, LicensePlate, customerId) VALUES ( "+ap.serviceId+", "+(lastappointmentid+1)+", "+ap.licensePlate+", "+ap.customerId+")";
+			DataOps.getInstance().insertInto(apptQuery);
+			DataOps.getInstance().insertInto(booksQuery);
+			String outgoingPartQuery="";
+			for(Integer partId : ap.partsRequired.keySet()) {
+				 outgoingPartQuery="insert into OutgoingParts (AppointmentId, partId, Quantity, scheduledDate, serviceCenterId) VALUES ( "+(lastappointmentid+1)+" ,"+partId+" ,"+ap.partsRequired.get(partId)+"' , "+ap.assignedDate+", "+ap.serviceCenterId+")";
+				 DataOps.getInstance().insertInto(outgoingPartQuery);
+			}
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			DataOps.destroyInstance();
+			return false;
+		}
+		return true;
+	}
+	
+	public Appointment rescheduleAppointmentHelper(int appointmentId) {
+		try {
+			Appointment resAppt = new Appointment();
+			resAppt.appointmentId = appointmentId;
+			String booksQuery = "select serviceId, LicensePlate, CustomerId from Books where appointmentId="+appointmentId;
+			ResultSet booksResultSet = DataOps.getInstance().retrieve(booksQuery);
+			booksResultSet.next();
+			int typeOfService = booksResultSet.getInt("serviceId");
+			int customerId = booksResultSet.getInt("CustomerId");
+			String licensePlate = booksResultSet.getString("LicensePlate");
+			String mileageQuery="select LASTRECORDEDMILEAGE from vehicle where licenseplate='"+licensePlate+"'";
+			ResultSet mileageRS = DataOps.getInstance().retrieve(mileageQuery); 
+			mileageRS.next();
+			int mileage = mileageRS.getInt("LASTRECORDEDMILEAGE");
+			Appointment existingAppt = null;
+			if(typeOfService <= 3) {
+				existingAppt = scheduleMaintenanceHelper(customerId, licensePlate, "", mileage);
+			}
+			else {
+				existingAppt = scheduleRepairHelper(customerId, licensePlate, "", mileage, typeOfService-3);
+			}
+			
+			resAppt.canSchedule = existingAppt.canSchedule;
+			resAppt.errorReport = existingAppt.errorReport;
+			resAppt.proposedDates = existingAppt.proposedDates;
+			resAppt.proposedSlots = existingAppt.proposedSlots;
+			return resAppt;
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			DataOps.destroyInstance();
+		}
+		return null;
+	}
+	
+	public boolean rescheduleAppointment(Appointment ap) {
+		try {
+			
+			String apptQuery="update  Appointment set Timein ='"+ap.assignedDate+"' where appointmentId="+ap.appointmentId;
+			DataOps.getInstance().insertInto(apptQuery);
+			String outgoingPartQuery="update OutgoingParts set scheduledDate ='"+ap.assignedDate+"' where appointmentId="+ap.appointmentId;
+			DataOps.getInstance().insertInto(outgoingPartQuery);
+			
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			DataOps.destroyInstance();
+			return false;
+		}
+		return true;
+	}
 	
 	
 }

@@ -17,5 +17,7 @@ public class Appointment {
 	public int customerId;
 	public int maintenanceType;
 	public int serviceId;
+	public int serviceCenterId;
 	public HashMap<Integer, Integer> partsRequired=new HashMap<Integer,Integer>();
+	public int appointmentId;
 }
