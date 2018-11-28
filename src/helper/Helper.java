@@ -708,6 +708,96 @@ public class Helper {
 		}
 		return true;
 	}
-	
+
+	public static void updatePayroll() throws SQLException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String salary_date = dateFormat.format(date);
+
+		try {
+			String[] date_arr = salary_date.split("-");
+			String year = date_arr[0];
+			String month = date_arr[1];
+			String day = date_arr[2];
+			
+			if (day.equals("01")) {
+				day = "15";
+				if (month.equals("01")) {
+					year = Integer.toString(Integer.parseInt(year) - 1);
+					month = "12";
+				} else {
+					int mn = Integer.parseInt(month) - 1;
+					if (mn < 10) {
+						month = "0" + Integer.toString(mn);
+					} else {
+						month = Integer.toString(mn);
+					}
+				}
+			} else if (day.equals("15")) {
+				day = "01";
+			} else {
+				return;
+			}
+			
+			String prev_date = year + "-" + month + "-" + day;
+			
+			String getMechHoursQuery = "SELECT * from MECREC WHERE day >= '"+prev_date+"' AND day < '"+salary_date+"'";
+			ResultSet mechHours = DataOps.getInstance().retrieve(getMechHoursQuery);
+			HashMap<Integer, Double> total_salary = new HashMap<Integer, Double>();
+			HashMap<Integer, Double> total_hours = new HashMap<Integer, Double>();
+
+			while (mechHours.next()) {
+				int eid = mechHours.getInt("EMPLOYEEID");
+				String[] slots = mechHours.getString("AVAILABLESLOTS").split(",");
+				double hours_worked = slots.length * 0.5;
+				
+				String employeeSalaryQuery = "select HOURLYWAGES from MECHANIC where EMPLOYEEID = '"+eid+"'";
+				ResultSet salary_rs = DataOps.getInstance().retrieve(employeeSalaryQuery);
+				if (salary_rs.next()) {
+					int salary = salary_rs.getInt("HOURLYWAGES");
+					
+					if (total_salary.containsKey(eid)) {
+						total_salary.put(eid, total_salary.get(eid) + salary*hours_worked);
+						total_hours.put(eid, total_hours.get(eid) + hours_worked);
+					} else {
+						total_salary.put(eid, salary*hours_worked);
+						total_hours.put(eid, hours_worked);
+					}
+				}
+			}
+			double emp_salary, emp_hours;
+			for (Integer eid: total_salary.keySet()) {
+				emp_salary = total_salary.get(eid);
+				emp_hours = total_hours.get(eid);
+				String insertPayQuery = "INSERT INTO PAYROLL values ("+eid+", '"+salary_date+"', "+emp_salary+", "+emp_hours+")";
+				DataOps.getInstance().insertInto(insertPayQuery);
+			}
+			
+			if (day.equals("15")) {
+				String getManagersQuery = "SELECT * from MANAGER";
+				ResultSet managers = DataOps.getInstance().retrieve(getManagersQuery);
+				
+				while (managers.next()) {
+					int eid = managers.getInt("EMPLOYEEID");
+					int salary = managers.getInt("SALARY");
+					
+					String insertPayQuery = "INSERT INTO PAYROLL values ("+eid+", '"+salary_date+"', "+salary+", 40)";
+					DataOps.getInstance().insertInto(insertPayQuery);
+				}
+				
+				
+				String getReceptionistQuery = "SELECT * from RECEPTIONIST";
+				ResultSet receptionists = DataOps.getInstance().retrieve(getReceptionistQuery);
+				
+				while (receptionists.next()) {
+					int eid = receptionists.getInt("EMPLOYEEID");
+					int salary = receptionists.getInt("SALARY");
+					
+					String insertPayQuery = "INSERT INTO PAYROLL values ("+eid+", '"+salary_date+"', "+salary+", 40)";
+					DataOps.getInstance().insertInto(insertPayQuery);
+				}
+			}
+		} catch (Exception e) {}
+	}
 	
 }
