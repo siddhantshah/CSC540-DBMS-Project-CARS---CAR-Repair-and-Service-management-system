@@ -36,14 +36,21 @@ public class Helper {
 		int servicecenterid = mileageRS.getInt("servicecenterid");
 		String updateMileageQuery="update Vehicle set lastrecordedmileage="+currentMileage+" where licenseplate='"+licensePlate+"'";
 		DataOps.getInstance().insertInto(updateMileageQuery);
-		int maintenanceType;
-		if(lastRecordedMileage - currentMileage < 10000 ) {
-			maintenanceType=1;
+		
+		String milesQuery ="select serviceid,miles from servicemiles where make= '"+make+"' and model='"+model+"' order by serviceid";
+		ResultSet milesRS = DataOps.getInstance().retrieve(milesQuery);
+		
+		
+		int maintenanceType=0;
+		while(milesRS.next()) {
+			int mileLimit = milesRS.getInt("miles");
+			int serviceId =milesRS.getInt("serviceid");
+			if(lastRecordedMileage - currentMileage < mileLimit ) {
+				maintenanceType=serviceId;
+				break;
+			}
 		}
-		else if(lastRecordedMileage - currentMileage < 25000) {
-			maintenanceType=2;
-		}
-		else {
+		if(maintenanceType ==0) {
 			maintenanceType=3;
 		}
 		ap.customerId=customerId;
@@ -51,10 +58,10 @@ public class Helper {
 		ap.serviceId=maintenanceType;
 		ap.serviceCenterId = servicecenterid;
 		//Get basic services for this repair
-		String deficitQuery = "select j2.partid, j2.currentquantity,j2.requiredquantity,j3.schduledquantity from \n" + 
+		String deficitQuery = "select j2.partid, j2.currentquantity,j2.requiredquantity,NVL(j3.schduledquantity,0) as schduledquantity from \n" + 
 				"(select h.partid, h.currentquantity, j1.requiredquantity from has h join \n" + 
-				"(select U.partid, U.quantity as requiredquantity from Uses U where basicserviceid in (select C.basicserviceid from Repair R join Contains C on r.serviceid = c.serviceid where c.serviceid="+maintenanceType+"and c.make='"+make+"' and c.model='"+model+"') \n" + 
-				"and (U.make, U.model) in (select V.make, v.model from vehicle V where v.licenseplate='"+licensePlate+"')) J1 on h.partid = j1.partid where h.servicecenterid ="+servicecenterid+") J2 join (select partid, sum(quantity) as schduledquantity from outgoingparts where servicecenterid ="+servicecenterid+" group by partid)j3\n" + 
+				"(select U.partid, U.quantity as requiredquantity from Uses U where basicserviceid in (select C.basicserviceid from Maintenance R join Contains C on r.serviceid = c.serviceid where c.serviceid="+maintenanceType+"and c.make='"+make+"' and c.model='"+model+"') \n" + 
+				"and (U.make, U.model) in (select V.make, v.model from vehicle V where v.licenseplate='"+licensePlate+"')) J1 on h.partid = j1.partid where h.servicecenterid ="+servicecenterid+") J2 left join (select partid, sum(quantity) as schduledquantity from outgoingparts where servicecenterid ="+servicecenterid+" group by partid)j3\n" + 
 				"on j2.partid = j3.partid";
 		ResultSet rs = DataOps.getInstance().retrieve(deficitQuery);
 		int partId, currentquantity,requiredquantity, schduledquantity,deficit;
@@ -105,12 +112,12 @@ public class Helper {
 				
 				String mechQuery;
 				if(mechanic== null || mechanic.length()==0) {
-					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 8-r.hours >="+ap.hoursReqd+" order by r.day"  ;
+					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 9-r.hours >="+ap.hoursReqd+" order by r.day"  ;
 					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
 					mechRS.next();
 					String availableSlots = mechRS.getString("availableslots");
 					String[] availableSlotsList = availableSlots.split(",");
-					while (availableSlotsList.length < ap.hoursReqd) {
+					while (((double)availableSlotsList.length /2) < ap.hoursReqd) {
 						if (!mechRS.next()) {
 							ap.canSchedule = false;
 							ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
@@ -125,45 +132,47 @@ public class Helper {
 					SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Date startOfDay = hourFormat.parse(dayString + " 08:00");
 					ap.proposedDates[0] = hourFormat.format(new Date(
-							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 1800 * 1000));
 					StringBuffer slotBuffer = new StringBuffer();
 					double hoursReqd = ap.hoursReqd;
-					for (int j = 0; j < hoursReqd; j++) {
-						slotBuffer.append(availableSlotsList[j] + ",");
+					int index=0;
+					for (double j = 0; j < hoursReqd; j=j+0.5) {
+						slotBuffer.append(availableSlotsList[index++] + ",");
 
 					}
 					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
 					ap.proposedSlots[0] = slotBuffer.toString();
 					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' order by r.day" ;
 					mechRS = DataOps.getInstance().retrieve(mechQuery);
-				
-					
-						mechRS.next();
-						availableSlots = mechRS.getString("availableslots");
-						availableSlotsList = availableSlots.split(",");
-						while (availableSlotsList.length < ap.hoursReqd) {
-							if (!mechRS.next()) {
-								ap.canSchedule = false;
-								ap.errorReport = "Cannot schedule appointment. Please try later";
-								return ap;
-							}
+					mechRS.next();
+					availableSlots = mechRS.getString("availableslots");
+					availableSlotsList = availableSlots.split(",");
+					while (((double)availableSlotsList.length /2) < ap.hoursReqd) {
+						if (!mechRS.next()) {
+							ap.canSchedule = false;
+							ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
+							return ap;
 						}
-						availableSlots = mechRS.getString("availableslots");
-						availableSlotsList = availableSlots.split(",");
-						dayString = mechRS.getString("day");
-						hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-						startOfDay = hourFormat.parse(dayString + " 08:00");
-						ap.proposedDates[1] = hourFormat.format(new Date(
-								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
-						slotBuffer = new StringBuffer();
-						hoursReqd = ap.hoursReqd;
-						for (int j = 0; j < hoursReqd; j++) {
-							slotBuffer.append(availableSlotsList[j] + ",");
+					}
+					availableSlots = mechRS.getString("availableslots");
+					availableSlotsList = availableSlots.split(",");
+					ap.assignedMechanic = mechRS.getString("name");
+					ap.assignedMechanicId = mechRS.getInt("employeeid");
+					dayString = mechRS.getString("day");
+					hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					startOfDay = hourFormat.parse(dayString + " 08:00");
+					ap.proposedDates[1] = hourFormat.format(new Date(
+							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 1800 * 1000));
+					slotBuffer = new StringBuffer();
+					hoursReqd = ap.hoursReqd;
+					index=0;
+					for (double j = 0; j < hoursReqd; j=j+0.5) {
+						slotBuffer.append(availableSlotsList[index++] + ",");
 
-						}
-						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
-						ap.proposedSlots[1] = slotBuffer.toString();
-				
+					}
+					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+					ap.proposedSlots[1] = slotBuffer.toString();
+
 				
 				}
 				
@@ -176,7 +185,7 @@ public class Helper {
 						mechRS.next();
 						String availableSlots = mechRS.getString("availableslots");
 						String[] availableSlotsList = availableSlots.split(",");
-						while (availableSlotsList.length < ap.hoursReqd) {
+						while (((double)availableSlotsList.length /2) < ap.hoursReqd) {
 							if (!mechRS.next()) {
 								ap.canSchedule = false;
 								ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
@@ -191,11 +200,12 @@ public class Helper {
 						SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						Date startOfDay = hourFormat.parse(dayString + " 08:00");
 						ap.proposedDates[i] = hourFormat.format(new Date(
-								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 1800 * 1000));
 						StringBuffer slotBuffer = new StringBuffer();
 						double hoursReqd = ap.hoursReqd;
-						for (int j = 0; j < hoursReqd; j++) {
-							slotBuffer.append(availableSlotsList[j] + ",");
+						int index=0;
+						for (double j = 0; j < hoursReqd; j=j+0.5) {
+							slotBuffer.append(availableSlotsList[index++] + ",");
 
 						}
 						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
@@ -296,12 +306,12 @@ public class Helper {
 				
 				String mechQuery;
 				if(mechanic== null || mechanic.length()==0) {
-					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 8-r.hours >="+ap.hoursReqd+" order by r.day"  ;
+					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 9-r.hours >="+ap.hoursReqd+" order by r.day"  ;
 					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
 					mechRS.next();
 					String availableSlots = mechRS.getString("availableslots");
 					String[] availableSlotsList = availableSlots.split(",");
-					while (availableSlotsList.length < ap.hoursReqd) {
+					while (((double)availableSlotsList.length /2) < ap.hoursReqd) {
 						if (!mechRS.next()) {
 							ap.canSchedule = false;
 							ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
@@ -316,44 +326,46 @@ public class Helper {
 					SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Date startOfDay = hourFormat.parse(dayString + " 08:00");
 					ap.proposedDates[0] = hourFormat.format(new Date(
-							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 1800 * 1000));
 					StringBuffer slotBuffer = new StringBuffer();
 					double hoursReqd = ap.hoursReqd;
-					for (int j = 0; j < hoursReqd; j++) {
-						slotBuffer.append(availableSlotsList[j] + ",");
+					int index=0;
+					for (double j = 0; j < hoursReqd; j=j+0.5) {
+						slotBuffer.append(availableSlotsList[index++] + ",");
 
 					}
 					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
 					ap.proposedSlots[0] = slotBuffer.toString();
 					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' order by r.day" ;
 					mechRS = DataOps.getInstance().retrieve(mechQuery);
-				
-					
-						mechRS.next();
-						availableSlots = mechRS.getString("availableslots");
-						availableSlotsList = availableSlots.split(",");
-						while (availableSlotsList.length < ap.hoursReqd) {
-							if (!mechRS.next()) {
-								ap.canSchedule = false;
-								ap.errorReport = "Cannot schedule appointment. Please try later";
-								return ap;
-							}
+					mechRS.next();
+					availableSlots = mechRS.getString("availableslots");
+					availableSlotsList = availableSlots.split(",");
+					while (((double)availableSlotsList.length /2) < ap.hoursReqd) {
+						if (!mechRS.next()) {
+							ap.canSchedule = false;
+							ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
+							return ap;
 						}
-						availableSlots = mechRS.getString("availableslots");
-						availableSlotsList = availableSlots.split(",");
-						dayString = mechRS.getString("day");
-						hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-						startOfDay = hourFormat.parse(dayString + " 08:00");
-						ap.proposedDates[1] = hourFormat.format(new Date(
-								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
-						slotBuffer = new StringBuffer();
-						hoursReqd = ap.hoursReqd;
-						for (int j = 0; j < hoursReqd; j++) {
-							slotBuffer.append(availableSlotsList[j] + ",");
+					}
+					availableSlots = mechRS.getString("availableslots");
+					availableSlotsList = availableSlots.split(",");
+					ap.assignedMechanic = mechRS.getString("name");
+					ap.assignedMechanicId = mechRS.getInt("employeeid");
+					dayString = mechRS.getString("day");
+					hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					startOfDay = hourFormat.parse(dayString + " 08:00");
+					ap.proposedDates[1] = hourFormat.format(new Date(
+							startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 1800 * 1000));
+					slotBuffer = new StringBuffer();
+					hoursReqd = ap.hoursReqd;
+					index=0;
+					for (double j = 0; j < hoursReqd; j=j+0.5) {
+						slotBuffer.append(availableSlotsList[index++] + ",");
 
-						}
-						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
-						ap.proposedSlots[1] = slotBuffer.toString();
+					}
+					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
+					ap.proposedSlots[1] = slotBuffer.toString();
 				
 				
 				}
@@ -367,7 +379,7 @@ public class Helper {
 						mechRS.next();
 						String availableSlots = mechRS.getString("availableslots");
 						String[] availableSlotsList = availableSlots.split(",");
-						while (availableSlotsList.length < ap.hoursReqd) {
+						while (((double)availableSlotsList.length /2) < ap.hoursReqd) {
 							if (!mechRS.next()) {
 								ap.canSchedule = false;
 								ap.errorReport = "Cannot schedule appointment with preferred mechanic. Please choose another preference or leave field blank";
@@ -382,11 +394,12 @@ public class Helper {
 						SimpleDateFormat hourFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						Date startOfDay = hourFormat.parse(dayString + " 08:00");
 						ap.proposedDates[i] = hourFormat.format(new Date(
-								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 3600 * 1000));
+								startOfDay.getTime() + (Integer.parseInt(availableSlotsList[0]) - 1) * 1800 * 1000));
 						StringBuffer slotBuffer = new StringBuffer();
 						double hoursReqd = ap.hoursReqd;
-						for (int j = 0; j < hoursReqd; j++) {
-							slotBuffer.append(availableSlotsList[j] + ",");
+						int index=0;
+						for (double j = 0; j < hoursReqd; j=j+0.5) {
+							slotBuffer.append(availableSlotsList[index++] + ",");
 
 						}
 						slotBuffer.deleteCharAt(slotBuffer.length() - 1);
@@ -615,6 +628,7 @@ public class Helper {
 			DataOps.getInstance().insertInto(order);
 			String decrease="update Has set currentquantity="+(currentQ-orderQuant)+" where servicecenterid="+serv+" and partid= "+partId;
 			DataOps.getInstance().insertInto(decrease);
+		
 			return tomorrow;
 			
 		}
@@ -654,8 +668,8 @@ public class Helper {
 			ResultSet mecrecRS = DataOps.getInstance().retrieve(mecrecQuery);
 			mecrecRS.next();
 			String[] slots = mecrecRS.getString("availableslots").split(",");
-			int hours = mecrecRS.getInt("hours");
-			int updatedHours=0;
+			double hours = mecrecRS.getDouble("hours");
+			double updatedHours=0;
 			ArrayList<String> slotList = new ArrayList<String>();
 			for(String slot: slots) {
 				slotList.add(slot);
@@ -665,14 +679,14 @@ public class Helper {
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours-proposedSlots.length;
+				updatedHours=hours-proposedSlots.length/2;
 			}
 			else {
 				String[] proposedSlots = ap.proposedSlots[1].split(",");
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours-proposedSlots.length;
+				updatedHours=hours-proposedSlots.length/2;
 			}
 			String newSlots = slotList.toString().substring(1);
 			newSlots=newSlots.substring(0, newSlots.length()-1);
@@ -731,6 +745,35 @@ public class Helper {
 			DataOps.getInstance().insertInto(apptQuery);
 			String outgoingPartQuery="update OutgoingParts set scheduledDate ='"+ap.assignedDate+"' where appointmentId="+ap.appointmentId;
 			DataOps.getInstance().insertInto(outgoingPartQuery);
+			String day = ap.assignedDate.substring(0, 10);
+			String mecrecQuery = "select availableslots, hours from mecrec where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
+			ResultSet mecrecRS = DataOps.getInstance().retrieve(mecrecQuery);
+			mecrecRS.next();
+			String[] slots = mecrecRS.getString("availableslots").split(",");
+			double hours = mecrecRS.getDouble("hours");
+			double updatedHours=0;
+			ArrayList<String> slotList = new ArrayList<String>();
+			for(String slot: slots) {
+				slotList.add(slot);
+			}
+			if(ap.proposedDates[0].equals(ap.assignedDate)) {
+				String[] proposedSlots = ap.proposedSlots[0].split(",");
+				for(String proposedSlot : proposedSlots) {
+					slotList.remove(proposedSlot);
+				}
+				updatedHours=hours-proposedSlots.length/2;
+			}
+			else {
+				String[] proposedSlots = ap.proposedSlots[1].split(",");
+				for(String proposedSlot : proposedSlots) {
+					slotList.remove(proposedSlot);
+				}
+				updatedHours=hours-proposedSlots.length/2;
+			}
+			String newSlots = slotList.toString().substring(1);
+			newSlots=newSlots.substring(0, newSlots.length()-1);
+			String updateMecrecQuery ="update MecRec set availableslots='"+newSlots+"' and hours="+updatedHours+" where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
+			DataOps.getInstance().insertInto(updateMecrecQuery);
 			
 			
 		}
