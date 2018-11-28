@@ -275,6 +275,20 @@ INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfSe
 INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(15,null,'Completed',TIMESTAMP '2016-01-02 14:00:00',401671897,8);
 INSERT INTO Appointment(appointmentId,mechanicPref,status,timeIn,mechId,typeOfService) VALUES(16,null,'Completed',TIMESTAMP '2015-09-30 11:00:00',401671897,4);
 
+update appointment set typeofservice = 1 where appointmentid =3;
+update appointment set typeofservice = 2 where appointmentid =4;
+update appointment set typeofservice = 1 where appointmentid =5;
+update appointment set typeofservice = 1 where appointmentid =6;
+update appointment set typeofservice = 1 where appointmentid =7;
+update appointment set typeofservice = 1 where appointmentid =8;
+update appointment set typeofservice = 1 where appointmentid =9;
+update appointment set typeofservice = 1 where appointmentid =10;
+update appointment set typeofservice = 2 where appointmentid =11;
+update appointment set typeofservice = 1 where appointmentid =12;
+update appointment set typeofservice = 1 where appointmentid =13;
+update appointment set typeofservice = 1 where appointmentid =14;
+update appointment set typeofservice = 2 where appointmentid =15;
+update appointment set typeofservice = 2 where appointmentid =16;
 
 INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(3,1,'XYZ-5643',1001);
 INSERT INTO Books(serviceId,appointmentId,licensePlate,customerId) VALUES(2,2,'XYZ-5643',1001);

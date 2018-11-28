@@ -39,9 +39,12 @@ public class LoginMenu extends AbstractMenu {
 				} else if(role.equals("Manager")) {
 					String empQuery = "SELECT * FROM Employee WHERE email='" + userId+"'";
 					ResultSet emprs = DataOps.getInstance().retrieve(empQuery);
-					int employeeId = emprs.getInt("employeeId");
-					Employee newEmployee = new Employee(employeeId);				
-					newEmployee.managerLandingPage(sc);
+					if (emprs.next()) {
+						int employeeId = emprs.getInt("employeeId");
+						Employee newEmployee = new Employee(employeeId);				
+						newEmployee.managerLandingPage(sc);
+					}
+					
 				}
 			}
 		} catch(Exception e) {

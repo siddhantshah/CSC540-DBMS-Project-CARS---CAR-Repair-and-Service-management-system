@@ -979,14 +979,72 @@ public class Employee {
 	 public  void managerPayroll(Scanner sc) {
 			System.out.println("======================Payroll======================");
 			System.out.println("Employee ID");
-			String employeeid = sc.nextLine();
+			String employeeid = sc.next();
+			
+			String payrollQuery = "select PAYDATE, NAME, HOURLYWAGES, HOURSWORKED, AMOUNTPAID from PAYROLL join EMPLOYEE on PAYROLL.EMPLOYEEID = EMPLOYEE.EMPLOYEEID join MECHANIC on PAYROLL.EMPLOYEEID = MECHANIC.EMPLOYEEID where PAYROLL.EMPLOYEEID = '"+employeeid+"'";
+			rs = DataOps.getInstance().retrieve(payrollQuery);
+			
+			
+			try {
+				while (rs.next()) {
+					System.out.println(rs.getString("NAME"));
+					System.out.println("A. Paycheck date - " + rs.getString("PAYDATE"));
+					System.out.println("B. Pay period - " + get_prev_date(rs.getString("PAYDATE")) + " to " + rs.getString("PAYDATE"));
+					System.out.println("C. Employee ID - " + employeeid);
+					System.out.println("D. Employee Name - " + rs.getString("NAME"));
+					System.out.println("E. Compensation ($) - " + rs.getInt("HOURLYWAGES"));
+					System.out.println("F. Compensation Frequency - hourly");
+					System.out.println("G. Units - " + rs.getDouble("HOURSWORKED"));
+					System.out.println("H. Earnings - " + rs.getDouble("AMOUNTPAID"));
+					
+					String start_date = rs.getString("PAYDATE").substring(0, 4) + "-01-01";
+					String totalPayQuery = "select SUM(AMOUNTPAID) as total_earnings from PAYROLL where EMPLOYEEID='"+employeeid+"' and PAYDATE between '"+start_date+"' and '"+rs.getString("PAYDATE") + "'";
+					ResultSet tmp_rs = DataOps.getInstance().retrieve(totalPayQuery);
+					double earnings = 0;
+					if (tmp_rs.next()) {
+						earnings = tmp_rs.getDouble("total_earnings");
+					}
+					System.out.println("I. Earnings (Year-to-date) - " + earnings);
+				}
+			} catch (Exception e) {}
+			
 			System.out.println("1. Go Back");
 			int choice = sc.nextInt();
 			switch(choice) {
 			case 1:
-				// 
+				managerLandingPage(sc);
+				break;
 			}	 
 		 }
+	 
+	 public String get_prev_date(String salary_date) {
+		 String[] date_arr = salary_date.split("-");
+			String year = date_arr[0];
+			String month = date_arr[1];
+			String day = date_arr[2];
+			
+			if (day.equals("01")) {
+				day = "15";
+				if (month.equals("01")) {
+					year = Integer.toString(Integer.parseInt(year) - 1);
+					month = "12";
+				} else {
+					int mn = Integer.parseInt(month) - 1;
+					if (mn < 10) {
+						month = "0" + Integer.toString(mn);
+					} else {
+						month = Integer.toString(mn);
+					}
+				}
+			} else if (day.equals("15")) {
+				day = "01";
+			} else {
+				return "";
+			}
+			
+			String prev_date = year + "-" + month + "-" + day;
+			return prev_date;
+	 }
 	 
 	 public  void managerInventory(Scanner sc) {
 			System.out.println("======================Inventory======================");
