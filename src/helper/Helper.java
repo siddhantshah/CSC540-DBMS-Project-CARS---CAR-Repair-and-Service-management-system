@@ -656,13 +656,13 @@ public class Helper {
 			ResultSet lastApptRS = DataOps.getInstance().retrieve(lastApptQuery);
 			lastApptRS.next();
 			int lastappointmentid = lastApptRS.getInt("lastappointmentid");
-			String apptQuery="insert into Appointment (AppointmentId, status, TimeIn, mechId, TypeOfService) VALUES ( "+(lastappointmentid+1)+","+" 'Pending', TIMESTAMP '"+ap.assignedDate+":00' , "+ap.assignedMechanicId+", "+ap.typeOfService+")";
+			String apptQuery="insert into Appointment (AppointmentId, status, TimeIn, mechId, TypeOfService) VALUES ( "+(lastappointmentid+1)+","+" 'Pending', '"+ap.assignedDate+"' , "+ap.assignedMechanicId+", "+ap.typeOfService+")";
 			String booksQuery="insert into Books (ServiceId, AppointmentId, LicensePlate, customerId) VALUES ( "+ap.serviceId+", "+(lastappointmentid+1)+", '"+ap.licensePlate+"', "+ap.customerId+")";
 			DataOps.getInstance().insertInto(apptQuery);
 			DataOps.getInstance().insertInto(booksQuery);
 			String outgoingPartQuery="";
 			for(Integer partId : ap.partsRequired.keySet()) {
-				 outgoingPartQuery="insert into OutgoingParts (AppointmentId, partId, Quantity, scheduledDate, serviceCenterId) VALUES ( "+(lastappointmentid+1)+" ,"+partId+" ,"+ap.partsRequired.get(partId)+"' , "+ap.assignedDate+", "+ap.serviceCenterId+")";
+				 outgoingPartQuery="insert into OutgoingParts (AppointmentId, partId, Quantity, scheduledDate, serviceCenterId) VALUES ( "+(lastappointmentid+1)+" ,"+partId+" ,"+ap.partsRequired.get(partId)+" , '"+ap.assignedDate+"', "+ap.serviceCenterId+")";
 				 DataOps.getInstance().insertInto(outgoingPartQuery);
 			}
 			String day = ap.assignedDate.substring(0, 10);
@@ -681,18 +681,23 @@ public class Helper {
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours-proposedSlots.length/2;
+				updatedHours=hours-proposedSlots[0].length()/2;
 			}
 			else {
 				String[] proposedSlots = ap.proposedSlots[1].split(",");
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours-proposedSlots.length/2;
+				updatedHours=hours-proposedSlots[1].length()/2;
 			}
-			String newSlots = slotList.toString().substring(1);
+			StringBuffer slotBuffer = new StringBuffer();
+			for(String slot : slotList) {
+				slotBuffer.append(slot);
+				slotBuffer.append(',');
+			}
+			String newSlots = slotBuffer.toString();
 			newSlots=newSlots.substring(0, newSlots.length()-1);
-			String updateMecrecQuery ="update MecRec set availableslots='"+newSlots+"' and hours="+updatedHours+" where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
+			String updateMecrecQuery ="update MecRec set availableslots='"+newSlots+"' , hours="+updatedHours+" where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
 			DataOps.getInstance().insertInto(updateMecrecQuery);
 			
 		}
@@ -743,7 +748,7 @@ public class Helper {
 	public boolean rescheduleAppointment(Appointment ap) {
 		try {
 			
-			String apptQuery="update Appointment set Timein = TIMESTAMP '"+ap.assignedDate+":00' where appointmentId="+ap.appointmentId;
+			String apptQuery="update Appointment set Timein = '"+ap.assignedDate+"' where appointmentId="+ap.appointmentId;
 			DataOps.getInstance().insertInto(apptQuery);
 			String outgoingPartQuery="update OutgoingParts set scheduledDate ='"+ap.assignedDate+"' where appointmentId="+ap.appointmentId;
 			DataOps.getInstance().insertInto(outgoingPartQuery);
@@ -763,18 +768,23 @@ public class Helper {
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours-proposedSlots.length/2;
+				updatedHours=hours-proposedSlots[0].length()/2;
 			}
 			else {
 				String[] proposedSlots = ap.proposedSlots[1].split(",");
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours-proposedSlots.length/2;
+				updatedHours=hours-proposedSlots[1].length()/2;
 			}
-			String newSlots = slotList.toString().substring(1);
+			StringBuffer slotBuffer = new StringBuffer();
+			for(String slot : slotList) {
+				slotBuffer.append(slot);
+				slotBuffer.append(',');
+			}
+			String newSlots = slotBuffer.toString();
 			newSlots=newSlots.substring(0, newSlots.length()-1);
-			String updateMecrecQuery ="update MecRec set availableslots='"+newSlots+"' and hours="+updatedHours+" where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
+			String updateMecrecQuery ="update MecRec set availableslots='"+newSlots+"' , hours="+updatedHours+" where day= '"+day+"' and employeeid="+ap.assignedMechanicId;
 			DataOps.getInstance().insertInto(updateMecrecQuery);
 			
 			
