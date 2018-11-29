@@ -656,8 +656,8 @@ public class Helper {
 			ResultSet lastApptRS = DataOps.getInstance().retrieve(lastApptQuery);
 			lastApptRS.next();
 			int lastappointmentid = lastApptRS.getInt("lastappointmentid");
-			String apptQuery="insert into Appointment (AppointmentId, status, TimeIn, mechId, TypeOfService) VALUES ( "+(lastappointmentid+1)+","+" 'Pending', '"+ap.assignedDate+"' , "+ap.assignedMechanicId+", "+ap.typeOfService+")";
-			String booksQuery="insert into Books (ServiceId, AppointmentId, LicensePlate, customerId) VALUES ( "+ap.serviceId+", "+(lastappointmentid+1)+", "+ap.licensePlate+", "+ap.customerId+")";
+			String apptQuery="insert into Appointment (AppointmentId, status, TimeIn, mechId, TypeOfService) VALUES ( "+(lastappointmentid+1)+","+" 'Pending', TIMESTAMP '"+ap.assignedDate+":00' , "+ap.assignedMechanicId+", "+ap.typeOfService+")";
+			String booksQuery="insert into Books (ServiceId, AppointmentId, LicensePlate, customerId) VALUES ( "+ap.serviceId+", "+(lastappointmentid+1)+", '"+ap.licensePlate+"', "+ap.customerId+")";
 			DataOps.getInstance().insertInto(apptQuery);
 			DataOps.getInstance().insertInto(booksQuery);
 			String outgoingPartQuery="";
@@ -743,7 +743,7 @@ public class Helper {
 	public boolean rescheduleAppointment(Appointment ap) {
 		try {
 			
-			String apptQuery="update  Appointment set Timein ='"+ap.assignedDate+"' where appointmentId="+ap.appointmentId;
+			String apptQuery="update Appointment set Timein = TIMESTAMP '"+ap.assignedDate+":00' where appointmentId="+ap.appointmentId;
 			DataOps.getInstance().insertInto(apptQuery);
 			String outgoingPartQuery="update OutgoingParts set scheduledDate ='"+ap.assignedDate+"' where appointmentId="+ap.appointmentId;
 			DataOps.getInstance().insertInto(outgoingPartQuery);
