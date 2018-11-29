@@ -612,7 +612,7 @@ public class Helper {
 		minThreshRS.next();
 		int minThresh = minThreshRS.getInt("MINIMUMORDERTHRESHOLD");
 		int orderQuant = (quantity < minThresh) ? minThresh : quantity;
-		String checkOtherCenterQuery = "select servicecenterid, currentquantity, MINIMUMQUANTITYTHRESHOLD from Has where servicecenterid != "+servicecenterid+" order by currentquantity desc";
+		String checkOtherCenterQuery = "select servicecenterid, currentquantity, MINIMUMQUANTITYTHRESHOLD from Has where partid="+partId+" and servicecenterid != "+servicecenterid+" order by currentquantity desc";
 		ResultSet checkOtherCenterRS = DataOps.getInstance().retrieve(checkOtherCenterQuery);
 		while(checkOtherCenterRS.next()) {
 			int serv = checkOtherCenterRS.getInt("servicecenterid");
@@ -627,7 +627,7 @@ public class Helper {
 			c.add(Calendar.DATE, 1);
 			Date tomorrow = c.getTime();
 		    String strDate = sdfDate.format(tomorrow);
-			String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+serv+", "+servicecenterid+", "+strDate+")";
+			String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+serv+", "+servicecenterid+", '"+strDate+"')";
 			DataOps.getInstance().insertInto(order);
 			String decrease="update Has set currentquantity="+(currentQ-orderQuant)+" where servicecenterid="+serv+" and partid= "+partId;
 			DataOps.getInstance().insertInto(decrease);
@@ -645,7 +645,7 @@ public class Helper {
 		c.add(Calendar.DATE, checkDistRS.getInt("deliveryWindow"));
 		Date delDate = c.getTime();
 	    String strDate = sdfDate.format(delDate);
-		String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+checkDistRS.getInt("DISTRIBUTORID")+", "+servicecenterid+", "+strDate+")";
+		String order="insert into Orders (partid,status, quantity, source,destination, EXPECTEDELIVERYDATE) values ("+partId+", 'Pending', "+orderQuant+", "+checkDistRS.getInt("DISTRIBUTORID")+", "+servicecenterid+", '"+strDate+"')";
 		DataOps.getInstance().insertInto(order);
 		return delDate;
 	}
