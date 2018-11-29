@@ -922,34 +922,143 @@ public class Employee {
 		 
 	 }
 	
+	public void receptionistLeftUpdateTask(Scanner sc){
+	 	// update payroll here
+	 	// update appintment status here
+
+		try {
+			H.updatePayroll();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		String query = "Select B.appointmentid from vehicle V, Books B where V.licenseplate = B.licensePlate and V.serviceCenterId = " + serviceCenterId;
+
+		rs = DataOps.getInstance().retrieve(query);
+		
+		try {
+			while(rs.next()) {
+				query = "update appointment set status = completed where appointmentid = " + rs.getInt("appointmentid");
+				DataOps.getInstance().insertInto(query);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
+			e.printStackTrace();
+		}
+
+	}
+	
 	public  void receptionistDailyTaskUpdateInventory(Scanner sc) {
-		System.out.println("======================Daily Task Uodate Inventory======================");
-		//display
+		System.out.println("======================Daily Task Update Inventory======================");
+		
+		DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+		Date currDate = new Date();
+		currDate.setDate(currDate.getDate()-1);
+		String currentDate = dateformat.format(currDate);
+
+		String query = "Select O.quantity, O.partid, H.currentquantity, H.minimumquantitythreshold, OR.quantity as incomingqty From outgoingparts O, Has H where O.scheduledate = " + currentDate + " and O.serviceCenterId = " + serviceCenterId + " and O.partId = H.partId and O.serviceCenterId = H.serviceCenterId and OR.partId = H.partId and OR.destination = " + serviceCenterId;
+			
+		rs = DataOps.getInstance().retrieve(query);
+		
+		try {
+			while(rs.next()) {
+
+				int newqty = rs.getInt("currentquantity") - rs.getInt("quantity") + rs.getInt("incomingqty");
+
+				if(newqty < rs.getInt("minimumquantitythreshold")){
+					String query2 = "update Has set currentquantity = "+newqty+" where partId = "+rs.getInt("partid")+" and serviceCenterId = " + serviceCenterId;
+					DataOps.getInstance().insertInto(query2);
+					H.orderParts(Integer.parseInt(serviceCenterId), rs.getInt("partId"), rs.getInt("quantity"));
+				}
+
+				else {
+					String query2 = "update Has set currentquantity = "+newqty+" where partId = "+rs.getInt("partid")+" and serviceCenterId = " + serviceCenterId;
+					DataOps.getInstance().insertInto(query2);
+				}
+				
+				System.out.println("Task Successful");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Task Did Not Complete");
+			DataOps.destroyInstance();
+			e.printStackTrace();
+		}
+
+		receptionistLeftUpdateTask(sc);	// additional update task receptionist need to run everyday
+
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// exit;
-
+			receptionistLandingPage(sc);
 		}
 		 
 	 }
 	
 	public  void receptionistDailyTaskRecordDeliveries(Scanner sc) {
 		System.out.println("======================Daily Task Record Deliveries======================");
+		
+		DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+		Date currDate = new Date();
+		currDate.setDate(currDate.getDate()-1);
+		String currentDate = dateformat.format(currDate);
+		
 		System.out.println("1. Enter Order ID (CSV)");
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
 		switch(choice) {
 		case 1:
-			// exit;
-		case 2:
-			// exit;
+			System.out.println("Enter the comma seperated list of orders");
+			String csv = sc.nextLine();
+			List csvList = getList(csv);
 
-		}
-		 
+			for(int i = 0 ; i < csvList.size() ; i++){
+
+				try {
+					String query = "Update orders set status = Completed, actualdeliverydate = " + currentDate +" where orderId = " + csvList.get(i) + " and destination = " + serviceCenterId;
+					DataOps.getInstance().insertInto(query);
+					query = "Delete from notification where orderId = " + csvList.get(i);
+					DataOps.getInstance().insertInto(query);
+					System.out.println("Task Completed");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Task Did Not Complete");
+					DataOps.destroyInstance();
+					e.printStackTrace();
+				}
+			}
+
+			receptionistDailyTaskRecordDeliveries(sc);
+
+		case 2:
+
+			String query = "Select expectedDeliveryDate, source, orderId from orders where status = pending and destination = " + serviceCenterId;
+			
+			rs = DataOps.getInstance().retrieve(query);
+		
+			try {
+				while(rs.next()) {
+					String expectedDate = rs.getString("expecteddeliverydate");
+					Date expectedDeliveryDate = getDate(expectedDate);
+
+					if((getDate(currentDate).compareTo(expectedDeliveryDate)) < 0){
+						String query2 = "insert into notification values(" + currentDate + "," + rs.getInt("orderId") + "," + rs.getString("expectedDeliveryDate") + "," + rs.getInt("source") + ")";
+						DataOps.getInstance().insertInto(query2);
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
+				e.printStackTrace();
+			}
+
+			receptionistLandingPage(sc);
+		}	 
 	 }
 	
 	 public  void managerAddNewEmployees(Scanner sc) {
