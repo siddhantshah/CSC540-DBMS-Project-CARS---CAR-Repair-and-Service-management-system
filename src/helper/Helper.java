@@ -67,7 +67,8 @@ public class Helper {
 		ResultSet rs = DataOps.getInstance().retrieve(deficitQuery);
 		int partId, currentquantity,requiredquantity, schduledquantity,deficit;
 		boolean shortage=false;
-		Date maxDate = new SimpleDateFormat("yyyy-MM-dd").parse("1970-01-01");
+		String maxDate = "1970-01-01";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			while(rs.next()) {
 				partId = rs.getInt("partid");
@@ -79,17 +80,17 @@ public class Helper {
 					String pendingOrderQuery = "select sum(quantity) as orderedPartQuantity, max(expecteddeliverydate) as expected from Orders where partId="+partId+"and status='Pending'";
 					ResultSet rs1= DataOps.getInstance().retrieve(pendingOrderQuery);
 					while(rs1.next()) {
-						int orderedPartQuantity = rs.getInt("orderedPartQuantity");
-						Date expectedDate = rs.getTimestamp("ordered");
+						int orderedPartQuantity = rs1.getInt("orderedPartQuantity");
+						String expectedDate = rs1.getString("ordered");
 						if(orderedPartQuantity+currentquantity-requiredquantity-schduledquantity > 0) {
-							if(expectedDate.compareTo(maxDate) ==1) {
+							if(expectedDate.compareTo(maxDate) > 1) {
 								maxDate=expectedDate;
 							}
 						}
 						else {
 							Date order = orderParts(servicecenterid,partId, -1);
-							if(order.compareTo(maxDate) ==1) {
-								maxDate=order;
+							if(sdf.format(order).compareTo(maxDate) ==1) {
+								maxDate=sdf.format(order);
 							}
 						}
 					}
@@ -273,14 +274,14 @@ public class Helper {
 						int orderedPartQuantity = pendingOrderRS.getInt("sum");
 						String expectedDate = pendingOrderRS.getString("expected");
 						if(orderedPartQuantity+currentquantity-requiredquantity-schduledquantity > 0) {
-							if(expectedDate.compareTo(maxDate) ==1) {
+							if(expectedDate.compareTo(maxDate) > 1) {
 								maxDate=expectedDate;
 							}
 						}
 						else {
 							Date order = orderParts(servicecenterid,partId, schduledquantity+requiredquantity-currentquantity-orderedPartQuantity);
 							
-							if(sdf.format(order).compareTo(maxDate) ==1) {
+							if(sdf.format(order).compareTo(maxDate) > 1) {
 								maxDate=sdf.format(order);
 							}
 						}
@@ -614,7 +615,7 @@ public class Helper {
 		String checkOtherCenterQuery = "select servicecenterid, currentquantity, MINIMUMQUANTITYTHRESHOLD from Has where servicecenterid != "+servicecenterid+" order by currentquantity desc";
 		ResultSet checkOtherCenterRS = DataOps.getInstance().retrieve(checkOtherCenterQuery);
 		while(checkOtherCenterRS.next()) {
-			int serv = checkOtherCenterRS.getInt("servicecenterid");	
+			int serv = checkOtherCenterRS.getInt("servicecenterid");
 			int currentQ = checkOtherCenterRS.getInt("currentquantity");
 			int minimumQ = checkOtherCenterRS.getInt("MINIMUMQUANTITYTHRESHOLD");
 			if(currentQ-orderQuant < minimumQ)
