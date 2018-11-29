@@ -14,6 +14,7 @@ import data.DataOps;
 import helper.Helper;
 import java.util.HashMap;
 import java.util.Map;
+import starter.MainMenu;
 
 public class Employee {
 	
@@ -99,7 +100,11 @@ public class Employee {
 			receptionistDailyTaskRecordDeliveries(sc);
 			break;
 		case 10:
-			// login
+			MainMenu m = new MainMenu();
+			System.out.println("Thanks You For Visiting");
+			System.out.println();
+			m.display(sc);
+			break;
 		default:
 			System.err.println("Please Enter Correct Choice");
 			System.out.println();
@@ -160,7 +165,10 @@ public class Employee {
 			managerInvoices(sc);
 			break;
 		case 12:
-			//login
+			MainMenu m = new MainMenu();
+			System.out.println("Thanks You For Visiting");
+			System.out.println();
+			m.display(sc);
 			break;
 		default:
 			System.err.println("Please Enter Correct Choice");
@@ -647,7 +655,6 @@ public class Employee {
 				System.out.println();
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
@@ -676,14 +683,21 @@ public class Employee {
 			System.err.println("Invalid Customer Email, Please enter correct details");
 			receptionistScheduleService(sc);
 		}
+		
 		System.out.println("B. License Plate");
 		String license = sc.nextLine();
 		if(!validateLicense(license, email)) {
 			System.err.println("Invalid License Plate, Please enter correct details");
 			receptionistScheduleService(sc);
 		}
+		
 		System.out.println("C. Current Mileage");
 		int mileage = Integer.parseInt(sc.nextLine());
+		if(!validateMileage(license, mileage)) {
+			System.err.println("Current Mileage Cannot be less then last recorded mileage, Please enter correct details");
+			receptionistScheduleService(sc);
+		}
+		
 		System.out.println("D. Mechanic Preference");
 		String mechanic = sc.nextLine();
 		if(!validateMechanic(mechanic)) {
@@ -698,6 +712,7 @@ public class Employee {
 			customerId = rs.getInt("customerId");
 			rs.close();
 		} catch (SQLException e) {
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
 		System.out.println("1. Schedule Maintainence");
@@ -784,7 +799,7 @@ public class Employee {
 		switch(choice) {
 		case 1:
 			if(!H.scheduleAppointment(appointment)) {
-				System.out.println("Cannot BookThe Requested Appointment Successfully");
+				System.out.println("Cannot Book The Requested Appointment Successfully");
 			}
 			receptionistScheduleService(sc);
 			break;
@@ -799,7 +814,7 @@ public class Employee {
 		 
 	 }
 	
-	public  void receptionistScheduleRepairPage1(Scanner sc,  int CustomerId , String license, int mileage, String mechanic) {
+	public  void receptionistScheduleRepairPage1(Scanner sc,  int customerId , String license, int mileage, String mechanic) {
 		System.out.println("======================Schedule Repair Page 1======================");
 		System.out.println("1. Engine Knock");
 		System.out.println("2. Car Drifts in a Particular Direction");
@@ -810,49 +825,121 @@ public class Employee {
 		System.out.println("7. Check Engine Light");
 		System.out.println("8. Go Back");
 		System.out.println("Please select your choice.");
+		Appointment appointment = new Appointment();
 		int choice = sc.nextInt();
 		dummy = sc.nextLine();
-		switch(choice) {
-		case 1:
-			// exit;
-		
-		case 2:
-			// exit;
-			
-		case 3:
-			// exit;
-		
-		case 4:
-			// exit;
-			
-		case 5:
-			// exit;
-		
-		case 6:
-			// exit;
-			
-		case 7:
-			// exit;
-		
-		case 8:
-			// exit;
+		try {
+			switch(choice) {
+			case 1:
+				appointment = H.scheduleRepairHelper(customerId, license, mechanic, mileage, 1);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else {
+					receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			case 2:
+				appointment = H.scheduleRepairHelper(customerId, license, mechanic, mileage, 2);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else {
+					receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			case 3:
+				appointment = H.scheduleRepairHelper(customerId, license, mechanic, mileage, 3);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else {
+					receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			case 4:
+				appointment = H.scheduleRepairHelper(customerId, license, mechanic, mileage, 4);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else {
+					receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			case 5:
+				appointment = H.scheduleRepairHelper(customerId, license, mechanic, mileage, 5);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else {
+					receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			case 6:
+				appointment = H.scheduleRepairHelper(customerId, license, mechanic, mileage, 6);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else {
+					receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			case 7:
+				appointment = H.scheduleRepairHelper(customerId, license, mechanic, mileage, 7);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else {
+					receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			case 8:
+				receptionistScheduleService(sc);
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				receptionistScheduleService(sc);
+			}
+		} catch (ParseException | SQLException e) {
+			DataOps.destroyInstance();
+			e.printStackTrace();
 		}
 		 
 	 }
 	
-	public  void receptionistScheduleRepairPage2(Scanner sc) {
+	public  void receptionistScheduleRepairPage2(Scanner sc, int customerId , String license, int mileage, String mechanic, Appointment appointment) {
 		System.out.println("======================Schedule Repair Page 2======================");
-		//display
-		System.out.println("1. Repair On Date");
-		System.out.println("2. Go Back");
-		System.out.println("Please select your choice.");
+		System.out.println("Diagnostic Report:" +appointment.diagnosticReport);
+		System.out.println("Fee: " + appointment.diagnosticFee);
+		System.out.println("Select Date Of Appointment");
+		System.out.println("1. " + appointment.proposedDates[0]);
+		System.out.println("2. " + appointment.proposedDates[1]);
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
-			// exit;
-		
+			appointment.assignedDate = appointment.proposedDates[0];
+			break;
 		case 2:
-			// exit;
+			appointment.assignedDate = appointment.proposedDates[1];
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
+		}
+		System.out.println("1. Repair on Date");
+		System.out.println("2. Go Back");
+		System.out.println("Please select your choice.");
+		choice = sc.nextInt();
+		dummy = sc.nextLine();
+		switch(choice) {
+		case 1:
+			if(!H.scheduleAppointment(appointment)) {
+				System.out.println("Cannot BookThe Requested Appointment Successfully");
+			}
+			receptionistScheduleService(sc);
+			break;
+		case 2:
+			receptionistScheduleRepairPage1(sc, customerId, license, mileage, mechanic);
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistScheduleRepairPage2(sc, customerId, license, mileage, mechanic, appointment);
 		}
 		 
 	 }
@@ -860,64 +947,148 @@ public class Employee {
 	
 	public  void receptionistReScheduleServicePage1(Scanner sc) {
 		System.out.println("======================Reschedule Service Page 1======================");
-		System.out.println("Customer Email Address");
+		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
 		int retrievedId = 0;
-		
+		int app = 0;
+		Appointment appointment = new Appointment();
+		String query = null;
 		try {
-			String query = "SELECT C.customerId FROM CUSTOMER C WHERE C.email = " + email;
-			while(rs.next()) {
-				retrievedId = rs.getInt("customerId");
-			}
+			query = "SELECT customerId FROM Customer WHERE email = '" + email +"'";
+			rs = DataOps.getInstance().retrieve(query);
+			rs.next();
+			retrievedId = rs.getInt("customerId");
 			
-			query = "SELECT B.appointmentId, A.timeIn, A.timeOut FROM Books B, Appointment A WHERE B.appointmentId = A.appointmentId AND B.customerId = " + retrievedId;
-					
+			query = "SELECT B.appointmentId From Books B, Appointment A WHERE B.appointmentId = A.appointmentId AND B.customerId = " + retrievedId + " AND A.status = 'Pending'";
+			rs = DataOps.getInstance().retrieve(query);
+			while(rs.next()) {
+				System.out.println(rs.getInt("appointmentId")+", ");
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-		
 		System.out.println("1. Pick A Service");
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
-			// exit;
+			System.out.println("Enter Service ID:");
+			app = sc.nextInt();
+			dummy =sc.nextLine();
+			appointment = H.rescheduleAppointmentHelper(app);
+			if(!appointment.canSchedule) {
+				System.out.println(appointment.errorReport);
+				receptionistScheduleService(sc);
+			} else {
+				receptionistReScheduleServicePage2(sc, appointment);
+			}
+			break;
 		
 		case 2:
-			// exit;
+			receptionistLandingPage(sc);
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistLandingPage(sc);
 		}
 		 
 	 }
 	
-	public  void receptionistReScheduleServicePage2(Scanner sc) {
+	public  void receptionistReScheduleServicePage2(Scanner sc, Appointment appointment) {
 		System.out.println("======================Reschedule Service Page 2======================");
-		//display
-		System.out.println("1. Reschdule Date");
-		System.out.println("2. Go Back");
-		System.out.println("Please select your choice.");
+		System.out.println("Select Date Of Appointment");
+		System.out.println("1. " + appointment.proposedDates[0]);
+		System.out.println("2. " + appointment.proposedDates[1]);
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
-			// exit;
-		
+			appointment.assignedDate = appointment.proposedDates[0];
+			break;
 		case 2:
-			// exit;
+			appointment.assignedDate = appointment.proposedDates[1];
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistReScheduleServicePage2(sc, appointment);
+		}
+		System.out.println("1. ReSchedule on Date");
+		System.out.println("2. Go Back");
+		System.out.println("Please select your choice.");
+		choice = sc.nextInt();
+		dummy = sc.nextLine();
+		switch(choice) {
+		case 1:
+			if(!H.rescheduleAppointment(appointment)) {
+				System.out.println("Cannot Book The Requested Appointment Successfully");
+			}
+			receptionistScheduleService(sc);
+			break;
+		case 2:
+			receptionistReScheduleServicePage1(sc);
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistReScheduleServicePage2(sc, appointment);
 		}
 		 
 	 }
 	
 	public  void receptionistInvoices(Scanner sc) {
-		System.out.println("======================invoices======================");
-		System.out.println("Customer Email Address");
-		String email = sc.nextLine();
+		System.out.println("======================Receptionist Invoices======================");
+		try {
+			System.out.println("Enter customer email address");
+			String email = sc.nextLine();
+			if(!validateCustomerEmail(email)) {
+				System.err.println("Invalid Customer Email, Please enter correct details");
+				receptionistInvoices(sc);
+			}
+			String name = null;
+			String query = "SELECT C.name FROM Customer C, OWNS O, Vehicle V WHERE O.customerId = C.customerID AND O.licenseplate = V.licenseplate AND  C.email = '" + email +"' AND v.servicecenterid =" + serviceCenterId;
+			rs = DataOps.getInstance().retrieve(query);
+			while(rs.next()) {
+				name = rs.getString("name");
+			}
+			
+		    query = "SELECT * from invoice where customername = '"+ name + "'";
+		    rs = DataOps.getInstance().retrieve(query);
+			while(rs.next()) {
+				System.out.println("AppointmentId: "+rs.getString("appointmentId"));
+				System.out.println("Customer Name: "+rs.getString("customername"));
+				System.out.println("Start Date: "+rs.getString("startdate"));
+				System.out.println("License Plate: "+rs.getString("licenseplate"));
+				System.out.println("Service Type: "+rs.getString("servicetype"));
+				System.out.println("Mechanic Name: "+rs.getString("mechanicname"));
+				System.out.println("Parts Used: "+rs.getString("partsused"));
+				System.out.println("Total cost for parts: "+rs.getString("costs"));
+				System.out.println("Total Labour Hours: "+rs.getString("totallabourhours"));
+				System.out.println("Total Labour Wages: "+rs.getString("totallabourwages"));
+				System.out.println("Total Service Cost: "+rs.getString("totalservicecost"));
+				System.out.println();
+			} 
+		} catch (SQLException e) {
+			DataOps.destroyInstance();
+			e.printStackTrace();
+		}
+		
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
-			// exit;
+			receptionistLandingPage(sc); 
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistInvoices(sc);
 		}
 		 
 	 }
@@ -1711,37 +1882,23 @@ public class Employee {
 			System.out.println("======================Manager Invoices======================");
 			try {
 				String query = null;
-			    query = "SELECT B.appointmentId from Books B, Vehicle V Where B.licensePlate = V.licensePlate AND V.serviceCenterId= " + serviceCenterId;
+			    query = "SELECT * from invoice where licenseplate in (select licenseplate from vehicle where serviceCenterId=" + serviceCenterId + ")";
 			    rs = DataOps.getInstance().retrieve(query);
 				while(rs.next()) {
-					int appointmentId = rs.getInt("appointmentId");
-					Map<String, Object> result = new HashMap<String, Object>();
-					Helper helper = new Helper();
-					result = helper.invoiceGenerator(appointmentId);
-					String parts="";
-					String costs="";
-					for (Map.Entry<String, Object> entry : ((Map<String, Object>)result.get("Parts Used")).entrySet()) {
-					    parts = parts + ", "+entry.getKey();
-					    costs = costs + ", "+entry.getValue();
-					}
-					System.out.println("AppointmentId: "+(Integer)result.get("appointmentId"));
-					System.out.println("Customer Name: "+(String)result.get("customerName"));
-					System.out.println("Start Date: "+(Date)result.get("startDate"));
-					System.out.println("License Plate: "+(String)result.get("licensePlate"));
-					System.out.println("Service Type: "+(String)result.get("serviceType"));
-					System.out.println("Mechanic Name: "+(String)result.get("Mechanic Name"));
-					System.out.println("Parts Used: "+ parts);
-					System.out.println("Total cost for parts: "+ costs);
-					System.out.println("Total Labour Hours: "+(Float)result.get("Total Labour Hours"));
-					System.out.println("Total Labour Wages: "+(Float)result.get("Total Labour Wages"));
-					System.out.println("Total Service Cost: "+(Float)result.get("Total Service Cost"));
+					System.out.println("AppointmentId: "+rs.getString("appointmentId"));
+					System.out.println("Customer Name: "+rs.getString("customername"));
+					System.out.println("Start Date: "+rs.getString("startdate"));
+					System.out.println("License Plate: "+rs.getString("licenseplate"));
+					System.out.println("Service Type: "+rs.getString("servicetype"));
+					System.out.println("Mechanic Name: "+rs.getString("mechanicname"));
+					System.out.println("Parts Used: "+rs.getString("partsused"));
+					System.out.println("Total cost for parts: "+rs.getString("costs"));
+					System.out.println("Total Labour Hours: "+rs.getString("totallabourhours"));
+					System.out.println("Total Labour Wages: "+rs.getString("totallabourwages"));
+					System.out.println("Total Service Cost: "+rs.getString("totalservicecost"));
 					System.out.println();
 				} 
-				
-				// print here
-				
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				DataOps.destroyInstance();
 				e.printStackTrace();
 			}
@@ -1752,7 +1909,12 @@ public class Employee {
 			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
-				// go back
+				managerLandingPage(sc); 
+				break;
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				managerInvoices(sc);
 			}
 		 }
 	 
@@ -1807,6 +1969,23 @@ public class Employee {
 			 rs.close();
 		 }catch (SQLException e) {
 			 // TODO Auto-generated catch block
+			 DataOps.destroyInstance();
+			 e.printStackTrace();
+		 }
+		 return(true);
+	 }
+	 
+	 public boolean validateMileage(String license, int mileage) {
+		 try {
+			 String query = "SELECT lastRecordedMileage FROM Vehicle WHERE licensePlate = '" + license +"'";
+			 rs = DataOps.getInstance().retrieve(query);
+			 rs.next();
+			 if(mileage < rs.getInt("lastRecordedMileage")) {
+				 rs.close();
+				 return(false);
+			 }
+			 rs.close();
+		 }catch (SQLException e) {
 			 DataOps.destroyInstance();
 			 e.printStackTrace();
 		 }

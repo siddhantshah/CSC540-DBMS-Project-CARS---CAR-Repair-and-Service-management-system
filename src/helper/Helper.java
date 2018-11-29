@@ -429,7 +429,7 @@ public class Helper {
 				
 	}
 	
-	public Map<String, Object> invoiceGenerator(int appointmentId) {
+	public void invoiceGenerator(int appointmentId) {
 		String query = null;
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
@@ -463,7 +463,7 @@ public class Helper {
 					result.put("appointmentId", new Integer(appointmentId));
 					result.put("customerName", rs.getString("cname"));
 					try {
-						result.put("startDate", new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs.getString("timeIn")));
+						result.put("startDate", new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(rs.getString("timeIn")));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -475,7 +475,13 @@ public class Helper {
 					result.put("Total Labour Hours", new Float(totalLabourHours));
 					result.put("Total Labour Wages", new Float(totalLabourCharge));
 					result.put("Total Service Cost", new Float(totalCost));
-					query = "Insert into invoice(APPOINTMENTID, LICENSEPLATE, SERVICETYPE, MECHANICNAME, PARTSUSED, TOTALSERVICECOST, TOTALLABOURHOURS, TOTALLABOURWAGES) values(" + appointmentId  + ",'" + rs.getString("licensePlate") + "','" + "Repair" + "','" + rs.getString("mname") + "',"+ new Float(totalLabourHours) + ","+ new Float(totalLabourCharge) + ","+ new Float(totalCost);
+					String parts="";
+					String costs="";
+					for (Map.Entry<String, Object> entry : partsUsed.entrySet()) {
+					    parts = parts + ", "+entry.getKey();
+					    costs = costs + ", "+entry.getValue();
+					}
+					query = "Insert into invoice(APPOINTMENTID, CUSTOMERNAME, STARTDATE, LICENSEPLATE, SERVICETYPE, MECHANICNAME, PARTSUSED, COSTS, TOTALSERVICECOST, TOTALLABOURHOURS, TOTALLABOURWAGES) values(" + appointmentId  + ",'" + rs.getString("cname") + "','" + rs.getString("timeIn") + "','" + rs.getString("licensePlate") + "','" + "Repair" + "','" + rs.getString("mname") + "','" + parts + "','" + costs + "'," + totalCost + ","+ totalLabourHours + ","+ totalLabourCharge + ")";
 					DataOps.getInstance().insertInto(query);
 					
 				} else if(typeOfService == 1){
@@ -488,7 +494,7 @@ public class Helper {
 					result.put("appointmentId", new Integer(appointmentId));
 					result.put("customerName", rs.getString("cname"));
 					try {
-						result.put("startDate", new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs.getString("timeIn")));
+						result.put("startDate", new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(rs.getString("timeIn")));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -500,6 +506,14 @@ public class Helper {
 					result.put("Total Labour Hours", new Float(totalLabourHours));
 					result.put("Total Labour Wages", new Float(totalLabourCharge));
 					result.put("Total Service Cost", new Float(totalCost));
+					String parts="";
+					String costs="";
+					for (Map.Entry<String, Object> entry : partsUsed.entrySet()) {
+					    parts = parts + ", "+entry.getKey();
+					    costs = costs + ", "+entry.getValue();
+					}
+					query = "Insert into invoice(APPOINTMENTID, CUSTOMERNAME, STARTDATE, LICENSEPLATE, SERVICETYPE, MECHANICNAME, PARTSUSED, COSTS, TOTALSERVICECOST, TOTALLABOURHOURS, TOTALLABOURWAGES) values(" + appointmentId  + ",'" + rs.getString("cname") + "','" + rs.getString("timeIn") + "','" + rs.getString("licensePlate") + "','" + "Repair" + "','" + rs.getString("mname") + "','" + parts + "','" + costs + "'," + totalCost + ","+ totalLabourHours + ","+ totalLabourCharge + ")";
+					DataOps.getInstance().insertInto(query);
 				}
 			} 
 			rs.close();
@@ -509,7 +523,7 @@ public class Helper {
 			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-		return result;
+		//return result;
 	}
 	
 	public Map<String, Object> getTotalCost(int serviceId, int appointmentId, String make, String model) {
@@ -539,7 +553,7 @@ public class Helper {
 					while(rs3.next()) {
 						if(rs3.getInt("basicServiceId")==basicServiceId) {
 							try {
-								lastDate = new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs2.getString("timeIn"));
+								lastDate = new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(rs2.getString("timeIn"));
 							} catch (ParseException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -567,7 +581,7 @@ public class Helper {
 				if(lastDate!=null) {
 					Calendar startCalendar = new GregorianCalendar();
 					try {
-						startCalendar.setTime(new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs.getString("timeIn")));
+						startCalendar.setTime(new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(rs.getString("timeIn")));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

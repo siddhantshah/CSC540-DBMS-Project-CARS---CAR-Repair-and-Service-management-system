@@ -1,3 +1,4 @@
+package starter;
 import view.Customer;
 import view.Employee;
 import java.sql.*;
@@ -12,17 +13,26 @@ public class LoginMenu extends AbstractMenu {
 		System.out.println("======================Login Menu======================");
 		System.out.print("Enter User Id: (email address)");
 		String userId = sc.next();
+		if(!validateLogin(userId)) {
+			System.err.println("Invalid User Name, Please enter correct details");
+			MainMenu mm = new MainMenu();
+			mm.display(sc);
+		}
 		System.out.print("Enter Password:");
 		String password = sc.next();
-		if(!password.equals("password")) {
-			System.out.println("Incorrect password.");
-			System.exit(1);
-		}
 		String query = "SELECT * FROM Users WHERE loginId='" + userId+"'";
 		ResultSet rs = DataOps.getInstance().retrieve(query);
 		try {
 			while(rs.next()) {
 				String role = rs.getString("role");
+				String passwordRetrieved = rs.getString("password");
+				if(!password.equals(passwordRetrieved)) {
+					System.err.println("Incorrect password.");
+					System.out.println();
+					MainMenu mm = new MainMenu();
+					mm.display(sc);
+					System.exit(1);
+				}
 				if(role.equals("Customer")) {
 					String custQuery = "SELECT * FROM Customer WHERE email='" + userId+"'";
 					ResultSet custrs = DataOps.getInstance().retrieve(custQuery);
@@ -51,5 +61,23 @@ public class LoginMenu extends AbstractMenu {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean validateLogin(String email) {
+		 try {
+			 ResultSet rs =null;
+			 String query = "SELECT count(loginId) as count FROM users WHERE loginId = '" + email +"'";
+			 rs = DataOps.getInstance().retrieve(query);
+			 rs.next();
+			 if(rs.getInt("count") != 1) {
+				 rs.close();
+				 return(false);
+			 }
+			 rs.close();
+		 }catch (SQLException e) {
+			 DataOps.destroyInstance();
+			 e.printStackTrace();
+		 }
+		 return(true);
+	 }
 
 }

@@ -1,3 +1,4 @@
+package starter;
 import java.util.Scanner;
 
 import data.DataOps;
