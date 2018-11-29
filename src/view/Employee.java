@@ -1,6 +1,7 @@
 package view;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +19,8 @@ public class Employee {
 	
 	Statement stmt = null;
     ResultSet rs = null;
+    String dummy = null;
+    Helper H = new Helper();
 	
 	private
 		 int employeeId;
@@ -66,6 +69,7 @@ public class Employee {
 		System.out.println("10. Logout");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			receptionistProfile(sc);
@@ -120,6 +124,7 @@ public class Employee {
 		System.out.println("12. Logout");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			managerProfile(sc);
@@ -171,6 +176,7 @@ public class Employee {
 		System.out.println("3. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			receptionistViewProfile(sc);
@@ -196,6 +202,7 @@ public class Employee {
 		System.out.println("3. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			managerViewProfile(sc);
@@ -244,6 +251,7 @@ public class Employee {
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			receptionistProfile(sc);
@@ -287,6 +295,7 @@ public class Employee {
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			managerProfile(sc);
@@ -310,11 +319,11 @@ public class Employee {
 		String query;
 		String input;
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			System.out.println("Please Enter Your Name");
 			System.out.println();
-			input = sc.nextLine();
 			input = sc.nextLine();
 			query = "UPDATE Employee SET name ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
@@ -323,14 +332,12 @@ public class Employee {
 		case 2:
 			System.out.println("Please Enter Your Address");
 			input = sc.nextLine();
-			input = sc.nextLine();
 			query = "UPDATE Employee SET address ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 3:
 			System.out.println("Please Enter Your Email Address");
-			input = sc.nextLine();
 			input = sc.nextLine();
 			query = "UPDATE Employee SET email ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
@@ -339,14 +346,12 @@ public class Employee {
 		case 4:
 			System.out.println("Please Enter Your Phone Number");
 			input = sc.nextLine();
-			input = sc.nextLine();
 			query = "UPDATE Employee SET phoneNumber ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			receptionistUpdateProfile(sc);
 			break;
 		case 5:
 			System.out.println("Please Enter Your password");
-			input = sc.nextLine();
 			input = sc.nextLine();
 			query = "SELECT loginId FROM employee WHERE employeeId=" + employeeId;
 			rs = DataOps.getInstance().retrieve(query);
@@ -384,11 +389,11 @@ public class Employee {
 		String query;
 		String input;
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			System.out.println("Please Enter Your Name");
 			System.out.println();
-			input = sc.nextLine();
 			input = sc.nextLine();
 			query = "UPDATE Employee SET name ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
@@ -397,14 +402,12 @@ public class Employee {
 		case 2:
 			System.out.println("Please Enter Your Address");
 			input = sc.nextLine();
-			input = sc.nextLine();
 			query = "UPDATE Employee SET address ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			managerUpdateProfile(sc);
 			break;
 		case 3:
 			System.out.println("Please Enter Your Email Address");
-			input = sc.nextLine();
 			input = sc.nextLine();
 			query = "UPDATE Employee SET email ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
@@ -413,14 +416,12 @@ public class Employee {
 		case 4:
 			System.out.println("Please Enter Your Phone Number");
 			input = sc.nextLine();
-			input = sc.nextLine();
 			query = "UPDATE Employee SET phoneNumber ='" + input + "' Where employeeId =" + employeeId;
 			DataOps.getInstance().insertInto(query);
 			managerUpdateProfile(sc);
 			break;
 		case 5:
 			System.out.println("Please Enter Your password");
-			input = sc.nextLine();
 			input = sc.nextLine();
 			query = "SELECT loginId FROM employee WHERE employeeId=" + employeeId;
 			rs = DataOps.getInstance().retrieve(query);
@@ -451,7 +452,6 @@ public class Employee {
 		System.out.println("======================Receptionist View Customer Profile======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
-		email = sc.nextLine();
 		int retrievedId = 0;
 		
 		try {
@@ -490,6 +490,7 @@ public class Employee {
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			receptionistLandingPage(sc);
@@ -506,7 +507,6 @@ public class Employee {
 		System.out.println("======================Manager View Customer Profile======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
-		email = sc.nextLine();
 		int retrievedId = 0;
 		
 		try {
@@ -545,6 +545,7 @@ public class Employee {
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			managerLandingPage(sc); 
@@ -561,7 +562,6 @@ public class Employee {
 		System.out.println("======================Receptionist Register Car======================");
 		System.out.println("A. Customer Email Address");
 		String email = sc.nextLine();
-		email = sc.nextLine();
 		System.out.println("B. License Plate");
 		String license = sc.nextLine();
 		System.out.println("C. Purchase Date");
@@ -582,6 +582,7 @@ public class Employee {
 		int retrievedId = 0;
 		String query = null;
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			query = "INSERT INTO Vehicle(licensePlate, model, dateOfPurchase, lastRecordedMileage, make, yearManufactured, serviceCenterId) "
@@ -619,7 +620,6 @@ public class Employee {
 		System.out.println("======================Receptionist Service History======================");
 		System.out.println("Enter customer email address");
 		String email = sc.nextLine();
-		email = sc.nextLine();
 		int retrievedId = 0;
 		String mechname = null;
 		String query = null;
@@ -654,6 +654,7 @@ public class Employee {
 		System.out.println("1. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			receptionistLandingPage(sc);
@@ -667,126 +668,138 @@ public class Employee {
 	 }
 	
 	public  void receptionistScheduleService(Scanner sc) {
-		System.out.println("======================Schedule Service======================");
+		System.out.println("======================Receptionist Schedule Service======================");
 		
 		System.out.println("A. Customer Email Address");
 		String email = sc.nextLine();
+		if(!validateCustomerEmail(email)) {
+			System.err.println("Invalid Customer Email, Please enter correct details");
+			receptionistScheduleService(sc);
+		}
 		System.out.println("B. License Plate");
 		String license = sc.nextLine();
+		if(!validateLicense(license, email)) {
+			System.err.println("Invalid License Plate, Please enter correct details");
+			receptionistScheduleService(sc);
+		}
 		System.out.println("C. Current Mileage");
 		int mileage = Integer.parseInt(sc.nextLine());
-		System.out.println("D. Input any Mechanice Preference Id (If no preference press enter)");
-		String query = "SELECT name, employeeId FROM Employee WHERE serviceCenterId = " + serviceCenterId;
+		System.out.println("D. Mechanic Preference");
+		String mechanic = sc.nextLine();
+		if(!validateMechanic(mechanic)) {
+			System.err.println("Invalid Mechanic, Please enter correct details");
+			receptionistScheduleService(sc);
+		}
+		int customerId =0;
+		String query = "Select customerId from customer where email = '" + email +"'";
+		rs = DataOps.getInstance().retrieve(query);
 		try {
-			
-			Object[][] table = new String[1][];
-			table[0] = new String[] { "Mechanic Id", "Name"};
-
-			for (Object[] row : table) {
-			    System.out.format("%15s%15s\n", row);
-			}
-			
-			
-			while(rs.next()) {
-				table[0] = new String[] { rs.getString("employeeId"), rs.getString("name")};
-
-				for (Object[] row : table) {
-				    System.out.format("%15s%15s\n", row);
-				}		
-			}
+			rs.next();
+			customerId = rs.getInt("customerId");
+			rs.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			DataOps.destroyInstance();
 			e.printStackTrace();
 		}
-
-		int prefMechId = Integer.parseInt(sc.nextLine());
 		System.out.println("1. Schedule Maintainence");
 		System.out.println("2. Schedule Repair");
 		System.out.println("3. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
-			receptionistScheduleMaintainencePage1(sc, email, license, mileage, prefMechId);
+			receptionistScheduleMaintainencePage1(sc, customerId, license, mileage, mechanic);
 			break;
 		
 		case 2:
-			receptionistScheduleRepairPage1(sc, email, license, mileage, prefMechId);
+			receptionistScheduleRepairPage1(sc, customerId, license, mileage, mechanic);
 			
 		case 3:
+			receptionistLandingPage(sc);
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
 			receptionistLandingPage(sc);
 		}
 		 
 	 }
 	
-	public  void receptionistScheduleMaintainencePage1(Scanner sc, String email , String license, int mileage, int prefMechId) {
+	public  void receptionistScheduleMaintainencePage1(Scanner sc, int customerId , String license, int mileage, String mechanic) {
 		System.out.println("======================Schedule Maintainence Page 1======================");
-		String query = "SELECT Count(*) AS valid FROM Vehicle WHERE licensePlate = "+ license;
-		try {
-			while(rs.next()) {
-				int count = rs.getInt("valid");
-				if(count == 0) {
-					System.out.println("Car Not Registered");
-					receptionistScheduleService(sc);
-					break;
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			DataOps.destroyInstance();
-			e.printStackTrace();
-		}
-		
 		System.out.println("1. Find Service Date");
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
-			// call back end function to register
-			// retrieve and print
-			
-			boolean possible = true;
-			
-			if(possible) {
-				//System.out.println(); // print date1 and date2
-				int mechId = 0; // has to be retrieved and changed
-				receptionistScheduleMaintainencePage2(sc,email, license, mileage, prefMechId, mechId);
-			} else {
-				// print not possible
+			Appointment appointment = new Appointment();
+			try {
+				appointment = H.scheduleMaintenanceHelper(customerId, license, mechanic, mileage);
+				if(!appointment.canSchedule) {
+					System.out.println(appointment.errorReport);
+					receptionistScheduleService(sc);
+				} else{
+					receptionistScheduleMaintainencePage2(sc, customerId, license, mileage, mechanic, appointment);
+				}
+			} catch (SQLException | ParseException e) {
+				e.printStackTrace();
 			}
 			break;
 		case 2:
 			receptionistScheduleService(sc);
 			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistScheduleMaintainencePage1(sc, customerId, license, mileage, mechanic);
 		}
 		 
 	 }
 	
-	public  void receptionistScheduleMaintainencePage2(Scanner sc, String email , String license, int mileage, int prefMechId, int mechId) {
+	public  void receptionistScheduleMaintainencePage2(Scanner sc, int customerId , String license, int mileage, String mechanic, Appointment appointment) {
 		System.out.println("======================Schedule Maintainence Page 2======================");
-		Date appointmentDate;
 		System.out.println("Select Date Of Appointment");
-		appointmentDate =  getDate(sc.nextLine());
+		System.out.println("1. " + appointment.proposedDates[0]);
+		System.out.println("2. " + appointment.proposedDates[1]);
+		int choice = sc.nextInt();
+		dummy = sc.nextLine();
+		switch(choice) {
+		case 1:
+			appointment.assignedDate = appointment.proposedDates[0];
+			break;
+		case 2:
+			appointment.assignedDate = appointment.proposedDates[1];
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistScheduleMaintainencePage2(sc, customerId, license, mileage, mechanic, appointment);
+		}
 		System.out.println("1. Schedule on Date");
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
-		int choice = sc.nextInt();
-		int random = 0; // has to be changed at back end to genrate autonatic id
+		choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
-			// 
-			//String query = "INSERT INTO APPOINTMENT(appointmentId, mechanicPref, Status, timeOut, timeIn, mechId, typeOfService) VALUES(" + random + "," + prefMechId + "," + "PENDING" + "," +  + "," + "," ")";
-			//String query = "INSERT INtO BOOKS VALUES()"
+			if(!H.scheduleAppointment(appointment)) {
+				System.out.println("Cannot BookThe Requested Appointment Successfully");
+			}
+			receptionistScheduleService(sc);
 			break;
 		case 2:
-			receptionistScheduleMaintainencePage1(sc, email, license, mileage, prefMechId);
+			receptionistScheduleMaintainencePage1(sc, customerId, license, mileage, mechanic);
+			break;
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			receptionistScheduleMaintainencePage2(sc, customerId, license, mileage, mechanic, appointment);
 		}
 		 
 	 }
 	
-	public  void receptionistScheduleRepairPage1(Scanner sc,  String email , String license, int mileage, int PrefMechId) {
+	public  void receptionistScheduleRepairPage1(Scanner sc,  int CustomerId , String license, int mileage, String mechanic) {
 		System.out.println("======================Schedule Repair Page 1======================");
 		System.out.println("1. Engine Knock");
 		System.out.println("2. Car Drifts in a Particular Direction");
@@ -798,6 +811,7 @@ public class Employee {
 		System.out.println("8. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			// exit;
@@ -939,7 +953,7 @@ public class Employee {
 	 }
 	
 	 public  void managerAddNewEmployees(Scanner sc) {
-		System.out.println("======================Add Employess Menu======================");
+		System.out.println("======================Manager Add Employess Menu======================");
 		System.out.println("A. Name");
 		String name = sc.nextLine();
 		System.out.println("B. Address");
@@ -954,25 +968,80 @@ public class Employee {
 		String startdate = sc.nextLine();
 		System.out.println("G. Compensation($)");
 		String compensation = sc.nextLine();
+		String query = "select max(employeeId) AS max from employee";
+		int newEmployeeId = 0;
+
+		rs = DataOps.getInstance().retrieve(query);
+		try {
+			rs.next();
+			newEmployeeId = rs.getInt("max") + 1;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("1. Add");
 		System.out.println("2. Go Back");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
+		int possible = 0;
 		switch(choice) {
 		case 1:
-			if(role == "Receptionist") {
-				String query = "INSERT INTO Employees() VALUES";
-				
+			if(role.equals("Receptionist")) {
+				query = "select count(W.employeeId) AS count from works_in W, employee E, Users U where W.employeeId = E.employeeId AND U.loginId = E.loginId AND W.serviceCenterId = " + serviceCenterId + " AND U.role='Receptionist'";
+				rs = DataOps.getInstance().retrieve(query);
+				try {
+					rs.next();
+					if(rs.getInt("count") == 1) {
+						System.err.println("A Receptionist is already present");
+						managerLandingPage(sc);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				query = "INSERT INTO Users VALUES('"+email+ "','12345678','Receptionist')";
+				DataOps.getInstance().insertInto(query);
+				query = "INSERT INTO Employee(employeeId,name,phoneNumber,address,email,startDate,loginId) VALUES(" + newEmployeeId + ",'" + name + "','" + phone + "','" + address + "','" + email + "','" + startdate + "','" + email + "')";
+				DataOps.getInstance().insertInto(query);
+				query = "INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(" + serviceCenterId + "," + newEmployeeId + ")";
+				DataOps.getInstance().insertInto(query);
+				query = "INSERT INTO Receptionist(employeeId,salary) VALUES(" + newEmployeeId + "," + compensation + ")";
+				DataOps.getInstance().insertInto(query);
 			}
 			
-			else if (role == "Mechanic"){
-				String query = "INSERT INTO Employees() VALUES";
+			else if (role.equals("Mechanic")){
+				query = "select count(W.employeeId) AS count from works_in W, employee E, Users U where W.employeeId = E.employeeId AND U.loginId = E.loginId AND W.serviceCenterId = " + serviceCenterId + " AND U.role='Mechanic'";
+				rs = DataOps.getInstance().retrieve(query);
+				try {
+					rs.next();
+					if(rs.getInt("count") == 5) {
+						System.err.println("5 Mechanics are already present");
+						managerLandingPage(sc);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				query = "INSERT INTO Users VALUES('"+email+ "','12345678','Mechanic')";
+				DataOps.getInstance().insertInto(query);
+				query = "INSERT INTO Employee(employeeId,name,phoneNumber,address,email,startDate,loginId) VALUES(" + newEmployeeId + ",'" + name + "','" + phone + "','" + address + "','" + email + "','" + startdate + "','" + email + "')";
+				DataOps.getInstance().insertInto(query);
+				query = "INSERT INTO Works_In(serviceCenterId,employeeId) VALUES(" + serviceCenterId + "," + newEmployeeId + ")";
+				DataOps.getInstance().insertInto(query);
+				query = "INSERT INTO Mechanic(employeeId,hourlyWages) VALUES(" + newEmployeeId + "," + compensation + ")";
+				DataOps.getInstance().insertInto(query);
 			}
-			
 			else {
-				System.out.println("Bad Option");
+				System.err.println("Bad Option");
 			}
+			managerLandingPage(sc);
+			
 		case 2:
-			//
+			managerLandingPage(sc);
+		default:
+			System.err.println("Please Enter Correct Choice");
+			System.out.println();
+			managerLandingPage(sc);
 		}	 
 	 }
 	 
@@ -1047,115 +1116,299 @@ public class Employee {
 	 }
 	 
 	 public  void managerInventory(Scanner sc) {
-			System.out.println("======================Inventory======================");
-			//display
+	 		// Here we do not need to display make and model so we might see similar data because each part may have the same id for different make and model
+			System.out.println("====================== Manager Inventory======================");
+			String query = "Select I.partId, I.name, H.currentquantity, I.make, I.unitprice, H.minimumquantitythreshold, H.minimumorderthreshold" +
+			" From Inventory I, Has H Where I.partId = H.partId And H.serviceCenterId = " + serviceCenterId;
+			rs = DataOps.getInstance().retrieve(query);		
+			
+			try {
+				while(rs.next()) {
+					System.out.println("PartId: "+rs.getInt("partId"));
+					System.out.println("Name: "+rs.getString("name"));
+					System.out.println("Make: "+rs.getString("make"));
+					System.out.println("Quantity: "+rs.getInt("currentquantity"));
+					System.out.println("Unit Price: "+rs.getInt("unitprice"));
+					System.out.println("Minium Quantity Threshold: "+rs.getInt("minimumquantitythreshold"));
+					System.out.println("Minum Order Threshold: "+ rs.getInt("minimumorderthreshold"));
+					System.out.println();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
+				e.printStackTrace();
+			}
+
 			System.out.println("1. Go Back");
 			int choice = sc.nextInt();
+			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
-				// 
+				managerLandingPage(sc);
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				managerLandingPage(sc);
 			}	 
 		 }
 	 
 	 public  void managerOrders(Scanner sc) {
-			System.out.println("======================Orders======================");
+			System.out.println("======================Manager Orders======================");
 			System.out.println("1. Order History");
 			System.out.println("2. New Order");
 			System.out.println("3. Go Back");
 			int choice = sc.nextInt();
+			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
-				// 
-				
+				managerOrderHistory(sc);
+				break;
 			case 2:
-				// 
-				
+				managerNewOrder(sc);
+				break;
 			case 3:
-				// 
+				managerLandingPage(sc);
+				break;
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				managerOrders(sc);
 			}	 
 		 }
 	 
 	 public  void managerOrderHistory(Scanner sc) {
-			System.out.println("======================Order History======================");
-			//display
+			System.out.println("======================ManagerOrder History======================");
+			
+			String query = "select O.orderId, O.actualdeliverydate, I.name, O.source, S.name as centername,O.quantity, I.unitprice, O.status from Orders O, Inventory I, Servicecenter S where I.partid  = O.partid and O.destination = " + serviceCenterId + " and S.servicecenterid = " + serviceCenterId;	
+
+
+			rs = DataOps.getInstance().retrieve(query);		
+			
+			try {
+				while(rs.next()) {
+					System.out.println("OrderId: "+rs.getInt("orderId"));
+					System.out.println("Delivery Date If Done: "+rs.getString("actualdeliverydate"));
+					System.out.println("Part Name: "+rs.getString("name"));
+					int sourceId = rs.getInt("source");
+					
+					if(sourceId >= 1000) {
+						System.out.println("Distributor: " + sourceId);	
+					}
+
+					else {
+						String query2 = "select name from servicecenter where servicecenterid = " + sourceId;
+						ResultSet rs1 = DataOps.getInstance().retrieve(query2);
+						rs1.next();
+						System.out.println("Source Service Center: "+rs1.getString("name"));
+					}
+					
+					System.out.println("Destination Service Center: "+rs.getString("centername"));
+					int qty = rs.getInt("quantity");
+					System.out.println("Quantity: "+rs.getInt("quantity"));
+					int unitPrice = rs.getInt("unitprice");
+					System.out.println("Unit Price: "+rs.getInt("unitprice"));
+					System.out.println("Total Price: "+(qty*unitPrice));
+					System.out.println("Order Status: "+rs.getString("status"));
+					System.out.println();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
+				e.printStackTrace();
+			}
 			System.out.println("1. Go Back");
 			int choice = sc.nextInt();
+			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
-				// 
+				managerOrders(sc);
+				break;
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				managerOrders(sc);
+			
 			}	 
 		 }
 	 
 	 public  void managerNewOrder(Scanner sc) {
 			System.out.println("======================New Order======================");
 			System.out.println("A. Part ID");
-			String partid = sc.nextLine();
+			int partid = Integer.parseInt(sc.nextLine());
 			System.out.println("B. Quantity");
-			String qty = sc.nextLine();
+			int qty = Integer.parseInt(sc.nextLine());
 			System.out.println("1. Place Order");
 			System.out.println("2. Go Back");
 			int choice = sc.nextInt();
 			switch(choice) {
 			case 1:
-				// 
+				 try {
+					H.orderParts(Integer.parseInt(serviceCenterId), partid, qty);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 break;
 			case 2:
-				// 
+				 managerOrders(sc);
+				 break;
 			}	 
 		 }
 	 
 	 public  void managerNotifications(Scanner sc) {
-			System.out.println("======================Notifications======================");
-			//display
+			System.out.println("======================Manager Notifications======================");
+			
+			String query = "select N.notificationId, N.notificationDate, N.orderId, N.supplierId, N.expecteddeliverydate from Notification N, Orders O where N.orderId  = O.orderId and O.destination = " + serviceCenterId;	
+
+			rs = DataOps.getInstance().retrieve(query);
+			
+			try {
+				while(rs.next()) {
+					System.out.println("NotificationId: "+rs.getInt("notificationId"));
+					System.out.println("Notification Date: "+rs.getString("notificationDate"));
+					System.out.println("OrderId: "+rs.getInt("orderId"));
+					int sourceId = rs.getInt("supplierId");
+					
+					if(sourceId >= 1000) {
+						System.out.println("Supplier Id (Distributor): " + sourceId);	
+					}
+
+					else {
+						String query2 = "select name from servicecenter where servicecenterid = " + sourceId;
+						ResultSet rs1 = DataOps.getInstance().retrieve(query2);
+						rs1.next();
+						System.out.println("Supplier Service Center: "+rs1.getString("name"));
+					}
+					
+					String expectedDate = rs.getString("expecteddeliverydate");
+					System.out.println("Expected Delivery Date: "+rs.getString("expecteddeliverydate"));
+					
+					Date expectedDeliveryDate=null;
+					try {
+						expectedDeliveryDate = new SimpleDateFormat("yyyy-MM-dd").parse(expectedDate);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+					Date currDate = new Date();
+					dateformat.format(currDate);
+
+					if(currDate.compareTo(expectedDeliveryDate) < 0) {
+						System.out.println("Not Delayed Yet");
+					}
+
+					else {
+						int days = currDate.getDate() - expectedDeliveryDate.getDate();
+						System.out.println("Delayed By: "+days+" days");	
+					}
+
+					System.out.println();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
+				e.printStackTrace();
+			}
+
 			System.out.println("1. Order ID");
 			System.out.println("2. Go Back");
 			int choice = sc.nextInt();
+			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
-				// 
+				System.out.println("Select The Order Id From Above");
+				int orderId = Integer.parseInt(sc.nextLine());
+				managerNotificationsDetail(sc, orderId);
 			case 2:
-				// 
+				managerLandingPage(sc);
+				break;
 			}
 		 }
 	 
-	 public  void managerNotificationsDetail(Scanner sc) {
+	 public  void managerNotificationsDetail(Scanner sc, int orderId) {
 			System.out.println("======================Notifications Detail======================");
-			//display
+			
+			String query = "select O.orderId, O.actualdeliverydate, I.name, O.source, S.name as centername,O.quantity, I.unitprice, O.status from Orders O, Inventory I, Servicecenter S where I.partid  = O.partid and O.destination = " + serviceCenterId + " and O.orderId = " + orderId + " and S.servicecenterid = " + serviceCenterId;	
+
+
+			rs = DataOps.getInstance().retrieve(query);		
+			
+			try {
+				while(rs.next()) {
+					System.out.println("OrderId: "+rs.getInt("orderId"));
+					System.out.println("Delivery Date If Done: "+rs.getString("actualdeliverydate"));
+					System.out.println("Part Name: "+rs.getString("name"));
+					int sourceId = rs.getInt("source");
+					
+					if(sourceId >= 1000) {
+						System.out.println("Distributor: " + sourceId);	
+					}
+
+					else {
+						String query2 = "select name from servicecenter where servicecenterid = " + sourceId;
+						ResultSet rs1 = DataOps.getInstance().retrieve(query2);
+						rs1.next();
+						System.out.println("Source Service Center: "+rs1.getString("name"));
+					}
+					
+					System.out.println("Destination Service Center: "+rs.getString("centername"));
+					int qty = rs.getInt("quantity");
+					System.out.println("Quantity: "+rs.getInt("quantity"));
+					int unitPrice = rs.getInt("unitprice");
+					System.out.println("Unit Price: "+rs.getInt("unitprice"));
+					System.out.println("Total Price"+(qty*unitPrice));
+					System.out.println("Order Status: "+rs.getString("status"));
+					System.out.println();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				DataOps.destroyInstance();
+				e.printStackTrace();
+			}
+
 			System.out.println("1. Go Back");
 			int choice = sc.nextInt();
 			switch(choice) {
 			case 1:
-				// 
+				managerNotifications(sc);
 			}
 		 }
 	 
 	 public  void managerNewCarModel(Scanner sc) {
-			System.out.println("======================New Car Model======================");
-			System.out.println("A. Make");
-			String make = sc.nextLine();
-			System.out.println("B. Model");
-			String model = sc.nextLine();
-			System.out.println("C. Year");
-			String year = sc.nextLine();
+		 System.out.println("======================New Car Model======================");
+		 System.out.println("A. Make");
+		 String make = sc.nextLine();
+		 System.out.println("B. Model");
+		 String model = sc.nextLine();
+		 System.out.println("C. Year");
+		 String year = sc.nextLine();
+			
+			if(!(make.equals("Honda") || make.equals("Toyota") || make.equals("Nissan"))) {
+				System.out.println("Only Honda, Toyota or Nissan are allowed");
+				managerLandingPage(sc);
+			}
 			
 			class servicea {
 				String miles;
 				String months;
-				String partlist;
+				String basicServiceList;
 			}
 			
 			class serviceb {
 				String miles;
 				String months;
-				String additionalPartList;
+				String basicServiceList;
 			}
 			
 			class servicec {
 				String miles;
 				String months;
-				String additionalPartList;
+				String basicServiceList;
 			}
-			
-			
 			
 			servicea sa = new servicea();
 			serviceb sb = new serviceb();
@@ -1166,24 +1419,26 @@ public class Employee {
 			sa.miles = sc.nextLine();  
 			System.out.println("b. Months");
 			sa.months = sc.nextLine();  
-			System.out.println("c. Parts List");
-			sa.partlist = sc.nextLine();
+			System.out.println("c. Basic Service List");
+			sa.basicServiceList = sc.nextLine();
 			
 			System.out.println("E. -----Service B----");
 			System.out.println("a. Miles");
 			sb.miles = sc.nextLine();  
 			System.out.println("b. Months");
 			sb.months = sc.nextLine();  
-			System.out.println("c. Additional Parts List");
-			sb.additionalPartList = sc.nextLine();  
+			System.out.println("c. Basic Service List");
+			sb.basicServiceList = sc.nextLine();
+			sb.basicServiceList = sb.basicServiceList + ',' + sa.basicServiceList;
 			
 			System.out.println("F. -----Service C----");
 			System.out.println("a. Miles");
 			scc.miles = sc.nextLine();  
 			System.out.println("b. Months");
 			scc.months = sc.nextLine();  
-			System.out.println("c. Additional Parts List");
-			scc.additionalPartList = sc.nextLine();
+			System.out.println("c. Basic Service List");
+			scc.basicServiceList = sc.nextLine();
+			scc.basicServiceList = scc.basicServiceList + ',' + sb.basicServiceList;
 			
 			System.out.println("1. Add Car");
 			System.out.println("2. Go Back");
@@ -1191,66 +1446,111 @@ public class Employee {
 			int choice = sc.nextInt();
 			switch(choice) {
 			case 1:
-				// 
+			
+				String query = "Insert into servicemiles values( '" + make + "','" + model + "'," + sa.miles + "," + 1 + ")";
+				DataOps.getInstance().insertInto(query);
+				List list = getList(sa.basicServiceList);
+				for(int i = 0 ; i < list.size() ; i++){
+					query = "Insert into contains values( " + list.get(i) + "," + 1 + ",'" + make + "','" + model + "')";
+					DataOps.getInstance().insertInto(query);
+				}
+			
+				query = "Insert into servicemiles values( '" + make + "','" + model + "'," + sb.miles + "," + 2 + ")";
+				DataOps.getInstance().insertInto(query);
+				list = getList(sb.basicServiceList);
+				for(int i = 0 ; i < list.size() ; i++){
+					query = "Insert into contains values( " + list.get(i) + "," + 2 + ",'" + make + "','" + model + "')";
+					DataOps.getInstance().insertInto(query);
+				}
+			
+				query = "Insert into servicemiles values( '" + make + "','" + model + "'," + sb.miles + "," + 3 + ")";
+				DataOps.getInstance().insertInto(query);
+				list = getList(scc.basicServiceList);
+				for(int i = 0 ; i < list.size() ; i++){
+					query = "Insert into contains values( " + list.get(i) + "," + 3 + ",'" + make + "','" + model + "')";
+					DataOps.getInstance().insertInto(query);
+				}
+			
+				managerLandingPage(sc);
+				break;
 			case 2:
-				// 
+				managerLandingPage(sc);
+				break;
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				managerLandingPage(sc);
 			}
 		 }
 	 
-	 public  void managerCarServiceDetails(Scanner sc) {
-			System.out.println("======================Manager Car Service Details======================");
-			System.out.println("A. Make");
-			String make = sc.nextLine();
-			System.out.println("B. Model");
-			String model = sc.nextLine();
-			System.out.println("C. Year");
-			String year = sc.nextLine();
-			
-			class servicea {
-				String miles;
-				String basicservicelist;
+	 public void managerCarServiceDetails(Scanner sc) {
+		 System.out.println("======================Manager Car Service Details======================");
+		 ResultSet rs2 = null;
+		 String query = "Select make, model, yearManufactured From vehicle Where serviCecenterId = " + serviceCenterId;
+		 rs = DataOps.getInstance().retrieve(query);		
+		 try {
+			 while(rs.next()) {
+				 int serviceamiles = 0;
+				 int servicebmiles = 0;
+				 int servicecmiles = 0;
+				 String basicservicelista = "";
+				 String basicservicelistb = "";
+				 String basicservicelistc = "";
+				 
+				 System.out.println("Make: "+rs.getString("make"));
+				 System.out.println("Model: "+rs.getString("model"));
+				 System.out.println("Year Manufactured In: "+rs.getString("yearManufactured"));
+				 query = "Select miles, serviceId from servicemiles where make ='" + rs.getString("make") + "' AND model = '" + rs.getString("model") + "'";
+				 rs2 = DataOps.getInstance().retrieve(query);
+				 while(rs2.next()) {
+					 if(rs2.getInt("serviceId") == 1) {
+						 serviceamiles = rs2.getInt("miles");
+					 }
+					 if(rs2.getInt("serviceId") == 2) {
+						 servicebmiles = rs2.getInt("miles");
+					 }
+					 if(rs2.getInt("serviceId") == 3) {
+						 servicecmiles = rs2.getInt("miles");
+					 }
+				 }
+				 query = "Select basicServiceId, serviceId from contains where make ='" + rs.getString("make") + "' AND model = '" + rs.getString("model") + "'";
+				 rs2 = DataOps.getInstance().retrieve(query);
+				 while(rs2.next()) {
+					 if(rs2.getInt("serviceId") == 1) {
+						 basicservicelista = basicservicelista + ", " + rs2.getInt("basicServiceId");
+					 }
+					 if(rs2.getInt("serviceId") == 2) {
+						 basicservicelistb = basicservicelistb + ", " + rs2.getInt("basicServiceId");
+					 }
+					 if(rs2.getInt("serviceId") == 3) {
+						 basicservicelistc = basicservicelistc + ", " + rs2.getInt("basicServiceId");
+					 }
+				 }
+				System.out.println("For Service A (make/model)");
+				System.out.println("Miles: " + serviceamiles);
+				System.out.println("Basic Service List: " + basicservicelista);
+				System.out.println("For Service B (make/model)");
+				System.out.println("Miles: " + servicebmiles);
+				System.out.println("Basic Service List: " + basicservicelistb);
+				System.out.println("For Service C (make/model)");
+				System.out.println("Miles: " + servicecmiles);
+				System.out.println("Basic Service List: " + basicservicelistc);
+				System.out.println();
+				}
+			} catch (SQLException e) {
+				DataOps.destroyInstance();
+				e.printStackTrace();
 			}
-			
-			class serviceb {
-				String miles;
-				String basicservicelist;
-			}
-			
-			class servicec {
-				String miles;
-				String basicservicelist;
-			}
-			
-			
-			
-			servicea sa = new servicea();
-			serviceb sb = new serviceb();
-			servicec scc = new servicec();
-			
-			System.out.println("D. -----Service A----");
-			System.out.println("a. Miles");
-			sa.miles = sc.nextLine();  
-			System.out.println("c. Parts List");
-			sa.basicservicelist = sc.nextLine();
-			
-			System.out.println("E. -----Service B----");
-			System.out.println("a. Miles");
-			sb.miles = sc.nextLine();  
-			System.out.println("c. Parts List");
-			sb.basicservicelist = sc.nextLine();
-			
-			System.out.println("F. -----Service C----");
-			System.out.println("a. Miles");
-			scc.miles = sc.nextLine();  
-			System.out.println("c. Parts List");
-			scc.basicservicelist = sc.nextLine();
-			
 			System.out.println("1. Go Back");
-			
 			int choice = sc.nextInt();
+			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
-				// 
+				managerLandingPage(sc);
+			default:
+				System.err.println("Please Enter Correct Choice");
+				System.out.println();
+				managerLandingPage(sc);
 			}
 		 }
 	 
@@ -1259,8 +1559,8 @@ public class Employee {
 			String mechname = null;
 			String query = null;
 			try {
-				query = "SELECT B.appointmentId, C.name, B.licensePlate, A.typeOfService, A.mechId, A.timeIn, A.Status FROM Books B, Appointment A, Customer C"
-						+ " WHERE A.appointmentId = B.appointmentId AND B.customerId = C.customerId";
+				query = "SELECT B.appointmentId, C.name, B.licensePlate, A.typeOfService, A.mechId, A.timeIn, A.Status FROM Books B, Appointment A, Customer C, Vehicle V"
+						+ " WHERE A.appointmentId = B.appointmentId AND B.customerId = C.customerId AND V.licensePlate = B.LicensePlate AND V.serviceCenterId = " + serviceCenterId;
 				rs = DataOps.getInstance().retrieve(query);
 				while(rs.next()) {
 					String serviceType = null;
@@ -1286,6 +1586,7 @@ public class Employee {
 			System.out.println("1. Go Back");
 			System.out.println("Please select your choice.");
 			int choice = sc.nextInt();
+			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
 				receptionistLandingPage(sc);
@@ -1301,31 +1602,31 @@ public class Employee {
 			System.out.println("======================Manager Invoices======================");
 			try {
 				String query = null;
-			    query = "SELECT appointmentId from Appointment";
+			    query = "SELECT B.appointmentId from Books B, Vehicle V Where B.licensePlate = V.licensePlate AND V.serviceCenterId= " + serviceCenterId;
 			    rs = DataOps.getInstance().retrieve(query);
-			    Object[][] table = new String[1][];
-				table[0] = new String[] { "AppointmentId", "Customer Name", "Start Date" , "License Plate", "Service Type", "Mechanic Name", "Parts Used", "Total cost for parts", "Total Labour Hours", "Total Labour Wages", "Total Service Cost" };
-
-				for (Object[] row : table) {
-				    System.out.format("%35s%35s%35s%35s%35s%35s%35s%50s%35s%35s%35s%35s\n", row);
-				}
 				while(rs.next()) {
 					int appointmentId = rs.getInt("appointmentId");
 					Map<String, Object> result = new HashMap<String, Object>();
 					Helper helper = new Helper();
 					result = helper.invoiceGenerator(appointmentId);
-					String parts=null;
-					String costs=null;
-					for (Map.Entry<String, Object> entry : result.entrySet()) {
+					String parts="";
+					String costs="";
+					for (Map.Entry<String, Object> entry : ((Map<String, Object>)result.get("Parts Used")).entrySet()) {
 					    parts = parts + ", "+entry.getKey();
 					    costs = costs + ", "+entry.getValue();
 					}
-					table = new String[1][];
-					table[0] = new String[] { (String)result.get("appointmentId"), (String)result.get("customerName"),(String)result.get("startDate"),(String)result.get("licensePlate"),(String)result.get("serviceType"),(String)result.get("Mechanic Name"),parts,costs,(String)result.get("Total Labour Hours"),(String)result.get("Total Labour Wages"),(String)result.get("Total Service Cost")};
-
-					for (Object[] row : table) {
-					    System.out.format("%15s%15s\n", row);
-					}
+					System.out.println("AppointmentId: "+(Integer)result.get("appointmentId"));
+					System.out.println("Customer Name: "+(String)result.get("customerName"));
+					System.out.println("Start Date: "+(Date)result.get("startDate"));
+					System.out.println("License Plate: "+(String)result.get("licensePlate"));
+					System.out.println("Service Type: "+(String)result.get("serviceType"));
+					System.out.println("Mechanic Name: "+(String)result.get("Mechanic Name"));
+					System.out.println("Parts Used: "+ parts);
+					System.out.println("Total cost for parts: "+ costs);
+					System.out.println("Total Labour Hours: "+(Float)result.get("Total Labour Hours"));
+					System.out.println("Total Labour Wages: "+(Float)result.get("Total Labour Wages"));
+					System.out.println("Total Service Cost: "+(Float)result.get("Total Service Cost"));
+					System.out.println();
 				} 
 				
 				// print here
@@ -1339,47 +1640,123 @@ public class Employee {
 			System.out.println("1. Go Back");
 			System.out.println("Please select your choice.");
 			int choice = sc.nextInt();
+			dummy = sc.nextLine();
 			switch(choice) {
 			case 1:
 				// go back
 			}
 		 }
 	 
+	 public boolean validateCustomerEmail(String email) {
+		 try {
+			 String query = "SELECT count(customerId) as count FROM Customer WHERE email = '" + email +"'";
+			 rs = DataOps.getInstance().retrieve(query);
+			 rs.next();
+			 if(rs.getInt("count") != 1) {
+				 rs.close();
+				 return(false);
+			 }
+			 query = "SELECT U.Role FROM Users U, Customer C WHERE U.loginId = C.loginId AND C.email = '" + email + "'";
+			 rs = DataOps.getInstance().retrieve(query);
+			 rs.next();
+			 if(!rs.getString("role").equals("Customer")) {
+				 rs.close();
+				 return(false);
+			 }
+			 rs.close();
+		 }catch (SQLException e) {
+			 // TODO Auto-generated catch block
+			 DataOps.destroyInstance();
+			 e.printStackTrace();
+		 }
+		 return(true);
+	 }
+	 
+	 public boolean validateLicense(String license, String email) {
+		 try {
+			 String query = "SELECT count(licensePlate) as count FROM Vehicle WHERE licensePlate = '" + license +"'";
+			 rs = DataOps.getInstance().retrieve(query);
+			 rs.next();
+			 if(rs.getInt("count") != 1) {
+				 rs.close();
+				 return(false);
+			 }
+			 query = "SELECT count(O.licensePlate) as count FROM Owns O, Customer C WHERE C.customerId = O.customerId AND C.email = '" + email + "' AND O.licensePlate = '" + license + "'";
+			 rs = DataOps.getInstance().retrieve(query);
+			 rs.next();
+			 if(rs.getInt("count") != 1) {
+				 rs.close();
+				 return(false);
+			 }
+			 query = "SELECT count(licensePlate) as count FROM Vehicle WHERE serviceCenterId = " + serviceCenterId + " AND licensePlate = '" + license + "'";
+			 rs = DataOps.getInstance().retrieve(query);
+			 rs.next();
+			 if(rs.getInt("count") != 1) {
+				 rs.close();
+				 return(false);
+			 }
+			 rs.close();
+		 }catch (SQLException e) {
+			 // TODO Auto-generated catch block
+			 DataOps.destroyInstance();
+			 e.printStackTrace();
+		 }
+		 return(true);
+	 }
+	 
+	 public boolean validateMechanic(String mechanic) {
+		 try {
+			 if(!mechanic.equals("")) {
+					String query = "SELECT count(W.employeeId) as count FROM Employee E, works_in W WHERE W.employeeId = E.employeeId AND E.name = '" + mechanic + "' AND W.serviceCenterId = " + serviceCenterId;
+					rs = DataOps.getInstance().retrieve(query);
+					rs.next();
+					if(rs.getInt("count") != 1) {
+						 rs.close();
+						 return(false);
+					}
+					query = "SELECT U.Role FROM Users U, Employee E WHERE U.loginId = E.loginId AND E.name = '" + mechanic + "'";
+					 rs = DataOps.getInstance().retrieve(query);
+					 rs.next();
+					 if(!rs.getString("role").equals("Mechanic")) {
+						 rs.close();
+						 return(false);
+					 }
+				}
+			 rs.close();
+		 }catch (SQLException e) {
+			 // TODO Auto-generated catch block
+			 DataOps.destroyInstance();
+			 e.printStackTrace();
+		 }
+		 return(true);
+	 }
+	 
 	 public  Date getDate(String date) {
-		 	
-		 DateFormat df = new SimpleDateFormat("dd/mm/yyyy");
+		 DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
 		 Date d = new Date();
-		 
 	     try { 
 		     d = df.parse(date);
-	      }
-	     
-	      catch(ParseException e) {
+	      } catch(ParseException e) {
 	    	  DataOps.destroyInstance();
-	         System.out.println("Unable to parse " + date);
+	         System.err.println("Unable to parse " + date);
 	      }
-	     
 		 return d;
 	 }
 	 
 	 public  List getList(String s) {
-		 List<String> list = new ArrayList<String>(Arrays.asList(s.split(" , ")));
+		 List<String> list = new ArrayList<String>(Arrays.asList(s.split(",")));
 		 return list;
 	 }
 	 
 	 public  Date getDateTime(String s) {
 		 DateFormat df = new SimpleDateFormat("dd/mm/yyyy HH:mm");
 		 Date d = new Date();
-		 
 	     try { 
 		     d = df.parse(s);
-	      }
-	     
-	      catch(ParseException e) {
+	      } catch(ParseException e) {
 	    	  DataOps.destroyInstance();
-	         System.out.println("Unable to parse " + s);
+	         System.err.println("Unable to parse " + s);
 	      }
-	     
 		 return d;
 	 }
 }
