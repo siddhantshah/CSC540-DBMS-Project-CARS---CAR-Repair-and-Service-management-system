@@ -112,7 +112,7 @@ public class Helper {
 				
 				String mechQuery;
 				if(mechanic== null || mechanic.length()==0) {
-					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 9-r.hours >="+ap.hoursReqd+" order by r.day"  ;
+					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid join Works_in w on w.employeeid=m.employeeid where r.day > '"+date+"' and 9-r.hours >="+ap.hoursReqd+" and w.servicecenterid = "+servicecenterid+" order by r.day"  ;
 					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
 					mechRS.next();
 					String availableSlots = mechRS.getString("availableslots");
@@ -142,7 +142,7 @@ public class Helper {
 					}
 					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
 					ap.proposedSlots[0] = slotBuffer.toString();
-					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' order by r.day" ;
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid join Works_in w on w.employeeid =m.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' and w.servicecenterid ="+servicecenterid+" order by r.day" ;
 					mechRS = DataOps.getInstance().retrieve(mechQuery);
 					mechRS.next();
 					availableSlots = mechRS.getString("availableslots");
@@ -178,7 +178,7 @@ public class Helper {
 				
 				else {
 	
-					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+mechanic+"' and r.day > '"+date+"' order by r.day" ;
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid join Works_in w on w.employeeid =m.employeeid where e.name='"+mechanic+"' and r.day > '"+date+"'and w.servicecenterid ="+servicecenterid+" order by r.day" ;
 					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
 				
 					for (int i = 0; i < 2; i++) {
@@ -306,7 +306,7 @@ public class Helper {
 				
 				String mechQuery;
 				if(mechanic== null || mechanic.length()==0) {
-					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where r.day > '"+date+"' and 9-r.hours >="+ap.hoursReqd+" order by r.day"  ;
+					mechQuery = "select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid join Works_in w on w.employeeid =m.employeeid where r.day > '"+date+"' and 9-r.hours >="+ap.hoursReqd+" and w.servicecenterid ="+servicecenterid+" order by r.day";
 					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
 					mechRS.next();
 					String availableSlots = mechRS.getString("availableslots");
@@ -336,7 +336,7 @@ public class Helper {
 					}
 					slotBuffer.deleteCharAt(slotBuffer.length() - 1);
 					ap.proposedSlots[0] = slotBuffer.toString();
-					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' order by r.day" ;
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid join Works_in w on w.employeeid = m.employeeid where e.name='"+ap.assignedMechanic+"' and r.day > '"+ap.proposedDates[0].substring(0, 10)+"' and w.servicecenterid ="+servicecenterid+" order by r.day"  ;
 					mechRS = DataOps.getInstance().retrieve(mechQuery);
 					mechRS.next();
 					availableSlots = mechRS.getString("availableslots");
@@ -372,7 +372,7 @@ public class Helper {
 				
 				else {
 	
-					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid where e.name='"+mechanic+"' and r.day > '"+date+"' order by r.day" ;
+					mechQuery="select r.day, e.employeeid ,e.name, r.availableslots, r.hours from Mechanic m join employee e on m.employeeid=e.employeeid join MecRec r on r.employeeid=e.employeeid join Works_in w on w.employeeid =m.employeeid where e.name='"+mechanic+"' and r.day > '"+date+"' and w.servicecenterid ="+servicecenterid+" order by r.day"  ;
 					ResultSet mechRS = DataOps.getInstance().retrieve(mechQuery);
 				
 					for (int i = 0; i < 2; i++) {
