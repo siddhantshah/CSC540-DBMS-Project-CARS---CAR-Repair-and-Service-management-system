@@ -958,7 +958,7 @@ public class Employee {
 		currDate.setDate(currDate.getDate()-1);
 		String currentDate = dateformat.format(currDate);
 
-		String query = "Select O.quantity, O.partid, H.currentquantity, H.minimumquantitythreshold, OR.quantity as incomingqty From outgoingparts O, Has H where O.scheduledate = '" + currentDate + "' and O.serviceCenterId = " + serviceCenterId + " and O.partId = H.partId and O.serviceCenterId = H.serviceCenterId and OR.partId = H.partId and OR.destination = " + serviceCenterId;
+		String query = "Select O.quantity, O.partid, H.currentquantity, H.minimumquantitythreshold, OR.quantity as incomingqty From outgoingparts O, Has H, Orders OR where O.scheduledate = '" + currentDate + "' and O.serviceCenterId = " + serviceCenterId + " and O.partId = H.partId and O.serviceCenterId = H.serviceCenterId and OR.partId = H.partId and OR.destination = " + serviceCenterId;
 			
 		rs = DataOps.getInstance().retrieve(query);
 		
