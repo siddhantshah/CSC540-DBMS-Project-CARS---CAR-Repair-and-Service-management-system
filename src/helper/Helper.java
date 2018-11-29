@@ -89,7 +89,7 @@ public class Helper {
 						}
 						else {
 							Date order = orderParts(servicecenterid,partId, -1);
-							if(sdf.format(order).compareTo(maxDate) ==1) {
+							if(sdf.format(order).compareTo(maxDate) > 1) {
 								maxDate=sdf.format(order);
 							}
 						}
