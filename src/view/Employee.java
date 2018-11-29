@@ -1112,6 +1112,7 @@ public class Employee {
 			while(rs.next()) {
 				query = "update appointment set status = 'Completed' where appointmentid = " + rs.getInt("appointmentid");
 				DataOps.getInstance().insertInto(query);
+				H.invoiceGenerator(rs.getInt("appointmentid"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -1196,6 +1197,21 @@ public class Employee {
 					DataOps.getInstance().insertInto(query);
 					query = "Delete from notification where orderId = " + csvList.get(i);
 					DataOps.getInstance().insertInto(query);
+
+					// add the incoming parts in has table
+					String query = "Select partid, quantity From Orders where orderid = "+csvList.get(i);
+					rs = DataOps.getInstance().retrieve(query);
+
+					while(rs.next()){
+						String query2 = "Select currentquantity from Has where partId = "+rs.getInt("partid")+" and serviceCenterId = " + serviceCenterId;
+						ResultSet rs1 = DataOps.getInstance().retrieve(query2);
+						while(rs1.next()){
+							int quant = rs.getInt("quantity")+rs1.getInt("currentquantity");
+							String query3 = "update Has set currentquantity = "+quant+" where partId = "+rs.getInt("partid")+" and serviceCenterId = " + serviceCenterId;
+							DataOps.getInstance().insertInto(query3);
+						}
+					}
+
 					System.out.println("Task Completed");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
