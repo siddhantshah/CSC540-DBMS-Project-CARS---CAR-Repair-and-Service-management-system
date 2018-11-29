@@ -1137,7 +1137,7 @@ public class Employee {
 		try {
 			while(rs.next()) {
 
-				int newqty = rs.getInt("currentquantity") - rs.getInt("quantity") + rs.getInt("incomingqty");
+				int newqty = rs.getInt("currentquantity") - rs.getInt("quantity");
 
 				if(newqty < rs.getInt("minimumquantitythreshold")){
 					String query2 = "update Has set currentquantity = "+newqty+" where partId = "+rs.getInt("partid")+" and serviceCenterId = " + serviceCenterId;
@@ -1199,7 +1199,7 @@ public class Employee {
 					DataOps.getInstance().insertInto(query);
 
 					// add the incoming parts in has table
-					String query = "Select partid, quantity From Orders where orderid = "+csvList.get(i);
+					query = "Select partid, quantity From Orders where orderid = "+csvList.get(i);
 					rs = DataOps.getInstance().retrieve(query);
 
 					while(rs.next()){
