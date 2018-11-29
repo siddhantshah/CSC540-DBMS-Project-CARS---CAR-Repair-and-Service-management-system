@@ -748,6 +748,8 @@ public class Helper {
 			
 			resAppt.canSchedule = existingAppt.canSchedule;
 			resAppt.errorReport = existingAppt.errorReport;
+			resAppt.assignedMechanic=existingAppt.assignedMechanic;
+			resAppt.assignedMechanicId=existingAppt.assignedMechanicId;
 			resAppt.proposedDates = existingAppt.proposedDates;
 			resAppt.proposedSlots = existingAppt.proposedSlots;
 			return resAppt;

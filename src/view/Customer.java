@@ -358,7 +358,7 @@ public class Customer {
 	 }
 	 
 	 public void scheduleService(Scanner sc) {
-			System.out.println("======================Receptionist Schedule Service======================");
+			System.out.println("======================Customer Schedule Service======================");
 			System.out.println("A. License Plate");
 			String license = sc.nextLine();
 			if(!validateLicense(license, email)) {
@@ -465,7 +465,7 @@ public class Customer {
 				if(!H.scheduleAppointment(appointment)) {
 					System.out.println("Cannot Book The Requested Appointment Successfully");
 				}
-				scheduleService(sc);
+				service(sc);
 				break;
 			case 2:
 				scheduleMaintenancePage1(sc, customerId, license, mileage, mechanic);
@@ -594,7 +594,7 @@ public class Customer {
 				if(!H.scheduleAppointment(appointment)) {
 					System.out.println("Cannot BookThe Requested Appointment Successfully");
 				}
-				scheduleService(sc);
+				service(sc);
 				break;
 			case 2:
 				scheduleRepairPage1(sc, customerId, license, mileage, mechanic);
@@ -680,7 +680,7 @@ public class Customer {
 				if(!H.rescheduleAppointment(appointment)) {
 					System.out.println("Cannot Book The Requested Appointment Successfully");
 				}
-				scheduleService(sc);
+				service(sc);
 				break;
 			case 2:
 				rescheduleServicePage1(sc);

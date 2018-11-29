@@ -801,7 +801,7 @@ public class Employee {
 			if(!H.scheduleAppointment(appointment)) {
 				System.out.println("Cannot Book The Requested Appointment Successfully");
 			}
-			receptionistScheduleService(sc);
+			receptionistLandingPage(sc);
 			break;
 		case 2:
 			receptionistScheduleMaintainencePage1(sc, customerId, license, mileage, mechanic);
@@ -931,7 +931,7 @@ public class Employee {
 			if(!H.scheduleAppointment(appointment)) {
 				System.out.println("Cannot BookThe Requested Appointment Successfully");
 			}
-			receptionistScheduleService(sc);
+			receptionistLandingPage(sc);
 			break;
 		case 2:
 			receptionistScheduleRepairPage1(sc, customerId, license, mileage, mechanic);
@@ -1027,7 +1027,7 @@ public class Employee {
 			if(!H.rescheduleAppointment(appointment)) {
 				System.out.println("Cannot Book The Requested Appointment Successfully");
 			}
-			receptionistScheduleService(sc);
+			receptionistLandingPage(sc);
 			break;
 		case 2:
 			receptionistReScheduleServicePage1(sc);
@@ -1234,8 +1234,13 @@ public class Employee {
 					String expectedDate = rs.getString("expecteddeliverydate");					
 
 					if((currentDate.compareTo(expectedDate)) > 0){
-						String query2 = "insert into notification values('" + currentDate + "'," + rs.getInt("orderId") + ",'" + rs.getString("expectedDeliveryDate") + "'," + rs.getInt("source") + ")";
-						DataOps.getInstance().insertInto(query2);
+						
+						String query3 = "Select orderId from notification where orderid = "+rs.getInt("orderid");
+						ResultSet rs2 = DataOps.getInstance().retrieve(query3);
+						if(!rs2.next()) {
+							String query2 = "insert into notification values('" + currentDate + "'," + rs.getInt("orderId") + ",'" + rs.getString("expectedDeliveryDate") + "'," + rs.getInt("source") + ")";
+							DataOps.getInstance().insertInto(query2);
+						}
 					}
 				}
 			} catch (Exception e) {
