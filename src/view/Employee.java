@@ -1370,13 +1370,13 @@ public class Employee {
 	 public  void managerNotifications(Scanner sc) {
 			System.out.println("======================Manager Notifications======================");
 			
-			String query = "select N.notificationId, N.notificationDate, N.orderId, N.supplierId, N.expecteddeliverydate from Notification N, Orders O where N.orderId  = O.orderId and O.destination = " + serviceCenterId;	
+			String query = "select N.notificationDate, N.orderId, N.supplierId, N.expecteddeliverydate from Notification N, Orders O where N.orderId  = O.orderId and O.destination = " + serviceCenterId;	
 
 			rs = DataOps.getInstance().retrieve(query);
 			
 			try {
 				while(rs.next()) {
-					System.out.println("NotificationId: "+rs.getInt("notificationId"));
+					//System.out.println("NotificationId: "+rs.getInt("notificationId"));
 					System.out.println("Notification Date: "+rs.getString("notificationDate"));
 					System.out.println("OrderId: "+rs.getInt("orderId"));
 					int sourceId = rs.getInt("supplierId");
