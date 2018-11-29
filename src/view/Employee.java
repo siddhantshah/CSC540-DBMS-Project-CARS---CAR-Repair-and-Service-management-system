@@ -1020,7 +1020,7 @@ public class Employee {
 			for(int i = 0 ; i < csvList.size() ; i++){
 
 				try {
-					String query = "Update orders set status = Completed, actualdeliverydate = " + currentDate +" where orderId = " + csvList.get(i) + " and destination = " + serviceCenterId;
+					String query = "Update orders set status = Completed, actualdeliverydate = '" + currentDate +"' where orderId = " + csvList.get(i) + " and destination = " + serviceCenterId;
 					DataOps.getInstance().insertInto(query);
 					query = "Delete from notification where orderId = " + csvList.get(i);
 					DataOps.getInstance().insertInto(query);
@@ -1047,7 +1047,7 @@ public class Employee {
 					Date expectedDeliveryDate = getDate(expectedDate);
 
 					if((getDate(currentDate).compareTo(expectedDeliveryDate)) < 0){
-						String query2 = "insert into notification values(" + currentDate + "," + rs.getInt("orderId") + "," + rs.getString("expectedDeliveryDate") + "," + rs.getInt("source") + ")";
+						String query2 = "insert into notification values(" + currentDate + "," + rs.getInt("orderId") + ",'" + rs.getString("expectedDeliveryDate") + "'," + rs.getInt("source") + ")";
 						DataOps.getInstance().insertInto(query2);
 					}
 				}
