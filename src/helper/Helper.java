@@ -257,7 +257,8 @@ public class Helper {
 		ResultSet rs = DataOps.getInstance().retrieve(deficitQuery);
 		int partId, currentquantity,requiredquantity, schduledquantity,deficit;
 		boolean shortage=false;
-		Date maxDate = new SimpleDateFormat("yyyy-MM-dd").parse("1970-01-01");
+		String maxDate = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			while(rs.next()) {
 				partId = rs.getInt("partid");
@@ -266,11 +267,11 @@ public class Helper {
 				schduledquantity =  rs.getInt("schduledquantity");
 				deficit = currentquantity-requiredquantity-schduledquantity;
 				if(deficit < 0) {
-					String pendingOrderQuery = "select sum(quantity) as orderedPartQuantity, max(expecteddeliverydate) as expected from Orders where partId="+partId+"and status='Pending'";
-					ResultSet rs1= DataOps.getInstance().retrieve(pendingOrderQuery);
-					while(rs1.next()) {
-						int orderedPartQuantity = rs.getInt("orderedPartQuantity");
-						Date expectedDate = rs.getTimestamp("ordered");
+					String pendingOrderQuery = "select sum(quantity) as sum, max(expecteddeliverydate) as expected from Orders where partId="+partId+"and status='Pending'";
+					ResultSet pendingOrderRS= DataOps.getInstance().retrieve(pendingOrderQuery);
+					while(pendingOrderRS.next()) {
+						int orderedPartQuantity = pendingOrderRS.getInt("sum");
+						String expectedDate = pendingOrderRS.getString("expected");
 						if(orderedPartQuantity+currentquantity-requiredquantity-schduledquantity > 0) {
 							if(expectedDate.compareTo(maxDate) ==1) {
 								maxDate=expectedDate;
@@ -278,8 +279,9 @@ public class Helper {
 						}
 						else {
 							Date order = orderParts(servicecenterid,partId, schduledquantity+requiredquantity-currentquantity-orderedPartQuantity);
-							if(order.compareTo(maxDate) ==1) {
-								maxDate=order;
+							
+							if(sdf.format(order).compareTo(maxDate) ==1) {
+								maxDate=sdf.format(order);
 							}
 						}
 					}
@@ -431,9 +433,9 @@ public class Helper {
 		String query = null;
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-		    query = "SELECT B.serviceId, C.name AS cname, A.timeIn, A.timeOut, B.licensePlate, A.typeOfService, E.name as mname, V.make, V.model"
-					+ "FROM BOOKS B, CUSTOMER C , Employee E, Appointment A, Vehicle V"
-					+ "WHERE A.mechId = E.employeeId AND B.appointmentId = A.apointmentId AND B.customerId = C.customerId AND V.licensePlate = B.licensePlate AND B.appointmentId =" + appointmentId;
+		    query = "SELECT B.serviceId, C.name AS cname, A.timeIn, B.licensePlate, A.typeOfService, E.name as mname, V.make, V.model"
+					+ " FROM BOOKS B, CUSTOMER C , Employee E, Appointment A, Vehicle V"
+					+ " WHERE A.mechId = E.employeeId AND B.appointmentId = A.appointmentId AND B.customerId = C.customerId AND V.licensePlate = B.licensePlate AND B.appointmentId =" + appointmentId;
 			rs = DataOps.getInstance().retrieve(query);
 			while(rs.next()) {
 				int typeOfService = rs.getInt("typeOfService");
@@ -452,7 +454,7 @@ public class Helper {
 					while(rs1.next()) {
 						diagnosticFee = rs1.getInt("diagnosticFee");
 					}
-					resultTemp = getTotalCost(serviceId, appointmentId);
+					resultTemp = getTotalCost(serviceId, appointmentId, rs.getString("make"), rs.getString("model"));
 					partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
 					totalLabourHours = totalLabourHours+ (Float)resultTemp.get("Total Labour Hours");
 					totalLabourCharge = totalLabourCharge+ (Float)resultTemp.get("Total Labour Wages");
@@ -460,62 +462,38 @@ public class Helper {
 					totalCost = totalCost+diagnosticFee;
 					result.put("appointmentId", new Integer(appointmentId));
 					result.put("customerName", rs.getString("cname"));
-					result.put("startDate", rs.getDate("timeIn"));
-					result.put("endDate", rs.getDate("timeOut"));
-					result.put("licensePlate", rs.getInt("licensePlate"));
+					try {
+						result.put("startDate", new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs.getString("timeIn")));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					result.put("licensePlate", rs.getString("licensePlate"));
 					result.put("serviceType", "Repair");
 					result.put("Mechanic Name", rs.getString("mname"));
 					result.put("Parts Used", partsUsed);
 					result.put("Total Labour Hours", new Float(totalLabourHours));
 					result.put("Total Labour Wages", new Float(totalLabourCharge));
 					result.put("Total Service Cost", new Float(totalCost));
+					query = "Insert into invoice(APPOINTMENTID, LICENSEPLATE, SERVICETYPE, MECHANICNAME, PARTSUSED, TOTALSERVICECOST, TOTALLABOURHOURS, TOTALLABOURWAGES) values(" + appointmentId  + ",'" + rs.getString("licensePlate") + "','" + "Repair" + "','" + rs.getString("mname") + "',"+ new Float(totalLabourHours) + ","+ new Float(totalLabourCharge) + ","+ new Float(totalCost);
+					DataOps.getInstance().insertInto(query);
 					
 				} else if(typeOfService == 1){
 					Map<String, Object> resultTemp = new HashMap<String, Object>();
-					if(serviceId == 1) {
-						resultTemp = getTotalCost(1, appointmentId);
-						partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
-						totalLabourHours = (Float)resultTemp.get("Total Labour Hours");
-						totalLabourCharge = (Float)resultTemp.get("Total Labour Wages");
-						totalCost = (Float)resultTemp.get("Total Service Cost");
-						
-					}
-					
-					if(serviceId == 2) {
-						resultTemp = getTotalCost(1, appointmentId);
-						partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
-						totalLabourHours = totalLabourHours+ (Float)resultTemp.get("Total Labour Hours");
-						totalLabourCharge = totalLabourCharge+ (Float)resultTemp.get("Total Labour Wages");
-						totalCost = totalCost+ (Float)resultTemp.get("Total Service Cost");
-						resultTemp = getTotalCost(2, appointmentId);
-						partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
-						totalLabourHours = totalLabourHours+ (Float)resultTemp.get("Total Labour Hours");
-						totalLabourCharge = totalLabourCharge+ (Float)resultTemp.get("Total Labour Wages");
-						totalCost = totalCost+ (Float)resultTemp.get("Total Service Cost");
-						
-					}
-					if(serviceId == 3) {
-						resultTemp = getTotalCost(1, appointmentId);
-						partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
-						totalLabourHours = totalLabourHours+ (Float)resultTemp.get("Total Labour Hours");
-						totalLabourCharge = totalLabourCharge+ (Float)resultTemp.get("Total Labour Wages");
-						totalCost = totalCost+ (Float)resultTemp.get("Total Service Cost");
-						resultTemp = getTotalCost(2, appointmentId);
-						partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
-						totalLabourHours = totalLabourHours+ (Float)resultTemp.get("Total Labour Hours");
-						totalLabourCharge = totalLabourCharge+ (Float)resultTemp.get("Total Labour Wages");
-						totalCost = totalCost+ (Float)resultTemp.get("Total Service Cost");
-						resultTemp = getTotalCost(3, appointmentId);
-						partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
-						totalLabourHours = totalLabourHours+ (Float)resultTemp.get("Total Labour Hours");
-						totalLabourCharge = totalLabourCharge+ (Float)resultTemp.get("Total Labour Wages");
-						totalCost = totalCost+ (Float)resultTemp.get("Total Service Cost");
-					}
+					resultTemp = getTotalCost(serviceId, appointmentId, rs.getString("make"), rs.getString("model"));
+					partsUsed.putAll((Map<String, Object>)resultTemp.get("Parts Used"));
+					totalLabourHours = (Float)resultTemp.get("Total Labour Hours");
+					totalLabourCharge = (Float)resultTemp.get("Total Labour Wages");
+					totalCost = (Float)resultTemp.get("Total Service Cost");
 					result.put("appointmentId", new Integer(appointmentId));
 					result.put("customerName", rs.getString("cname"));
-					result.put("startDate", rs.getDate("timeIn"));
-					result.put("endDate", rs.getDate("timeOut"));
-					result.put("licensePlate", rs.getInt("licensePlate"));
+					try {
+						result.put("startDate", new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs.getString("timeIn")));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					result.put("licensePlate", rs.getString("licensePlate"));
 					result.put("serviceType", "Maintenance");
 					result.put("Mechanic Name", rs.getString("mname"));
 					result.put("Parts Used", partsUsed);
@@ -524,6 +502,8 @@ public class Helper {
 					result.put("Total Service Cost", new Float(totalCost));
 				}
 			} 
+			rs.close();
+			rs1.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			DataOps.destroyInstance();
@@ -532,7 +512,7 @@ public class Helper {
 		return result;
 	}
 	
-	public Map<String, Object> getTotalCost(int serviceId, int appointmentId) {
+	public Map<String, Object> getTotalCost(int serviceId, int appointmentId, String make, String model) {
 		String query = null;
 		float totalCost =0;
 		float totalLabourHours = 0;
@@ -541,7 +521,7 @@ public class Helper {
 		Map<String,Object> partsUsed = new HashMap<String, Object>();
 		Map<String, Object> result = new HashMap<String, Object>();
 		query = "SELECT B.basicServiceId, B.hoursRequired, B.laborChargeRate FROM Basicservice B, Contains C "
-		  		+ "WHERE C.basicServiceId = B.basicServiceId AND C.serviceID = " + serviceId;
+		  		+ "WHERE C.basicServiceId = B.basicServiceId AND C.serviceID = " + serviceId + " AND C.make = '" + make +"' AND model = '" + model + "'";
 	try {
 		rs1 = DataOps.getInstance().retrieve(query);
 		while(rs1.next()) {
@@ -549,36 +529,54 @@ public class Helper {
 			totalLabourCharge = totalLabourCharge + (rs1.getInt("laborChargeRate") *  rs1.getFloat("hoursRequired"));
 			int basicServiceId = rs1.getInt("basicServiceId");
 			Date lastDate = null;
-			query = "SELECT B.serviceId, B.appointmentId, A.timeIn FROM Books B, Appointment A where B.appointmentId = A.appointmentId AND B.licensePlate=" + rs.getInt("licensePlate") + "ORDER BY A.timeIn DESC";
+			query = "SELECT B.serviceId, B.appointmentId, A.timeIn, V.make, V.model FROM Books B, Appointment A, Vehicle V where B.appointmentId = A.appointmentId AND B.licensePlate = V.licensePlate AND B.licensePlate='" + rs.getString("licensePlate") + "' ORDER BY A.timeIn DESC";
 			rs2 = DataOps.getInstance().retrieve(query);
 			while(rs2.next()) {
 				if(appointmentId != rs2.getInt("appointmentId")) {
-					int sid = rs2.getInt(serviceId);
-					query = "SELECT basicServiceId FROM Contains WHERE serviceId="+sid;
+					int sid = rs2.getInt("serviceId");
+					query = "SELECT basicServiceId FROM Contains WHERE serviceId="+sid + " AND make='" + rs2.getString("make") + "' AND model='" + rs2.getString("model") + "'";
 					rs3 = DataOps.getInstance().retrieve(query);
 					while(rs3.next()) {
 						if(rs3.getInt("basicServiceId")==basicServiceId) {
-							lastDate = rs2.getDate("timeIn");
+							try {
+								lastDate = new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs2.getString("timeIn"));
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							break;
 						}
 					}
+					rs3.close();
 					if(lastDate!=null) {
 						break;
 					}
 				}
 			}
-			query = "SELECT U.partId, U.name, U.quantity, I.unitPrice, I.warranty FROM Uses U, Inventory I WHERE U.partId = I.partId AND U.basicServiceId =" + basicServiceId + " AND U.make = " + rs.getString("make") + " AND U.model = " + rs.getInt("model") + "AND I.make=" + rs.getString("make");
+			rs2.close();
+			query = "SELECT U.partId, I.name, U.quantity, I.unitPrice, I.warranty FROM Uses U, Inventory I WHERE U.partId = I.partId AND U.basicServiceId =" + basicServiceId + " AND U.make = '" + rs.getString("make") + "' AND U.model = '" + rs.getString("model") + "' AND I.make='" + rs.getString("make")+ "'";
 			rs2 = DataOps.getInstance().retrieve(query);
 			while(rs2.next()) {
-				partsUsed.put(rs2.getString("name"),new Integer(rs2.getInt("quantity")*rs2.getInt("unitprice")));
+				if(partsUsed.containsKey(rs2.getString("name"))) {
+					Integer newValue = (Integer)partsUsed.get(rs2.getString("name")) + new Integer(rs2.getInt("quantity")*rs2.getInt("unitprice"));
+					partsUsed.remove(rs2.getString("name"));
+					partsUsed.put(rs2.getString("name"), newValue);
+				}else {
+					partsUsed.put(rs2.getString("name"),new Integer(rs2.getInt("quantity")*rs2.getInt("unitprice")));
+				}
 				if(lastDate!=null) {
 					Calendar startCalendar = new GregorianCalendar();
-					startCalendar.setTime(rs.getDate("timeIn"));
+					try {
+						startCalendar.setTime(new SimpleDateFormat("dd-MM-yy hh:mm:ss").parse(rs.getString("timeIn")));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					Calendar endCalendar = new GregorianCalendar();
 					endCalendar.setTime(lastDate);
 
 					int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
-					int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+					int diffMonth = diffYear * 12 + startCalendar.get(Calendar.MONTH) - endCalendar.get(Calendar.MONTH);
 					int warranty = rs2.getInt("warranty");
 					if(warranty!=0 && diffMonth> warranty) {
 						totalCost = totalCost+rs2.getInt("quantity")*rs2.getInt("unitprice") + (rs1.getInt("laborChargeRate") *  rs1.getFloat("hoursRequired"));
@@ -591,7 +589,9 @@ public class Helper {
 					totalCost = totalCost+rs2.getInt("quantity")*rs2.getInt("unitprice");
 				}
 			}
+			rs2.close();
 		}
+		rs1.close();
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		DataOps.destroyInstance();
@@ -606,7 +606,7 @@ public class Helper {
 	
 	
 	public Date orderParts(int servicecenterid, int partId, int quantity) throws SQLException {
-		String minThresQuery="select MINIMUMORDERTHRESHOLD from Has where servicecenterid="+servicecenterid+" partid="+partId;
+		String minThresQuery="select MINIMUMORDERTHRESHOLD from Has where servicecenterid="+servicecenterid+" and partid="+partId;
 		ResultSet minThreshRS = DataOps.getInstance().retrieve(minThresQuery);
 		minThreshRS.next();
 		int minThresh = minThreshRS.getInt("MINIMUMORDERTHRESHOLD");
