@@ -681,14 +681,14 @@ public class Helper {
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours+proposedSlots.length/2;
+				updatedHours=hours+((double)proposedSlots.length)/2;
 			}
 			else {
 				String[] proposedSlots = ap.proposedSlots[1].split(",");
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours+proposedSlots.length/2;
+				updatedHours=hours+((double)proposedSlots.length)/2;
 			}
 			StringBuffer slotBuffer = new StringBuffer();
 			for(String slot : slotList) {
@@ -768,14 +768,14 @@ public class Helper {
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours+proposedSlots.length/2;
+				updatedHours=hours+((double)proposedSlots.length)/2;
 			}
 			else {
 				String[] proposedSlots = ap.proposedSlots[1].split(",");
 				for(String proposedSlot : proposedSlots) {
 					slotList.remove(proposedSlot);
 				}
-				updatedHours=hours+proposedSlots.length/2;
+				updatedHours=hours+((double)proposedSlots.length)/2;
 			}
 			StringBuffer slotBuffer = new StringBuffer();
 			for(String slot : slotList) {
