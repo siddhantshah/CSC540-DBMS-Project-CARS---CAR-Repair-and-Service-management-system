@@ -814,7 +814,7 @@ public class Helper {
 		return true;
 	}
 
-	public static void updatePayroll() throws SQLException {
+	public void updatePayroll() throws SQLException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String salary_date = dateFormat.format(date);

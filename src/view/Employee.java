@@ -1349,34 +1349,66 @@ public class Employee {
 	 public  void managerPayroll(Scanner sc) {
 			System.out.println("======================Payroll======================");
 			System.out.println("Employee ID");
+
 			String employeeid = sc.next();
 			
-			String payrollQuery = "select PAYDATE, NAME, HOURLYWAGES, HOURSWORKED, AMOUNTPAID from PAYROLL join EMPLOYEE on PAYROLL.EMPLOYEEID = EMPLOYEE.EMPLOYEEID join MECHANIC on PAYROLL.EMPLOYEEID = MECHANIC.EMPLOYEEID where PAYROLL.EMPLOYEEID = '"+employeeid+"'";
-			rs = DataOps.getInstance().retrieve(payrollQuery);
-			
+			String empTypeQuery = "select ROLE from employee JOIN users on employee.EMAIL = users.LOGINID where EMPLOYEEID='"+employeeid+"'";
+			rs = DataOps.getInstance().retrieve(empTypeQuery);
 			
 			try {
-				while (rs.next()) {
-					System.out.println(rs.getString("NAME"));
-					System.out.println("A. Paycheck date - " + rs.getString("PAYDATE"));
-					System.out.println("B. Pay period - " + get_prev_date(rs.getString("PAYDATE")) + " to " + rs.getString("PAYDATE"));
-					System.out.println("C. Employee ID - " + employeeid);
-					System.out.println("D. Employee Name - " + rs.getString("NAME"));
-					System.out.println("E. Compensation ($) - " + rs.getInt("HOURLYWAGES"));
-					System.out.println("F. Compensation Frequency - hourly");
-					System.out.println("G. Units - " + rs.getDouble("HOURSWORKED"));
-					System.out.println("H. Earnings - " + rs.getDouble("AMOUNTPAID"));
-					
-					String start_date = rs.getString("PAYDATE").substring(0, 4) + "-01-01";
-					String totalPayQuery = "select SUM(AMOUNTPAID) as total_earnings from PAYROLL where EMPLOYEEID='"+employeeid+"' and PAYDATE between '"+start_date+"' and '"+rs.getString("PAYDATE") + "'";
-					ResultSet tmp_rs = DataOps.getInstance().retrieve(totalPayQuery);
-					double earnings = 0;
-					if (tmp_rs.next()) {
-						earnings = tmp_rs.getDouble("total_earnings");
+				rs.next();
+				String empType = rs.getString("ROLE");
+				if (empType.equals("Mechanic")) {				
+					String payrollQuery = "select PAYDATE, NAME, HOURLYWAGES, HOURSWORKED, AMOUNTPAID from PAYROLL join EMPLOYEE on PAYROLL.EMPLOYEEID = EMPLOYEE.EMPLOYEEID join MECHANIC on PAYROLL.EMPLOYEEID = MECHANIC.EMPLOYEEID join WORKS_IN on EMPLOYEE.EMPLOYEEID = WORKS_IN.EMPLOYEEID where PAYROLL.EMPLOYEEID = '"+employeeid+"' AND SERVICECENTERID='"+serviceCenterId+"'";
+					ResultSet prs = DataOps.getInstance().retrieve(payrollQuery);
+					while (prs.next()) {
+						System.out.println(prs.getString("NAME"));
+						System.out.println("A. Paycheck date - " + prs.getString("PAYDATE"));
+						System.out.println("B. Pay period - " + get_prev_date(prs.getString("PAYDATE")) + " to " + prs.getString("PAYDATE"));
+						System.out.println("C. Employee ID - " + employeeid);
+						System.out.println("D. Employee Name - " + prs.getString("NAME"));
+						System.out.println("E. Compensation ($) - " + prs.getInt("HOURLYWAGES"));
+						System.out.println("F. Compensation Frequency - hourly");
+						System.out.println("G. Units - " + prs.getDouble("HOURSWORKED"));
+						System.out.println("H. Earnings - " + prs.getDouble("AMOUNTPAID"));
+						
+						String start_date = prs.getString("PAYDATE").substring(0, 4) + "-01-01";
+						String totalPayQuery = "select SUM(AMOUNTPAID) as total_earnings from PAYROLL where EMPLOYEEID='"+employeeid+"' and PAYDATE between '"+start_date+"' and '"+rs.getString("PAYDATE") + "'";
+						ResultSet tmp_rs = DataOps.getInstance().retrieve(totalPayQuery);
+						double earnings = 0;
+						if (tmp_rs.next()) {
+							earnings = tmp_rs.getDouble("total_earnings");
+						}
+						System.out.println("I. Earnings (Year-to-date) - " + earnings);
 					}
-					System.out.println("I. Earnings (Year-to-date) - " + earnings);
+				} else if (empType.equals("Receptionist")) {
+					String recPayrollQuery = "select PAYDATE, NAME, HOURSWORKED, AMOUNTPAID from PAYROLL join EMPLOYEE on PAYROLL.EMPLOYEEID = EMPLOYEE.EMPLOYEEID join WORKS_IN on EMPLOYEE.EMPLOYEEID = WORKS_IN.EMPLOYEEID where PAYROLL.EMPLOYEEID = '"+employeeid+"' AND SERVICECENTERID='"+serviceCenterId+"'";
+					ResultSet rrs = DataOps.getInstance().retrieve(recPayrollQuery);
+					while (rrs.next()) {
+						System.out.println(rrs.getString("NAME"));
+						System.out.println("A. Paycheck date - " + rrs.getString("PAYDATE"));
+						System.out.println("B. Pay period - " + get_prev_date(rrs.getString("PAYDATE")) + " to " + rrs.getString("PAYDATE"));
+						System.out.println("C. Employee ID - " + employeeid);
+						System.out.println("D. Employee Name - " + rrs.getString("NAME"));
+						System.out.println("E. Compensation ($) - " + rrs.getDouble("AMOUNTPAID"));
+						System.out.println("F. Compensation Frequency - monthly");
+						System.out.println("G. Units - " + rrs.getDouble("HOURSWORKED"));
+						System.out.println("H. Earnings - " + rrs.getDouble("AMOUNTPAID"));
+						
+						String start_date = rrs.getString("PAYDATE").substring(0, 4) + "-01-01";
+						String totalPayQuery = "select SUM(AMOUNTPAID) as total_earnings from PAYROLL where EMPLOYEEID='"+employeeid+"' and PAYDATE between '"+start_date+"' and '"+rs.getString("PAYDATE") + "'";
+						ResultSet tmp_rs = DataOps.getInstance().retrieve(totalPayQuery);
+						double earnings = 0;
+						if (tmp_rs.next()) {
+							earnings = tmp_rs.getDouble("total_earnings");
+						}
+						System.out.println("I. Earnings (Year-to-date) - " + earnings);
+					}
 				}
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				DataOps.destroyInstance();
+				e.printStackTrace();
+			}
 			
 			System.out.println("1. Go Back");
 			int choice = sc.nextInt();
