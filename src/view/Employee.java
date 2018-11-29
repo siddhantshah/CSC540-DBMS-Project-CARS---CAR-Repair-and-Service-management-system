@@ -939,7 +939,7 @@ public class Employee {
 		
 		try {
 			while(rs.next()) {
-				query = "update appointment set status = completed where appointmentid = " + rs.getInt("appointmentid");
+				query = "update appointment set status = 'Completed' where appointmentid = " + rs.getInt("appointmentid");
 				DataOps.getInstance().insertInto(query);
 			}
 		} catch (SQLException e) {
@@ -958,7 +958,7 @@ public class Employee {
 		currDate.setDate(currDate.getDate()-1);
 		String currentDate = dateformat.format(currDate);
 
-		String query = "Select O.quantity, O.partid, H.currentquantity, H.minimumquantitythreshold, OR.quantity as incomingqty From outgoingparts O, Has H, Orders OR where O.scheduledate = '" + currentDate + "' and O.serviceCenterId = " + serviceCenterId + " and O.partId = H.partId and O.serviceCenterId = H.serviceCenterId and OR.partId = H.partId and OR.destination = " + serviceCenterId;
+		String query = "Select O.quantity, O.partid, H.currentquantity, H.minimumquantitythreshold, Od.quantity as incomingqty From outgoingparts O, Has H, Orders Od where O.scheduleddate = '" + currentDate + "' and O.serviceCenterId = " + serviceCenterId + " and O.partId = H.partId and O.serviceCenterId = H.serviceCenterId and Od.partId = H.partId and Od.destination = " + serviceCenterId;
 			
 		rs = DataOps.getInstance().retrieve(query);
 		
@@ -1011,6 +1011,7 @@ public class Employee {
 		System.out.println("2. Go Back");
 		System.out.println("Please select your choice.");
 		int choice = sc.nextInt();
+		dummy = sc.nextLine();
 		switch(choice) {
 		case 1:
 			System.out.println("Enter the comma seperated list of orders");
@@ -1020,7 +1021,7 @@ public class Employee {
 			for(int i = 0 ; i < csvList.size() ; i++){
 
 				try {
-					String query = "Update orders set status = Completed, actualdeliverydate = '" + currentDate +"' where orderId = " + csvList.get(i) + " and destination = " + serviceCenterId;
+					String query = "Update orders set status = 'Completed', actualdeliverydate = '" + currentDate +"' where orderId = " + csvList.get(i) + " and destination = " + serviceCenterId;
 					DataOps.getInstance().insertInto(query);
 					query = "Delete from notification where orderId = " + csvList.get(i);
 					DataOps.getInstance().insertInto(query);
@@ -1037,21 +1038,20 @@ public class Employee {
 
 		case 2:
 
-			String query = "Select expectedDeliveryDate, source, orderId from orders where status = pending and destination = " + serviceCenterId;
+			String query = "Select expectedDeliveryDate, source, orderId from orders where status = 'Pending' and destination = " + serviceCenterId;
 			
 			rs = DataOps.getInstance().retrieve(query);
 		
 			try {
 				while(rs.next()) {
-					String expectedDate = rs.getString("expecteddeliverydate");
-					Date expectedDeliveryDate = getDate(expectedDate);
+					String expectedDate = rs.getString("expecteddeliverydate");					
 
-					if((getDate(currentDate).compareTo(expectedDeliveryDate)) < 0){
+					if((currentDate.compareTo(expectedDate)) > 0){
 						String query2 = "insert into notification values('" + currentDate + "'," + rs.getInt("orderId") + ",'" + rs.getString("expectedDeliveryDate") + "'," + rs.getInt("source") + ")";
 						DataOps.getInstance().insertInto(query2);
 					}
 				}
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				DataOps.destroyInstance();
 				e.printStackTrace();
@@ -1841,7 +1841,7 @@ public class Employee {
 	 }
 	 
 	 public  Date getDate(String date) {
-		 DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		 Date d = new Date();
 	     try { 
 		     d = df.parse(date);
