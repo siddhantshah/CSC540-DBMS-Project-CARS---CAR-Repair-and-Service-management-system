@@ -20,4 +20,5 @@ public class Appointment {
 	public int serviceCenterId;
 	public HashMap<Integer, Integer> partsRequired=new HashMap<Integer,Integer>();
 	public int appointmentId;
+	public int typeOfService;
 }

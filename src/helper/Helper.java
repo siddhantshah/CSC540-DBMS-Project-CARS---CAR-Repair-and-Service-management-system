@@ -57,6 +57,7 @@ public class Helper {
 		ap.licensePlate = licensePlate;
 		ap.serviceId=maintenanceType;
 		ap.serviceCenterId = servicecenterid;
+		ap.typeOfService=1;
 		//Get basic services for this repair
 		String deficitQuery = "select j2.partid, j2.currentquantity,j2.requiredquantity,NVL(j3.schduledquantity,0) as schduledquantity from \n" + 
 				"(select h.partid, h.currentquantity, j1.requiredquantity from has h join \n" + 
@@ -238,6 +239,7 @@ public class Helper {
 		Appointment ap = new Appointment();
 		ap.customerId=customerId;
 		ap.licensePlate = licensePlate;
+		ap.typeOfService=2;
 		ap.serviceId=3+problem;
 		String mileageQuery="select servicecenterid from vehicle where licenseplate='"+licensePlate+"'";
 		ResultSet mileageRS = DataOps.getInstance().retrieve(mileageQuery); 
@@ -654,7 +656,7 @@ public class Helper {
 			ResultSet lastApptRS = DataOps.getInstance().retrieve(lastApptQuery);
 			lastApptRS.next();
 			int lastappointmentid = lastApptRS.getInt("lastappointmentid");
-			String apptQuery="insert into Appointment (AppointmentId, status, TimeIn, mechId, TypeOfService) VALUES ( "+(lastappointmentid+1)+","+" 'Pending', '"+ap.assignedDate+"' , "+ap.assignedMechanicId+", "+ap.serviceId+")";
+			String apptQuery="insert into Appointment (AppointmentId, status, TimeIn, mechId, TypeOfService) VALUES ( "+(lastappointmentid+1)+","+" 'Pending', '"+ap.assignedDate+"' , "+ap.assignedMechanicId+", "+ap.typeOfService+")";
 			String booksQuery="insert into Books (ServiceId, AppointmentId, LicensePlate, customerId) VALUES ( "+ap.serviceId+", "+(lastappointmentid+1)+", "+ap.licensePlate+", "+ap.customerId+")";
 			DataOps.getInstance().insertInto(apptQuery);
 			DataOps.getInstance().insertInto(booksQuery);
@@ -709,7 +711,7 @@ public class Helper {
 			String booksQuery = "select serviceId, LicensePlate, CustomerId from Books where appointmentId="+appointmentId;
 			ResultSet booksResultSet = DataOps.getInstance().retrieve(booksQuery);
 			booksResultSet.next();
-			int typeOfService = booksResultSet.getInt("serviceId");
+			int serviceid = booksResultSet.getInt("serviceId");
 			int customerId = booksResultSet.getInt("CustomerId");
 			String licensePlate = booksResultSet.getString("LicensePlate");
 			String mileageQuery="select LASTRECORDEDMILEAGE from vehicle where licenseplate='"+licensePlate+"'";
@@ -717,11 +719,11 @@ public class Helper {
 			mileageRS.next();
 			int mileage = mileageRS.getInt("LASTRECORDEDMILEAGE");
 			Appointment existingAppt = null;
-			if(typeOfService <= 3) {
+			if(serviceid <= 3) {
 				existingAppt = scheduleMaintenanceHelper(customerId, licensePlate, "", mileage);
 			}
 			else {
-				existingAppt = scheduleRepairHelper(customerId, licensePlate, "", mileage, typeOfService-3);
+				existingAppt = scheduleRepairHelper(customerId, licensePlate, "", mileage, serviceid-3);
 			}
 			
 			resAppt.canSchedule = existingAppt.canSchedule;
